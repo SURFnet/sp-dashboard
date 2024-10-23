@@ -137,6 +137,9 @@ class Service
     #[ORM\Column(length: 255, nullable: false)]
     private ?string $organizationNameEn = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $inviteRoleId = null;
+
     public function __construct()
     {
         $this->contacts = new ArrayCollection();
@@ -336,5 +339,16 @@ class Service
     public function setOrganizationNameEn(string $organizationNameEn): void
     {
         $this->organizationNameEn = $organizationNameEn;
+    }
+
+    public function getInviteRoleId(): ?int
+    {
+        return $this->inviteRoleId;
+    }
+
+    public function registerInvite(string $urn, int $roleId): void
+    {
+        $this->teamName = $urn;
+        $this->inviteRoleId = $roleId;
     }
 }

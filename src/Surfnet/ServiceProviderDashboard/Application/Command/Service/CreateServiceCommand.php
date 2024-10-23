@@ -36,6 +36,9 @@ class CreateServiceCommand implements Command
     #[Assert\Uuid(strict: false)]
     private $guid;
 
+    #[Assert\Uuid(strict: false)]
+    private string $manageId;
+
     /**
      * @var                                string
      */
@@ -79,6 +82,14 @@ class CreateServiceCommand implements Command
 
     #[Assert\NotBlank]
     private ?string $organizationNameEn = null;
+
+    /**
+     * @param string $manageId
+     */
+    public function __construct(string $manageId)
+    {
+        $this->manageId = $manageId;
+    }
 
     /**
      * @param string $guid
@@ -148,6 +159,11 @@ class CreateServiceCommand implements Command
     public function getGuid()
     {
         return $this->guid;
+    }
+
+    public function getManageId(): string
+    {
+        return $this->manageId;
     }
 
     /**
@@ -225,9 +241,6 @@ class CreateServiceCommand implements Command
         $this->organizationNameNl = $organizationNameNl;
     }
 
-    /**
-     * @return string
-     */
     public function getOrganizationNameEn(): ?string
     {
         return $this->organizationNameEn;

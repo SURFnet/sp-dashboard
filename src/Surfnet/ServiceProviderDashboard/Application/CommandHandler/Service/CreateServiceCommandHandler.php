@@ -23,42 +23,37 @@ namespace Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service;
 use Surfnet\ServiceProviderDashboard\Application\Command\Service\CreateServiceCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishTeamsRepository;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\InviteRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
-use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\CreateTeamsException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CreateServiceCommandHandler implements CommandHandler
 {
     public function __construct(
         private readonly ServiceRepository $serviceRepository,
-        private readonly PublishTeamsRepository $publishEntityClient,
+        private readonly InviteRepository $inviteRepository,
         private readonly TranslatorInterface $translator,
         private readonly string $prefixPart1,
         private readonly string $prefixPart2,
+        private readonly string $landingUrl,
     ) {
     }
 
-    /**
-     * @throws CreateTeamsException
-     */
     public function handle(CreateServiceCommand $command): void
     {
-        $name = $command->getName();
+        $serviceName = $command->getName();
         $teamName = strtolower($command->getTeamName());
         $fullTeamName = $this->prefixPart1 . $this->prefixPart2 . $teamName;
+        $roleDescription = $this->translator->trans(
+            'invite.role_create.description',
+            [
+                '%serviceName%' => $serviceName,
+                '%organisationName%' => $command->getOrganizationNameEn()
+            ]
+        );
 
-        /**
- * create team
-**/
-        $team = $this->createTeamData($name, $teamName, $command->getTeamManagerEmail());
-        $this->publishEntityClient->createTeam($team);
-
-        /**
- * create service
-**/
         $service = new Service();
-        $service->setName($name);
+        $service->setName($serviceName);
         $service->setGuid($command->getGuid());
         $service->setTeamName($fullTeamName);
         $service->setProductionEntitiesEnabled($command->isProductionEntitiesEnabled());
@@ -72,37 +67,19 @@ class CreateServiceCommandHandler implements CommandHandler
         $service->setOrganizationNameEn($command->getOrganizationNameEn());
         $service->setOrganizationNameNl($command->getOrganizationNameNl());
         $this->serviceRepository->isUnique($service);
+
+        $roleName = sprintf('%s %s', $serviceName, $command->getOrganizationNameEn());
+
+        $response = $this->inviteRepository->createRole(
+            $roleName,
+            $roleName,
+            $roleDescription,
+            $this->landingUrl,
+            $command->getManageId(),
+        );
+
+        $service->registerInvite($response->urn, $response->id);
+
         $this->serviceRepository->save($service);
-    }
-
-    private function createTeamData(string $name, string $teamName, string $email): array
-    {
-        $emails = $this->createEmailsArray($email);
-
-        return [
-            'name' => $teamName,
-            'description' => $this->translator->trans(
-                'teams.create.description',
-                [
-                '%teamName%' => $name,
-                ]
-            ),
-            'personalNote' => $this->translator->trans('teams.create.personalNote'),
-            'viewable' => false,
-            'emails' => $emails,
-            'roleOfCurrentUser' => 'MANAGER',
-            'invitationMessage' => $this->translator->trans('teams.create.invitationMessage'),
-            'language' => 'ENGLISH',
-        ];
-    }
-
-    private function createEmailsArray(string $email): array
-    {
-        $emails = [];
-        foreach (explode(',', $email) as $mail) {
-            $emails[trim($mail)] = 'MANAGER';
-        }
-
-        return $emails;
     }
 }

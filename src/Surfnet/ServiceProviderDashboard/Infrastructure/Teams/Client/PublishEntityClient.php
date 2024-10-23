@@ -22,9 +22,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishTeamsRepository as PublishTeamsRepositoryInterface;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\HttpException\HttpException;
-use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\ChangeMembershipRoleException
-    as ChangeMembershipRoleException;
-use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\CreateTeamsException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\ChangeMembershipRoleException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\ResendInviteException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\RuntimeException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\SendInviteException;
@@ -36,35 +34,6 @@ class PublishEntityClient implements PublishTeamsRepositoryInterface
         private readonly HttpClient $client,
         private readonly LoggerInterface $logger,
     ) {
-    }
-
-    /**
-     * @throws CreateTeamsException
-     */
-    public function createTeam(array $team): mixed
-    {
-        try {
-            $this->logger->info(sprintf('Creating new team \'%s\' in teams', $team['name']));
-
-            $response = $this->client->post(
-                json_encode($team),
-                '/api/spdashboard/teams'
-            );
-
-            if (!isset($response['id'])) {
-                throw new CreateTeamsException(
-                    sprintf('Unable to create a team for %s in teams', $team['name'])
-                );
-            }
-
-            return $response;
-        } catch (HttpException|GuzzleException|RuntimeException $e) {
-            throw new CreateTeamsException(
-                sprintf('Unable to create a team for %s in teams', $team['name']),
-                0,
-                $e
-            );
-        }
     }
 
     /**

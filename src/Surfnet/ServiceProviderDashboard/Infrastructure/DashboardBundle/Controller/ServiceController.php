@@ -57,6 +57,9 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
  */
 class ServiceController extends AbstractController
 {
+    /**
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     */
     public function __construct(
         private readonly CommandBus $commandBus,
         private readonly AuthorizationService $authorizationService,
@@ -67,6 +70,7 @@ class ServiceController extends AbstractController
         private readonly QueryTeamsRepository $queryClient,
         private readonly LoggerInterface $logger,
         private readonly string $defaultStemName,
+        private readonly string $manageId,
     ) {
     }
 
@@ -129,7 +133,7 @@ class ServiceController extends AbstractController
     public function create(Request $request): RedirectResponse|Response
     {
         $request->getSession()->getFlashBag()->clear();
-        $command = new CreateServiceCommand();
+        $command = new CreateServiceCommand($this->manageId);
 
         $form = $this->createForm(CreateServiceType::class, $command);
 

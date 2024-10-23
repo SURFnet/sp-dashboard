@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
+use Facebook\WebDriver\WebDriverBy;
 use Symfony\Component\Uid\Uuid;
 
 class ServiceCreateTest extends WebTestCase
@@ -59,4 +60,21 @@ class ServiceCreateTest extends WebTestCase
         $services = $this->getServiceRepository()->findAll();
         $this->assertCount(4, $services);
     }
+
+    public function test_shows_correct_error_if_role_exists_in_invite()
+    {
+        $this->inviteRepository->createRole('New Service #1 New Service #1', 'New Service #1 New Service #1', '', '', '4b0e422d-d0d0-4b9e-a521-fdd1ee5d2bad');
+
+        $crawler = self::$pantherClient->request('GET', '/service/create');
+
+        $form = $crawler->findElement(WebDriverBy::cssSelector('form[name="dashboard_bundle_service_type"]'));
+        $this->fillFormField($form, '#dashboard_bundle_service_type_general_name', 'New Service #1');
+        $this->fillFormField($form, '#dashboard_bundle_service_type_general_organizationNameNl', 'Nieuwe Service #1');
+        $this->fillFormField($form, '#dashboard_bundle_service_type_general_organizationNameEn', 'New Service #1');
+        $this->fillFormField($form, '#dashboard_bundle_service_type_general_guid', 'f59100e1-4232-4646-8ac5-50f3c2bc32a3');
+        $this->fillFormField($form, '#dashboard_bundle_service_type_teams_teamManagerEmail', 'mail@example.org');
+        $form->submit();
+        $this->assertOnPage('The name "Demo role name" already exists, please use a unique name.');
+    }
+
 }

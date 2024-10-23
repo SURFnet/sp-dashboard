@@ -35,6 +35,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\DeleteManageEntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\IdentityProviderRepository;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\InviteRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryManageRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryTeamsRepository;
@@ -85,6 +86,8 @@ class WebTestCase extends PantherTestCase
      * @var DeleteManageEntityRepository
      */
     protected $testDeleteClient;
+
+    protected InviteRepository $inviteRepository;
 
     /** @var QueryTeamsRepository&FakeTeamsQueryClient */
     protected $teamsQueryClient;
@@ -172,6 +175,10 @@ class WebTestCase extends PantherTestCase
             ->getParameter('surfnet.dashboard.security.authentication.authorization_attribute_name');
         $this->surfConextRepresentativeAttributeValue = self::getContainer()
             ->getParameter('surfnet.dashboard.security.authentication.surfconext_representative_authorization');
+
+        $this->inviteRepository = self::getContainer()
+            ->get(InviteRepository::class);
+        $this->inviteRepository->reset();
     }
 
     protected function registerManageEntity(
