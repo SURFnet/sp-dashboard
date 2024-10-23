@@ -22,6 +22,8 @@ services:
     arguments:
       $prefixPart1: '%env(team_prefix_default_stem_name)%'
       $prefixPart2: '%env(team_prefix_group_name_context)%'
+      $inviteRepository: '@Surfnet\ServiceProviderDashboard\Infrastructure\Invite\InviteRepository'
+      $landingUrl: '%env(invite_landing_url)%'
 
   surfnet.dashboard.command_handler.delete_service:
     class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\DeleteServiceCommandHandler
@@ -463,6 +465,7 @@ services:
     arguments:
       $defaultStemName: '%env(team_prefix_default_stem_name)%'
       $logger: '@logger'
+      $manageId: '%env(spdashboard_manage_id)%'
 
   Surfnet\ServiceProviderDashboard\Infrastructure\Teams\TeamsClient:
     arguments:
@@ -678,3 +681,13 @@ services:
       $entityAclService: '@Surfnet\ServiceProviderDashboard\Application\Service\EntityAclService'
       $testIdps: '@Surfnet\ServiceProviderDashboard\Domain\ValueObject\ConfiguredTestIdpCollection'
       $identityProviderRepository: '@surfnet.manage.client.identity_provider_client.test_environment'
+
+
+  Surfnet\ServiceProviderDashboard\Infrastructure\Invite\InviteRepository:
+
+  Surfnet\ServiceProviderDashboard\Infrastructure\Invite\InviteHttpClient:
+    arguments:
+      $host: '%env(string:invite_host)%'
+      $path: '/api/external/v1'
+      $username: '%env(string:invite_api_username)%'
+      $password: '%env(string:invite_api_password)%'

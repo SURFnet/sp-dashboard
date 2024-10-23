@@ -22,7 +22,6 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\ChangeMembershipRoleException;
-use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\CreateTeamsException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\ResendInviteException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\SendInviteException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\PublishEntityClient;
@@ -64,32 +63,6 @@ class TeamsPublishEntityClientTest extends MockeryTestCase
             ),
             $this->logger
         );
-    }
-
-    /**
-     * @throws CreateTeamsException
-     */
-    public function testItCanCreateATeam()
-    {
-        $team = [
-            "name" => "Champions ",
-            "description" => "Team champions",
-            "personalNote" => "Team created by SP Dashboard",
-            "viewable" => true,
-            "emails" => [
-                "test@test.com" => "ADMIN"
-            ],
-            "roleOfCurrentUser" => "ADMIN",
-            "invitationMessage" => "Please..",
-            "language" => "DUTCH"
-        ];
-
-        $json = file_get_contents(__DIR__ . '/fixture/team.json');
-        $this->mockHandler->append(new Response(201, [], $json));
-        $this->logger->shouldReceive('info');
-
-        $response = $this->client->createTeam($team);
-        $this->assertEquals(json_decode($json, true), $response);
     }
 
     /**

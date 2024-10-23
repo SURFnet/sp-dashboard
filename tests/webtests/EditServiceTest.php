@@ -63,6 +63,7 @@ class EditServiceTest extends WebTestCase
         $this->switchToService('SURFnet');
 
         $crawler = self::$pantherClient->request('GET', '/service/1/edit');
+        self::$pantherClient->waitForVisibility('.service-form', 5);
 
         // Step 1: Admin sets privacy questions enabled to false
         $formData = [

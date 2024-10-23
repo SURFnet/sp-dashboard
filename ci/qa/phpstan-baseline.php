@@ -452,32 +452,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/CommandHandler/PrivacyQuestions/PrivacyQuestionsCommandHandler.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Repository\\\\PublishTeamsRepository\\:\\:createTeam\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/CommandHandler/Service/CreateServiceCommandHandler.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\CommandHandler\\\\Service\\\\CreateServiceCommandHandler\\:\\:createEmailsArray\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/CommandHandler/Service/CreateServiceCommandHandler.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\CommandHandler\\\\Service\\\\CreateServiceCommandHandler\\:\\:createTeamData\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/CommandHandler/Service/CreateServiceCommandHandler.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Parameter \\#1 \\$organizationNameEn of method Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\Service\\:\\:setOrganizationNameEn\\(\\) expects string, string\\|null given\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/CommandHandler/Service/CreateServiceCommandHandler.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Parameter \\#1 \\$organizationNameNl of method Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\Service\\:\\:setOrganizationNameNl\\(\\) expects string, string\\|null given\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/CommandHandler/Service/CreateServiceCommandHandler.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#3 \\$email of method Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\CommandHandler\\\\Service\\\\CreateServiceCommandHandler\\:\\:createTeamData\\(\\) expects string, string\\|null given\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/CommandHandler/Service/CreateServiceCommandHandler.php',
 ];
@@ -4187,6 +4167,11 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/HttpClient/ResourcePathFormatter.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Infrastructure\\\\Invite\\\\InviteHttpClient\\:\\:post\\(\\) has parameter \\$payload with no value type specified in iterable type array\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/Invite/InviteHttpClient.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Expression on left side of \\?\\? is not nullable\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/Jira/Factory/IssueFieldFactory.php',
@@ -4787,11 +4772,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/Teams/Client/DeleteEntityClient.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Cannot access offset \'id\' on mixed\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/Teams/Client/PublishEntityClient.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Cannot call method getReasonPhrase\\(\\) on mixed\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/Teams/Client/PublishEntityClient.php',
@@ -4799,11 +4779,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Cannot call method getStatusCode\\(\\) on mixed\\.$#',
 	'count' => 2,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/Teams/Client/PublishEntityClient.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Infrastructure\\\\Teams\\\\Client\\\\PublishEntityClient\\:\\:createTeam\\(\\) has parameter \\$team with no value type specified in iterable type array\\.$#',
-	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/Teams/Client/PublishEntityClient.php',
 ];
 $ignoreErrors[] = [
