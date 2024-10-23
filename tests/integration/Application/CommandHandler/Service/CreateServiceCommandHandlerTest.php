@@ -25,9 +25,16 @@ use Mockery\Mock;
 use Surfnet\ServiceProviderDashboard\Application\Command\Service\CreateServiceCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\CreateServiceCommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Application\Service\UuidValidator;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\InviteRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\CreateRoleResponse;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\InviteException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\PublishEntityClient;
+use Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeInviteRepository;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CreateServiceCommandHandlerTest extends MockeryTestCase
@@ -39,6 +46,7 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
     /** @var ServiceRepository|m\MockInterface */
     private $repository;
 
+    private InviteRepository $inviteRepository;
     /**
      * @var PublishEntityClient
      */
@@ -53,14 +61,16 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
     {
         $this->repository = m::mock(ServiceRepository::class);
         $this->publishEntityClient = m::mock(PublishEntityClient::class);
+        $this->inviteRepository = m::mock(InviteRepository::class);
         $this->translator = m::mock(TranslatorInterface::class);
 
         $this->commandHandler = new CreateServiceCommandHandler(
             $this->repository,
-            $this->publishEntityClient,
+            $this->inviteRepository,
             $this->translator,
             'voor',
-            'voegsel'
+            'voegsel',
+            'https://example.org',
         );
     }
 
@@ -69,11 +79,22 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
      */
     public function test_it_can_process_a_create_service_command()
     {
+        $inviteUrn = 'urn:mace:surf.nl:test.surfaccess.nl:'.Uuid::v4()->toRfc4122().':required_role_name';
+
         $this->translator
             ->shouldReceive('trans');
         $this->publishEntityClient
             ->shouldReceive('createTeam')
             -> andReturn([]);
+        $this->inviteRepository->shouldReceive('createRole')->withArgs(
+            [
+                'Foobar Organization Name EN',
+                'Foobar Organization Name EN',
+                '',
+                'https://example.org',
+                '920392e8-a1fc-4627-acb4-b1f215e11dcd'
+            ]
+        )->andReturns(new CreateRoleResponse(1234, 'foo', 'bar', 'baz', $inviteUrn));
 
         $service = new Service();
         $service->setName('Foobar');
@@ -88,8 +109,9 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
         $service->setContractSigned('yes');
         $service->setOrganizationNameEn('Organization Name EN');
         $service->setOrganizationNameNl('Organization Name NL');
+        $service->registerInvite($inviteUrn, 1234);
 
-        $command = new CreateServiceCommand();
+        $command = new CreateServiceCommand('920392e8-a1fc-4627-acb4-b1f215e11dcd');
         $command->setName($service->getName());
         $command->setTeamName($service->getTeamName());
         $command->setTeamManagerEmail('tiffany@aching.do');
@@ -103,7 +125,6 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
         $command->setSurfconextRepresentativeApproved($service->getSurfconextRepresentativeApproved());
         $command->setContractSigned($service->getContractSigned());
         $command->setInstitutionId($service->getInstitutionId());
-        $service->setTeamName('voorvoegselteam-foobar');
 
         $this->repository->shouldReceive('save')->with(IsEqual::equalTo($service))->once();
         $this->repository->shouldReceive('isUnique')->andReturn(true)->once();
@@ -121,9 +142,19 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
             ->shouldReceive('createTeam')
             -> andReturn([]);
 
+        $this->inviteRepository->shouldReceive('createRole')->withArgs(
+            [
+                'Foobar Organization name',
+                'Foobar Organization name',
+                '',
+                'https://example.org',
+                '4'
+            ]
+        );
+
         $this->expectExceptionMessage("This teamname is taken by: HZ with Guid: 30dd879c-ee2f-11db-8314-0800200c9a66");
         $this->expectException(InvalidArgumentException::class);
-        $command = new CreateServiceCommand();
+        $command = new CreateServiceCommand('4b0e422d-d0d0-4b9e-a521-fdd1ee5d2bad');
         $command->setName('Foobar');
         $command->setTeamName('team-foobar');
         $command->setTeamManagerEmail('tiffany@aching.do');

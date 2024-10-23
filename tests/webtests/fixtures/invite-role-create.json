@@ -1,0 +1,44 @@
+{
+  "id": 42114,
+  "name": "Demo role name",
+  "shortName": "required_role_name",
+  "description": "Required role description",
+  "urn": "urn:mace:surf.nl:test.surfaccess.nl:74fd8059-7558-4454-8393-fd84f74c4907:required_role_name",
+  "defaultExpiryDays": 365,
+  "enforceEmailEquality": false,
+  "eduIDOnly": false,
+  "blockExpiryDate": false,
+  "overrideSettingsAllowed": false,
+  "teamsOrigin": false,
+  "identifier": "74fd8059-7558-4454-8393-fd84f74c4907",
+  "remoteApiUser": "SP Dashboard",
+  "applicationUsages": [
+    {
+      "id": 49203,
+      "landingPage": "http://landingpage.com",
+      "application": {
+        "id": 41904,
+        "manageId": "4",
+        "manageType": "SAML20_SP"
+      }
+    }
+  ],
+  "auditable": {
+    "createdAt": 1729254283,
+    "createdBy": "sp_dashboard"
+  },
+  "applicationMaps": [
+    {
+      "OrganizationName:en": "SURF bv",
+      "landingPage": "http://landingpage.com",
+      "logo": "https://static.surfconext.nl/media/idp/surfconext.png",
+      "entityid": "https://research",
+      "name:en": "Research EN",
+      "id": "4",
+      "_id": "4",
+      "type": "saml20_sp",
+      "url": "https://default-url-research.org",
+      "name:nl": "Research NL"
+    }
+  ]
+}

@@ -67,6 +67,25 @@ services:
         class: Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakePublishEntityClient
         public: true
 
+    surfnet.dashboard.command_handler.create_service:
+        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\CreateServiceCommandHandler
+        public: true
+        tags:
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Service\CreateServiceCommand }
+        arguments:
+            $serviceRepository: '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ServiceRepository'
+            $translator: '@identity_translator'
+            $prefixPart1: '%env(team_prefix_default_stem_name)%'
+            $prefixPart2: '%env(team_prefix_group_name_context)%'
+            $inviteRepository: '@Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeInviteRepository'
+            $landingUrl: '%env(invite_landing_url)%'
+
+    Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeInviteRepository:
+
+    Surfnet\ServiceProviderDashboard\Domain\Repository\InviteRepository:
+        class: Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeInviteRepository
+        public: true
+
     surfnet.manage.client.delete_client.prod_environment:
         class: Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeDeleteManageEntityClient
         public: true

@@ -21,25 +21,6 @@ namespace Surfnet\ServiceProviderDashboard\Domain\Repository;
 interface PublishTeamsRepository
 {
     /**
-     * Create a new team in Teams.
-     *
-     * Expects an array with the following structure:
-     *
-     {
-        "name": "Champions ",
-        "description": "Team champions",
-        "personalNote": "Team created by SP Dashboard",
-        "viewable": true,
-        "emails": {
-            "test@test.com": "ADMIN"
-        },
-        "roleOfCurrentUser": "ADMIN",
-        "invitationMessage": "Please..",
-        "language": "DUTCH"
-     }
-    public function createTeam(array $team): mixed;
-
-    /**
      * Change the membership role for a given id with a given role.
      */
     public function changeMembership(int $id, string $role): mixed;
