@@ -46,6 +46,9 @@ class SurfAuthorizations
         $codeAttributeValue = reset($match);
         $organizationCodeMatches = [];
         preg_match(self::SAB_ORGCODE_PATTERN, $codeAttributeValue, $organizationCodeMatches);
+        if (!isset($organizationCodeMatches[1])) {
+            throw new InvalidAuthorizationException('The organizationCode could not be extracted');
+        }
         $this->organizationCode = $organizationCodeMatches[1];
     }
 
