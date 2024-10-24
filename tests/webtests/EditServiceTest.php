@@ -47,6 +47,7 @@ class EditServiceTest extends WebTestCase
         $this->checkFormField($form, '#dashboard_bundle_edit_service_type_serviceStatus_surfconextRepresentativeApproved_1');
         $this->fillFormField($form, '#dashboard_bundle_edit_service_type_teams_teamName', 'urn:collab:group:dev.openconext.local:demo:openconext:org:team-a');
         self::$pantherClient->executeScript("document.getElementsByClassName('service-form').item(0).submit();");
+        self::$pantherClient->takeScreenshot('/tmp/screenshots/10-0.png');
         self::assertOnPage('Your changes were saved!');
     }
 
@@ -62,7 +63,7 @@ class EditServiceTest extends WebTestCase
         $this->switchToService('SURFnet');
 
         $crawler = self::$pantherClient->request('GET', '/service/1/edit');
-
+        self::$pantherClient->takeScreenshot('/tmp/screenshots/00.png');
         // Step 1: Admin sets privacy questions enabled to false
         $formData = [
             'dashboard_bundle_edit_service_type[general][privacyQuestionsEnabled]' => false,
@@ -75,8 +76,8 @@ class EditServiceTest extends WebTestCase
         $form->setValues($formData);
         $crawler->selectButton('Save')->submit();
         self::$pantherClient->wait(3);
-        mkdir('/tmp/screenshots');
-        self::$pantherClient->takeScreenshot('/tmp/screenshots/01.png');
+//        mkdir('/tmp/screenshots');
+        self::$pantherClient->takeScreenshot('/tmp/screenshots/02.png');
         self::assertOnPage('Your changes were saved!');
         // Step 2: Surfnet can't access the privacy questions
         $this->logOut();
