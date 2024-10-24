@@ -17,6 +17,10 @@ jobs:
       DOCKER_RUN_SPD_AS_WWW: docker exec --user 33:33 spdashboard-spdashboard-1
 
     steps:
+      - uses: actions/upload-artifact@v4
+        with:
+          name: my-artifact
+          path: /tmp/screenshots
       - name: Check out the repo
         uses: actions/checkout@v4
         with:

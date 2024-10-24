@@ -74,7 +74,8 @@ class EditServiceTest extends WebTestCase
             ->form();
         $form->setValues($formData);
         $crawler->selectButton('Save')->submit();
-        self::$pantherClient->wait();
+        self::$pantherClient->wait(3);
+        self::$pantherClient->takeScreenshot('/tmp/screenshots/01.png');
         self::assertOnPage('Your changes were saved!');
         // Step 2: Surfnet can't access the privacy questions
         $this->logOut();
