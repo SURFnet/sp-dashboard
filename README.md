@@ -55,6 +55,7 @@ Then start the command line in the container with `docker compose exec -ti spdas
 
 Run `composer install`. This will install all PHP dependencies, including the development dependencies.
 Run `yarn install`. This will install all js dependencies, including the development dependencies.
+Run `yarn encore dev`. This will build the frontend.
 
 Install database migrations
 ```

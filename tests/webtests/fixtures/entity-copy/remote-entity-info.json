@@ -53,7 +53,7 @@
       "description:nl": "OpenConext SSO Proxy",
       "name:en": "OpenConext Engine EN",
       "name:nl": "OpenConext Engine",
-      "coin:service_team_id": "urn:collab:group:vm.openconext.org:demo:openconext:org:surf.nl",
+      "coin:service_team_id": "urn:collab:group:dev.openconext.local:demo:openconext:org:surf.nl",
       "coin:eula": "https://eulaurl",
       "coin:application_url": "https://appurl",
       "coin:original_metadata_url": "https://engine.dev.openconext.local/authentication/sp/metadata",

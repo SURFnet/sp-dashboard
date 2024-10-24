@@ -46,7 +46,7 @@ class EditServiceTest extends WebTestCase
         $this->fillFormField($form, '#dashboard_bundle_edit_service_type_general_name', 'The A Team');
         $this->fillFormField($form, '#dashboard_bundle_edit_service_type_general_organizationNameNl', 'Groepje A');
         $this->checkFormField($form, '#dashboard_bundle_edit_service_type_serviceStatus_surfconextRepresentativeApproved_1');
-        $this->fillFormField($form, '#dashboard_bundle_edit_service_type_teams_teamName', 'urn:collab:group:vm.openconext.org:demo:openconext:org:team-a');
+        $this->fillFormField($form, '#dashboard_bundle_edit_service_type_teams_teamName', 'urn:collab:group:dev.openconext.local:demo:openconext:org:team-a');
         self::$pantherClient->executeScript("document.getElementsByClassName('service-form').item(0).submit();");
         self::assertOnPage('Your changes were saved!');
     }
