@@ -1017,11 +1017,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Metadata/JsonGenerator.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Right side of && is always true\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Metadata/JsonGenerator.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Argument of an invalid type Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\Entity\\\\Attribute supplied for foreach, only iterables are supported\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Metadata/JsonGenerator/ArpGenerator.php',
@@ -1494,11 +1489,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Parameter \\#1 \\$entityId of static method Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\Parser\\\\OidcngClientIdParser\\:\\:parse\\(\\) expects string, string\\|null given\\.$#',
 	'count' => 2,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Metadata/OidcngResourceServerJsonGenerator.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Right side of && is always true\\.$#',
-	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Metadata/OidcngResourceServerJsonGenerator.php',
 ];
 $ignoreErrors[] = [

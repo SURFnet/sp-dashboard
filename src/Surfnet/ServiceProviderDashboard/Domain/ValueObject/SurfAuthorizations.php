@@ -46,7 +46,9 @@ class SurfAuthorizations
         $codeAttributeValue = reset($match);
         $organizationCodeMatches = [];
         preg_match(self::SAB_ORGCODE_PATTERN, $codeAttributeValue, $organizationCodeMatches);
-        $this->organizationCode = $organizationCodeMatches[1];
+        if (isset($organizationCodeMatches[1])) {
+            $this->organizationCode = $organizationCodeMatches[1];
+        }
     }
 
     public function isSurfConextRepresentative(): bool

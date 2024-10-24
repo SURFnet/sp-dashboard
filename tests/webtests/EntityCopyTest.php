@@ -55,7 +55,6 @@ class EntityCopyTest extends WebTestCase
     public function test_copy_does_not_create_new_entity()
     {
         $crawler = self::$pantherClient->request('GET', "/entity/copy/{$this->service->getId()}/d645ddf7-1246-4224-8e14-0d5c494fd9ad");
-
         self::assertOnPage('Service Provider registration form');
 
         $this->assertEquals(1, $crawler->selectButton('Publish')->count());
