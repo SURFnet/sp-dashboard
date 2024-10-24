@@ -16,7 +16,7 @@
       "contacts:0:givenName": "Aad",
       "contacts:0:surName": "Janssen",
       "contacts:0:emailAddress": "ajanssen@foobar.com",
-      "coin:service_team_id": "urn:collab:group:vm.openconext.org:demo:openconext:org:surf.nl",
+      "coin:service_team_id": "urn:collab:group:dev.openconext.local:demo:openconext:org:surf.nl",
       "coin:application_url": "https:\/\/prod.dev.playground.openconext.nl\/playground",
       "coin:eula": "https:\/\/prod.dev.playground.openconext.nl\/playground\/EULA",
       "NameIDFormat": "urn:oasis:names:tc:SAML:2.0:nameid-format:transient",
