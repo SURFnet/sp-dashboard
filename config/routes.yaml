@@ -5,8 +5,9 @@ dashboard_saml:
   resource: "@DashboardSamlBundle/Controller/"
   prefix:   /
 
-openconext_monitor:
-  resource: "@OpenConextMonitorBundle/Resources/config/routing.yml"
+open_conext_monitor:
+  resource: "@OpenConextMonitorBundle/src/Controller"
+  type: attribute
   prefix: /
 
 lexik_translation_edition:

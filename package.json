@@ -6,6 +6,7 @@
   "devDependencies": {
     "@babel/core": "^7.20.5",
     "@babel/preset-env": "^7.20.2",
+    "@cypress/request": ">=3.0.0",
     "@hotwired/stimulus": "^3.0.0",
     "@symfony/stimulus-bridge": "^3.2.0",
     "@symfony/ux-autocomplete": "file:vendor/symfony/ux-autocomplete/assets",

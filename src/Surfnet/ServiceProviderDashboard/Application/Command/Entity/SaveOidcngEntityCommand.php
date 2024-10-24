@@ -238,6 +238,20 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $this->setAttribute($property, $value);
     }
 
+    /**
+     * The current behaviour is that __get always returns null if the attribute is not set.
+     * The linked symfony/property-access change now suddenly calls the __isset before the __get.
+     * If __isset would return false, the __get would not be called, and null would not be returned, resulting in an error.
+     * Therefore, __isset will always return true.
+     *
+     * @see getAttribute
+     * @see https://github.com/symfony/symfony/issues/54739
+     */
+    public function __isset(string $name): bool
+    {
+        return true;
+    }
+
     public function __get(string $property): ?Attribute
     {
         return $this->getAttribute($property);
