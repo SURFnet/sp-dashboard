@@ -27,8 +27,8 @@ use Symfony\Component\Uid\Uuid;
 
 class WebTestFixtures extends Fixture
 {
-    public const TEAMNAME_SURF = 'urn:collab:group:vm.openconext.org:demo:openconext:org:surf.nl';
-    public const TEAMNAME_IBUILDINGS = 'urn:collab:group:vm.openconext.org:demo:openconext:org:ibuildings.nl';
+    public const TEAMNAME_SURF = 'urn:collab:group:dev.openconext.local:demo:openconext:org:surf.nl';
+    public const TEAMNAME_IBUILDINGS = 'urn:collab:group:dev.openconext.local:demo:openconext:org:ibuildings.nl';
     public const TEAMNAME_ACME = 'demo:openconext:org:acme.com';
 
     public function load(ObjectManager $manager): void
