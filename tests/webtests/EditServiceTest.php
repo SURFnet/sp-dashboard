@@ -73,10 +73,9 @@ class EditServiceTest extends WebTestCase
             ->selectButton('Save')
             ->form();
         $form->setValues($formData);
-        self::$pantherClient->executeScript("document.getElementsByClassName('service-form').item(0).submit();");
-        self::$pantherClient->wait(3);
+        $crawler->selectButton('Save')->submit();
+        self::$pantherClient->wait();
         self::assertOnPage('Your changes were saved!');
-
         // Step 2: Surfnet can't access the privacy questions
         $this->logOut();
         $surfNet = $serviceRepository->findByName('SURFnet');
