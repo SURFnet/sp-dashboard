@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 use Facebook\WebDriver\WebDriverBy;
+use Facebook\WebDriver\WebDriverExpectedCondition;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\DataFixtures\ORM\WebTestFixtures;
 
 class EditServiceTest extends WebTestCase
@@ -74,8 +75,7 @@ class EditServiceTest extends WebTestCase
             ->form();
         $form->setValues($formData);
         self::$pantherClient->executeScript("document.getElementsByClassName('service-form').item(0).submit();");
-        self::$pantherClient->wait(3);
-        self::assertOnPage('Your changes were saved!');
+        self::$pantherClient->wait(10)->until( WebDriverExpectedCondition::elementTextContains(WebDriverBy::cssSelector('body'), 'Your changes were saved!'));
 
         // Step 2: Surfnet can't access the privacy questions
         $this->logOut();
