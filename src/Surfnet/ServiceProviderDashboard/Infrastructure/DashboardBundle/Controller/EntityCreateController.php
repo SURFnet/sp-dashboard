@@ -82,6 +82,7 @@ class EntityCreateController extends AbstractController
         $entityList = $this->entityService
             ->getEntityListForService($service)
             ->sortEntitiesByEnvironment();
+        $isProductionEnabled = $entityList->hasTestEntities() || $service->isProductionEntitiesEnabled();
         $form = $this->createForm(CreateNewEntityType::class, $formId);
 
         $form->handleRequest($request);
@@ -129,6 +130,7 @@ class EntityCreateController extends AbstractController
             'environment' => $targetEnvironment,
             'inputId' => $inputId,
             'protocols' => $choices,
+            'productionEnabled' => $isProductionEnabled,
             'entities' => $entityList->getEntities(),
             'manageId' => $formId,
             ]
@@ -155,7 +157,9 @@ class EntityCreateController extends AbstractController
         $hasTestEntities = $this->entityService
             ->getEntityListForService($service)->hasTestEntities();
 
-        if (!$hasTestEntities && $targetEnvironment !== Constants::ENVIRONMENT_TEST) {
+        if (!$service->isProductionEntitiesEnabled() && !$hasTestEntities
+            && $targetEnvironment !== Constants::ENVIRONMENT_TEST
+        ) {
             throw $this->createAccessDeniedException(
                 'You do not have access to create entities without publishing to the test environment first'
             );

@@ -42,6 +42,7 @@ class EditServiceCommand implements Command
         #[SpDashboardAssert\UrnFormattedTeamName]
         #[Assert\NotBlank]
         private string $teamName,
+        private bool $productionEntitiesEnabled,
         private bool $privacyQuestionsEnabled,
         private bool $clientCredentialClientsEnabled,
         #[Assert\NotBlank]
@@ -72,6 +73,11 @@ class EditServiceCommand implements Command
     public function setName(string $name): void
     {
         $this->name = $name;
+    }
+
+    public function setProductionEntitiesEnabled(bool $enabled): void
+    {
+        $this->productionEntitiesEnabled = $enabled;
     }
 
     public function setPrivacyQuestionsEnabled(bool $privacyQuestionsEnabled): void
@@ -187,6 +193,11 @@ class EditServiceCommand implements Command
     public function isPrivacyQuestionsAnswered(): bool
     {
         return $this->privacyQuestionsAnswered;
+    }
+
+    public function isProductionEntitiesEnabled(): bool
+    {
+        return $this->productionEntitiesEnabled;
     }
 
     public function isPrivacyQuestionsEnabled(): bool

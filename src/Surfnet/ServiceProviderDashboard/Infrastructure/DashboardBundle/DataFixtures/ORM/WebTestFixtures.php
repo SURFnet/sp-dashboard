@@ -34,9 +34,11 @@ class WebTestFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         $service = $this->createService('SURFnet', self::TEAMNAME_SURF);
+        $service->setProductionEntitiesEnabled(false);
         $manager->persist($service);
 
         $service =  $this->createService('Ibuildings B.V.', self::TEAMNAME_IBUILDINGS);
+        $service->setProductionEntitiesEnabled(true);
         $service->setPrivacyQuestionsEnabled(true);
         $service->setClientCredentialClientsEnabled(true);
         $manager->persist($service);

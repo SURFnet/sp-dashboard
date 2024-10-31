@@ -58,6 +58,7 @@ class CreateServiceCommand implements Command
      */
     private $institutionId;
 
+    private bool $productionEntitiesEnabled = false;
 
     private bool $privacyQuestionsEnabled = true;
 
@@ -101,6 +102,11 @@ class CreateServiceCommand implements Command
     public function setName($name): void
     {
         $this->name = $name;
+    }
+
+    public function setProductionEntitiesEnabled(bool $enabled): void
+    {
+        $this->productionEntitiesEnabled = $enabled;
     }
 
     public function setPrivacyQuestionsEnabled(bool $privacyQuestionsEnabled): void
@@ -158,6 +164,11 @@ class CreateServiceCommand implements Command
     public function getName()
     {
         return $this->name;
+    }
+
+    public function isProductionEntitiesEnabled(): bool
+    {
+        return $this->productionEntitiesEnabled;
     }
 
     public function isPrivacyQuestionsEnabled(): bool
