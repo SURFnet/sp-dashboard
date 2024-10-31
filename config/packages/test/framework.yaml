@@ -8,3 +8,4 @@ framework:
         storage_factory_id: session.storage.factory.mock_file
     profiler:
         collect: false
+    csrf_protection: false
