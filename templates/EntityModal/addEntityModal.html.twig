@@ -7,7 +7,7 @@
                     {% set fieldName = manageId ~ '_environment' %}
                     <li class="add-entity-field">
                         {% set fieldId = manageId ~ '_prod' %}
-                        <input class="add-entity-radio" type="radio" name={{ fieldName }} id="{{ fieldId }}" value="production"{% if environment is same as('production') %} checked="checked"{% endif %}>
+                        <input class="add-entity-radio" type="radio" name={{ fieldName }} id="{{ fieldId }}" value="production"{% if not productionEnabled %} disabled="disabled"{% endif %}{% if environment is same as('production') and productionEnabled %} checked="checked"{% endif %}>
                         <label class="add-entity-label" for="{{ fieldId }}">{{ 'entity.add.environment.production'|trans }}</label>
                     </li>
                     <li class="add-entity-field">

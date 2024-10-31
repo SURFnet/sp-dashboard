@@ -74,6 +74,13 @@ class CreateServiceType extends AbstractType
                         ]
                     )
                     ->add(
+                        'productionEntitiesEnabled',
+                        CheckboxType::class,
+                        [
+                            'required' => false,
+                        ]
+                    )
+                    ->add(
                         'privacyQuestionsEnabled',
                         CheckboxType::class,
                         [
