@@ -80,6 +80,7 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
         $service->setTeamName('team-foobar');
         $service->setGuid('30dd879c-ee2f-11db-8314-0800200c9a66');
         $service->setPrivacyQuestionsEnabled(true);
+        $service->setProductionEntitiesEnabled(true);
 
         $service->setServiceType('institution');
         $service->setIntakeStatus('yes');
@@ -94,6 +95,7 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
         $command->setTeamManagerEmail('tiffany@aching.do');
         $command->setGuid($service->getGuid());
         $command->setPrivacyQuestionsEnabled($service->isPrivacyQuestionsEnabled());
+        $command->setProductionEntitiesEnabled($service->isProductionEntitiesEnabled());
         $command->setOrganizationNameEn($service->getOrganizationNameEn());
         $command->setOrganizationNameNl($service->getOrganizationNameNl());
         $command->setServiceType($service->getServiceType());
@@ -126,6 +128,7 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
         $command->setTeamName('team-foobar');
         $command->setTeamManagerEmail('tiffany@aching.do');
         $command->setGuid('30dd879c-ee2f-11db-8314-0800200c9a66');
+        $command->setProductionEntitiesEnabled(true);
         $command->setPrivacyQuestionsEnabled(false);
 
         $command->setServiceType('institution');
