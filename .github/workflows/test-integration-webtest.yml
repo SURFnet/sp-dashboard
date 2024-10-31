@@ -58,3 +58,11 @@ jobs:
         working-directory: spdashboard
         run: |
           ${DOCKER_COMPOSE_PHP} sh -c 'composer webtest'
+
+      - name: Upload error screenshots
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: error-screenshots
+          path: spdashboard/var/error-screenshots
+          retention-days: 2
