@@ -30,6 +30,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class CreateServiceCommand implements Command
 {
+    private ?int $serviceId = null;
+
     /**
      * @var string
      */
@@ -269,5 +271,15 @@ class CreateServiceCommand implements Command
     public function setTeamManagerEmail(string $teamManagerEmail): void
     {
         $this->teamManagerEmail = $teamManagerEmail;
+    }
+
+    public function getServiceId(): ?int
+    {
+        return $this->serviceId;
+    }
+
+    public function setServiceId(int $serviceId): void
+    {
+        $this->serviceId = $serviceId;
     }
 }

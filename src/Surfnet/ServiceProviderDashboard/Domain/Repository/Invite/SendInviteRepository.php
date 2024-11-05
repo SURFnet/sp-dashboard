@@ -15,21 +15,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Surfnet\ServiceProviderDashboard\Domain\Repository;
+namespace Surfnet\ServiceProviderDashboard\Domain\Repository\Invite;
 
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\CreateRoleResponse;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\SendInviteResponse;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\InviteException;
 
-interface InviteRepository
+interface SendInviteRepository
 {
     /**
      * @throws InviteException
      */
-    public function createRole(
-        string $name,
-        string $shortName,
-        string $description,
-        string $landingPage,
-        string $manageId,
-    ): CreateRoleResponse;
+    public function sendInvite(
+        string $email,
+        string $message,
+        string $language,
+        int $roleIdentifier,
+    ): SendInviteResponse;
 }

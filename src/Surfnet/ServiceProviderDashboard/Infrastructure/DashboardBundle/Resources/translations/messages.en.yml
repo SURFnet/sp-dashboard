@@ -399,6 +399,7 @@ service.create.description: "Members of this team have access to SP %Name% via t
 service.create.personalNote: "Team created by SP Dashboard"
 service.create.invitationMessage: "Please accept this invitation by logging in with your institutional account or eduID account (create one at eduID.nl)."
 service.create.flash.success: "Your service was added successfully."
+service.create-invite-flash.failed: "The service and role have been created. However, the creation of the admin membership failed. Please proceed to %inviteDeeplink% to proceed and invite the administrator"
 service.edit.title: Edit service
 service.edit.flash.success: "Your changes were saved!"
 service.delete.title: "Delete service"

@@ -24,6 +24,7 @@ use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Command\Service\CreateServiceCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Service\DeleteServiceCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Service\EditServiceCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Service\SendInviteCommand;
 use Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotFoundException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\ServiceNotFoundException;
@@ -43,6 +44,7 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\EditServiceType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\ServiceSwitcherType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\InviteException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -51,6 +53,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Translation\TranslatableMessage;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -71,6 +75,7 @@ class ServiceController extends AbstractController
         private readonly LoggerInterface $logger,
         private readonly string $defaultStemName,
         private readonly string $manageId,
+        private readonly string $inviteUrl,
     ) {
     }
 
@@ -130,7 +135,7 @@ class ServiceController extends AbstractController
 
     #[IsGranted('ROLE_ADMINISTRATOR')]
     #[Route(path: '/service/create', name: 'service_add', methods: ['GET', 'POST'])]
-    public function create(Request $request): RedirectResponse|Response
+    public function create(Request $request, TranslatorInterface $translator): RedirectResponse|Response
     {
         $request->getSession()->getFlashBag()->clear();
         $command = new CreateServiceCommand($this->manageId);
@@ -143,7 +148,40 @@ class ServiceController extends AbstractController
             $this->logger->info(sprintf('Save new Service, service was created by: %s', '@todo'), (array) $command);
             try {
                 $this->commandBus->handle($command);
-                $this->addFlash('info', 'service.create.flash.success');
+
+                try {
+                    $message = $translator->trans('service.create.invitationMessage');
+
+                    $service = $this->getCreatedService($command);
+
+                    if ($command->getTeamManagerEmail() === null) {
+                        throw new InviteException('Could not create invite, team manager has no email.');
+                    }
+
+                    if ($service->getInviteRoleId() === null) {
+                        throw new InviteException('Could not create invite, invite role id is unknown.');
+                    }
+
+                    $inviteCommand = new SendInviteCommand(
+                        $command->getTeamManagerEmail(),
+                        $message,
+                        'en',
+                        $service->getInviteRoleId()
+                    );
+                    $this->commandBus->handle($inviteCommand);
+                    $this->addFlash('info', 'service.create.flash.success');
+                } catch (InviteException $e) {
+                    if (!isset($service)) {
+                        throw $e;
+                    }
+
+                    $message = new TranslatableMessage(
+                        'service.create-invite-flash.failed',
+                        ['%inviteDeeplink%' => $this->inviteUrl . '/roles/' . $service->getInviteRoleId()]
+                    );
+                    $this->addFlash('info', $message);
+                }
+
                 return $this->redirectToRoute('service_overview');
             } catch (Exception $e) {
                 $this->addFlash('error', $e->getMessage());
@@ -333,5 +371,22 @@ class ServiceController extends AbstractController
             $protocol === Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT;
 
         return $protocolUsesSecret && $publishedEntity->getOidcClient()->getClientSecret();
+    }
+
+    /**
+     * @throws InviteException
+     */
+    private function getCreatedService(CreateServiceCommand $command): \Surfnet\ServiceProviderDashboard\Domain\Entity\Service
+    {
+        if ($command->getServiceId() === null) {
+            throw new InviteException('Could not find created Service, no service ID');
+        }
+
+        $service = $this->serviceService->getServiceById($command->getServiceId());
+
+        if ($service === null) {
+            throw new InviteException('Could not find created Service.');
+        }
+        return $service;
     }
 }

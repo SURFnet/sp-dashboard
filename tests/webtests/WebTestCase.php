@@ -26,8 +26,6 @@ use Doctrine\ORM\EntityManager;
 use Facebook\WebDriver\Chrome\ChromeOptions;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverElement;
-use Facebook\WebDriver\WebDriverKeyboard;
-use Facebook\WebDriver\WebDriverKeys;
 use PHPUnit\Framework\ExpectationFailedException;
 use RuntimeException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
@@ -35,7 +33,8 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\DeleteManageEntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\IdentityProviderRepository;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\InviteRepository;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\Invite\CreateRoleRepository;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\Invite\SendInviteRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryManageRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryTeamsRepository;
@@ -87,7 +86,8 @@ class WebTestCase extends PantherTestCase
      */
     protected $testDeleteClient;
 
-    protected InviteRepository $inviteRepository;
+    protected CreateRoleRepository $createRoleRepository;
+    protected SendInviteRepository $sendInviteRepository;
 
     /** @var QueryTeamsRepository&FakeTeamsQueryClient */
     protected $teamsQueryClient;
@@ -176,9 +176,13 @@ class WebTestCase extends PantherTestCase
         $this->surfConextRepresentativeAttributeValue = self::getContainer()
             ->getParameter('surfnet.dashboard.security.authentication.surfconext_representative_authorization');
 
-        $this->inviteRepository = self::getContainer()
-            ->get(InviteRepository::class);
-        $this->inviteRepository->reset();
+        $this->createRoleRepository = self::getContainer()
+            ->get(CreateRoleRepository::class);
+        $this->createRoleRepository->reset();
+
+        $this->sendInviteRepository = self::getContainer()
+            ->get(SendInviteRepository::class);
+        $this->sendInviteRepository->reset();
     }
 
     protected function registerManageEntity(

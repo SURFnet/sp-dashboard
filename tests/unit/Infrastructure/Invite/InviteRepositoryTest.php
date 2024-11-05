@@ -23,19 +23,19 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\InviteException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Invite\InviteHttpClient;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Invite\InviteRepository;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Invite\CreateRoleRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class InviteRepositoryTest extends TestCase
 {
-    private InviteRepository $repository;
+    private CreateRoleRepository $repository;
     private InviteHttpClient $httpClient;
 
     protected function setUp(): void
     {
         $this->httpClient = $this->createMock(InviteHttpClient::class);
-        $this->repository = new InviteRepository($this->httpClient, new NullLogger());
+        $this->repository = new CreateRoleRepository($this->httpClient, new NullLogger());
     }
 
     public function testSuccessfulRoleCreation(): void
