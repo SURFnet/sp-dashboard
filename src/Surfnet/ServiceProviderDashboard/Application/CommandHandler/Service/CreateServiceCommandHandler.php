@@ -23,7 +23,7 @@ namespace Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service;
 use Surfnet\ServiceProviderDashboard\Application\Command\Service\CreateServiceCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\InviteRepository;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\Invite\CreateRoleRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -31,7 +31,7 @@ class CreateServiceCommandHandler implements CommandHandler
 {
     public function __construct(
         private readonly ServiceRepository $serviceRepository,
-        private readonly InviteRepository $inviteRepository,
+        private readonly CreateRoleRepository $inviteRepository,
         private readonly TranslatorInterface $translator,
         private readonly string $prefixPart1,
         private readonly string $prefixPart2,
@@ -81,5 +81,6 @@ class CreateServiceCommandHandler implements CommandHandler
         $service->registerInvite($response->urn, $response->id);
 
         $this->serviceRepository->save($service);
+        $command->setServiceId($service->getId());
     }
 }

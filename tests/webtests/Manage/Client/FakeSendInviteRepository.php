@@ -18,19 +18,13 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests\Manage\Client;
 
-use RuntimeException;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\InviteRepository;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository as PublishEntityRepositoryInterface;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\CreateRoleResponse;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\Invite\SendInviteRepository;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\SendInviteResponse;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\InviteException;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Uid\Uuid;
 
-class FakeInviteRepository implements InviteRepository
+class FakeSendInviteRepository implements SendInviteRepository
 {
-    private string $path = __DIR__ . '/../../../../var/webtest-invite-repository.json';
+    private string $path = __DIR__ . '/../../../../var/webtest-send-invite-repository.json';
 
     public function reset()
     {
@@ -43,38 +37,24 @@ class FakeInviteRepository implements InviteRepository
         exec(sprintf('chmod g+w %s', realpath($this->path)));
     }
 
-    public function registerPublishResponse(string $entityId, string $response)
+    public function registerPublishResponse(string $email, string $response)
     {
         $data = $this->read();
-        if(isset($data[$entityId])){
+        if(isset($data[$email])){
             $responseArray = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
             throw new InviteException(
                 sprintf('The name "%s" already exists, please use a unique name.', $responseArray['name'])
             );
         }
-        $data[$entityId] = $response;
+        $data[$email] = $response;
         $this->write($data);
     }
 
-
-    public function createRole(
-        string $name,
-        string $shortName,
-        string $description,
-        string $landingPage,
-        string $manageId,
-    ): CreateRoleResponse {
-        $uuid = Uuid::v4()->toRfc4122();
-
-        $data = $this->responseTemplate();
-        $data['urn'] = 'urn:mace:surf.nl:test.surfaccess.nl:'.$uuid.':required_role_name';
-        $data['identifier'] = $uuid;
-
-        $this->registerPublishResponse($manageId, json_encode($data, JSON_THROW_ON_ERROR));
-
-
-        return new CreateRoleResponse($data['id'], $data['name'], $data['shortName'], $data['description'], $data['urn']);
+    public function count()
+    {
+        return count($this->read());
     }
+
 
     private function read()
     {
@@ -88,10 +68,38 @@ class FakeInviteRepository implements InviteRepository
 
     private function responseTemplate(){
         return json_decode(
-            file_get_contents(__DIR__ . '/../../fixtures/invite-role-create.json'),
+            '{
+  "status": 201,
+  "recipientInvitationURLs": [
+    {
+      "recipient": "admin@service.nl",
+      "invitationURL": "https://invite.test.surfconext.nl/invitation/accept?{hash}"
+    }
+  ]
+}',
             true,
             512,
             JSON_THROW_ON_ERROR
         );
+    }
+
+    public function sendInvite(
+        string $email,
+        string $message,
+        string $language,
+        int $roleIdentifier,
+    ): SendInviteResponse {
+        if($email === 'general@failure.com'){
+            throw new InviteException(
+                sprintf('Unable to send invite for "%s". Bad request.', $email)
+            );
+        }
+
+        $data = $this->responseTemplate();
+        $data['recipientInvitationURLs'][0]['recipient'] = $email;
+        $this->registerPublishResponse($email, json_encode($data, JSON_THROW_ON_ERROR));
+
+
+        return new SendInviteResponse($data['id'], $data['name'], $data['shortName'], $data['description'], $data['urn']);
     }
 }

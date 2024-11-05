@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository;
 
+use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityRepository as DoctrineEntityRepository;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;

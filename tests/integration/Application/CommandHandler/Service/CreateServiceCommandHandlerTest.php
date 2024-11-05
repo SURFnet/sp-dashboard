@@ -21,19 +21,15 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Integration\Application\Command
 use Hamcrest\Core\IsEqual;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Mockery\Mock;
 use Surfnet\ServiceProviderDashboard\Application\Command\Service\CreateServiceCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\CreateServiceCommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Service\UuidValidator;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\InviteRepository;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\Invite\CreateRoleRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\CreateRoleResponse;
-use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\InviteException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\PublishEntityClient;
-use Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeInviteRepository;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -46,7 +42,7 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
     /** @var ServiceRepository|m\MockInterface */
     private $repository;
 
-    private InviteRepository $inviteRepository;
+    private CreateRoleRepository $inviteRepository;
     /**
      * @var PublishEntityClient
      */
@@ -61,7 +57,7 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
     {
         $this->repository = m::mock(ServiceRepository::class);
         $this->publishEntityClient = m::mock(PublishEntityClient::class);
-        $this->inviteRepository = m::mock(InviteRepository::class);
+        $this->inviteRepository = m::mock(CreateRoleRepository::class);
         $this->translator = m::mock(TranslatorInterface::class);
 
         $this->commandHandler = new CreateServiceCommandHandler(
@@ -126,9 +122,15 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
         $command->setContractSigned($service->getContractSigned());
         $command->setInstitutionId($service->getInstitutionId());
 
-        $this->repository->shouldReceive('save')->with(IsEqual::equalTo($service))->once();
+        $this->repository->shouldReceive('save')->with(IsEqual::equalTo($service))
+            ->andReturnUsing(function ($service) {
+                $service->setId(123);
+                return $service;
+            })->once();
         $this->repository->shouldReceive('isUnique')->andReturn(true)->once();
         $this->commandHandler->handle($command);
+
+        $this->assertEquals(123, $command->getServiceId());
     }
 
     /**

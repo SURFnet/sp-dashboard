@@ -19,12 +19,12 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\Invite;
 
 use Psr\Log\LoggerInterface;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\InviteRepository as InviteRepositoryInterface;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\Invite\CreateRoleRepository as InviteRepositoryInterface;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\CreateRoleResponse;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\InviteException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\RuntimeException;
 
-readonly class InviteRepository implements InviteRepositoryInterface
+readonly class CreateRoleRepository implements InviteRepositoryInterface
 {
     public function __construct(
         private InviteHttpClient $client,
@@ -60,7 +60,7 @@ readonly class InviteRepository implements InviteRepositoryInterface
     }
 
     /**
-     * @return array<mixed>
+     * @return array<string,mixed>
      */
     private function createPayload(
         string $name,

@@ -22,8 +22,17 @@ services:
     arguments:
       $prefixPart1: '%env(team_prefix_default_stem_name)%'
       $prefixPart2: '%env(team_prefix_group_name_context)%'
-      $inviteRepository: '@Surfnet\ServiceProviderDashboard\Infrastructure\Invite\InviteRepository'
+      $inviteRepository: '@Surfnet\ServiceProviderDashboard\Infrastructure\Invite\CreateRoleRepository'
       $landingUrl: '%env(invite_landing_url)%'
+
+  Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\SendInviteCommandHandler:
+    autowire: true
+    tags:
+      - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Service\CreateServiceCommand }
+    arguments:
+      $sendInviteRepository: '@Surfnet\ServiceProviderDashboard\Infrastructure\Invite\SendInviteRepository'
+
+  Surfnet\ServiceProviderDashboard\Infrastructure\Invite\SendInviteRepository:
 
   surfnet.dashboard.command_handler.delete_service:
     class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\DeleteServiceCommandHandler
@@ -71,7 +80,6 @@ services:
 
   surfnet.dashboard.command_handler.load_metadata:
     class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\LoadMetadataCommandHandler
-    public: true
     arguments:
       - '@Surfnet\ServiceProviderDashboard\Application\Service\AttributeNameService'
       - '@Surfnet\ServiceProviderDashboard\Legacy\Metadata\Fetcher'
@@ -466,6 +474,7 @@ services:
       $defaultStemName: '%env(team_prefix_default_stem_name)%'
       $logger: '@logger'
       $manageId: '%env(spdashboard_manage_id)%'
+      $inviteUrl: '%env(string:invite_host)%'
 
   Surfnet\ServiceProviderDashboard\Infrastructure\Teams\TeamsClient:
     arguments:
@@ -683,7 +692,7 @@ services:
       $identityProviderRepository: '@surfnet.manage.client.identity_provider_client.test_environment'
 
 
-  Surfnet\ServiceProviderDashboard\Infrastructure\Invite\InviteRepository:
+  Surfnet\ServiceProviderDashboard\Infrastructure\Invite\CreateRoleRepository:
 
   Surfnet\ServiceProviderDashboard\Infrastructure\Invite\InviteHttpClient:
     arguments:

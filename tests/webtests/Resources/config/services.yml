@@ -77,13 +77,23 @@ services:
             $translator: '@identity_translator'
             $prefixPart1: '%env(team_prefix_default_stem_name)%'
             $prefixPart2: '%env(team_prefix_group_name_context)%'
-            $inviteRepository: '@Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeInviteRepository'
+            $inviteRepository: '@Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeCreateRoleRepository'
             $landingUrl: '%env(invite_landing_url)%'
 
-    Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeInviteRepository:
+    Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\SendInviteCommandHandler:
+        public: true
+        autowire: true
+        tags:
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Service\SendInviteCommand }
+        arguments:
+            $sendInviteRepository: '@Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeSendInviteRepository'
 
-    Surfnet\ServiceProviderDashboard\Domain\Repository\InviteRepository:
-        class: Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeInviteRepository
+    Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeSendInviteRepository:
+
+    Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeCreateRoleRepository:
+
+    Surfnet\ServiceProviderDashboard\Domain\Repository\Invite\CreateRoleRepository:
+        class: Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeCreateRoleRepository
         public: true
 
     surfnet.manage.client.delete_client.prod_environment:
@@ -138,3 +148,7 @@ services:
         class: Surfnet\SamlBundle\SAML2\BridgeContainer
         public: true
         arguments: ['@logger']
+
+    Surfnet\ServiceProviderDashboard\Domain\Repository\Invite\SendInviteRepository:
+        public: true
+        class: Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeSendInviteRepository
