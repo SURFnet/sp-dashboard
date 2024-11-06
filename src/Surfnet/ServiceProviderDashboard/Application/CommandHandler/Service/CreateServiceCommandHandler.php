@@ -33,8 +33,6 @@ class CreateServiceCommandHandler implements CommandHandler
         private readonly ServiceRepository $serviceRepository,
         private readonly InviteRepository $inviteRepository,
         private readonly TranslatorInterface $translator,
-        private readonly string $prefixPart1,
-        private readonly string $prefixPart2,
         private readonly string $landingUrl,
     ) {
     }
@@ -42,8 +40,6 @@ class CreateServiceCommandHandler implements CommandHandler
     public function handle(CreateServiceCommand $command): void
     {
         $serviceName = $command->getName();
-        $teamName = strtolower($command->getTeamName());
-        $fullTeamName = $this->prefixPart1 . $this->prefixPart2 . $teamName;
         $roleDescription = $this->translator->trans(
             'invite.role_create.description',
             [
@@ -55,7 +51,6 @@ class CreateServiceCommandHandler implements CommandHandler
         $service = new Service();
         $service->setName($serviceName);
         $service->setGuid($command->getGuid());
-        $service->setTeamName($fullTeamName);
         $service->setProductionEntitiesEnabled($command->isProductionEntitiesEnabled());
         $service->setPrivacyQuestionsEnabled($command->isPrivacyQuestionsEnabled());
         $service->setClientCredentialClientsEnabled($command->isClientCredentialClientsEnabled());

@@ -34,7 +34,7 @@ class SpDashboardMetadataGeneratorTest extends MockeryTestCase
         $entity = m::mock(ManageEntity::class)->makePartial();
         $service = new Service();
 
-        $service->setTeamName('The A Team');
+        $service->updateTeamName('The A Team');
 
         $coin = m::mock(Coin::class);
         $coin->shouldReceive('getOriginalMetadataUrl')->andReturn('http://the-a-team.com/saml/metadata');

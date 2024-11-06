@@ -40,13 +40,6 @@ class CreateServiceCommand implements Command
     private string $manageId;
 
     /**
-     * @var                                string
-     */
-    #[SpDashboardAssert\UniqueTeamName()]
-    #[Assert\NotBlank]
-    private $teamName;
-
-    /**
      * @var string
      */
     #[Assert\NotBlank]
@@ -97,14 +90,6 @@ class CreateServiceCommand implements Command
     public function setGuid($guid): void
     {
         $this->guid = $guid;
-    }
-
-    /**
-     * @param string $teamName
-     */
-    public function setTeamName($teamName): void
-    {
-        $this->teamName = $teamName;
     }
 
     /**
@@ -164,14 +149,6 @@ class CreateServiceCommand implements Command
     public function getManageId(): string
     {
         return $this->manageId;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTeamName()
-    {
-        return $this->teamName;
     }
 
     /**

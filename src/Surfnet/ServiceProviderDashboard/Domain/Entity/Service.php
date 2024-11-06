@@ -211,10 +211,7 @@ class Service
         $this->privacyQuestionsEnabled = $privacyQuestionsEnabled;
     }
 
-    /**
-     * @param string $teamName
-     */
-    public function setTeamName($teamName): void
+    public function updateTeamName(string $teamName): void
     {
         $this->teamName = $teamName;
     }
