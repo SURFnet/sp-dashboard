@@ -20,8 +20,6 @@ services:
     tags:
       - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Service\CreateServiceCommand }
     arguments:
-      $prefixPart1: '%env(team_prefix_default_stem_name)%'
-      $prefixPart2: '%env(team_prefix_group_name_context)%'
       $inviteRepository: '@Surfnet\ServiceProviderDashboard\Infrastructure\Invite\CreateRoleRepository'
       $landingUrl: '%env(invite_landing_url)%'
 
@@ -293,28 +291,6 @@ services:
       - '@surfnet.manage.query_service'
     tags:
       - { name: validator.constraint_validator, alias: unique_entity_id }
-
-  Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\UniqueTeamNameValidator:
-    arguments:
-      - '@Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\QueryClient'
-      - '%env(team_prefix_group_name_context)%'
-    tags:
-      - { name: validator.constraint_validator, alias: unique_team_name }
-
-  Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ExistingTeamNameValidator:
-    arguments:
-      - '@Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\QueryClient'
-      - '%env(team_prefix_default_stem_name)%'
-      - '%env(team_prefix_group_name_context)%'
-    tags:
-      - { name: validator.constraint_validator, alias: existing_team_name }
-
-  Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\UrnFormattedTeamNameValidator:
-    arguments:
-      - '%env(team_prefix_default_stem_name)%'
-      - '%env(team_prefix_group_name_context)%'
-    tags:
-      - { name: validator.constraint_validator, alias: urn_formatted_team_name }
 
   Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\UniqueRedirectUrlsValidator:
     tags:

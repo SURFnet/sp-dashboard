@@ -2,7 +2,6 @@
 
 import './type_definitions.ts';
 import './components/addFlashMessage.ts';
-import './components/add_service.ts';
 import './components/change_member_role.ts';
 import './components/connection_request_widget.ts';
 import './components/delete_member.ts';

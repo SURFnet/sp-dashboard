@@ -75,8 +75,6 @@ services:
         arguments:
             $serviceRepository: '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ServiceRepository'
             $translator: '@identity_translator'
-            $prefixPart1: '%env(team_prefix_default_stem_name)%'
-            $prefixPart2: '%env(team_prefix_group_name_context)%'
             $inviteRepository: '@Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeCreateRoleRepository'
             $landingUrl: '%env(invite_landing_url)%'
 

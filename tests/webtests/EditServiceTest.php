@@ -51,6 +51,25 @@ class EditServiceTest extends WebTestCase
         self::assertOnPage('Your changes were saved!');
     }
 
+    public function test_cannot_create_duplicate_teamname()
+    {
+        $this->logIn();
+        $this->switchToService('SURFnet');
+        $button = self::findBy('.service-status-title-button');
+        $button->click();
+
+        $crawler = self::$pantherClient->refreshCrawler();
+
+        $form = $crawler->findElement(WebDriverBy::cssSelector('form[name="dashboard_bundle_edit_service_type"]'));
+        $this->fillFormField($form, '#dashboard_bundle_edit_service_type_general_guid', 'f1af6b9e-2546-4593-a57f-6ca34d2561e9');
+        $this->fillFormField($form, '#dashboard_bundle_edit_service_type_general_name', 'The A Team');
+        $this->fillFormField($form, '#dashboard_bundle_edit_service_type_general_organizationNameNl', 'Groepje A');
+        $this->checkFormField($form, '#dashboard_bundle_edit_service_type_serviceStatus_surfconextRepresentativeApproved_1');
+        $this->fillFormField($form, '#dashboard_bundle_edit_service_type_teams_teamName', WebTestFixtures::TEAMNAME_IBUILDINGS);
+        self::$pantherClient->executeScript("document.getElementsByClassName('service-form').item(0).submit();");
+        self::assertOnPage('The teamname of the service should be unique. This teamname is taken by: "Ibuildings B.V."');
+    }
+
     /**
      * Admins can toggle the privacy question feature for Services. Effectively enabling/disabling the Privacy
      * question form.

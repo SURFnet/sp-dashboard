@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\Repository;
 
+use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 
 interface ServiceRepository
@@ -26,6 +27,8 @@ interface ServiceRepository
 
     /**
      * Is the proposed service entity unique? The id of the service is not taken into account in this test.
+     *
+     * @throws InvalidArgumentException
      */
     public function isUnique(Service $service): bool;
 

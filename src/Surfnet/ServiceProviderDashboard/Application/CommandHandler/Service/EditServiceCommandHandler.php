@@ -58,7 +58,7 @@ class EditServiceCommandHandler implements CommandHandler
         $service->setInstitutionId($command->getInstitutionId());
         $service->setOrganizationNameEn($command->getOrganizationNameEn());
         $service->setOrganizationNameNl($command->getOrganizationNameNl());
-        $service->setTeamName($command->getTeamName());
+        $service->updateTeamName($command->getTeamName());
 
         $this->serviceRepository->isUnique($service);
 

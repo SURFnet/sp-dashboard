@@ -32,6 +32,9 @@ class ServiceRepository extends DoctrineEntityRepository implements ServiceRepos
         $this->getEntityManager()->flush($service);
     }
 
+    /**
+     * @throws InvalidArgumentException
+     */
     public function isUnique(Service $service): bool
     {
         $this->isTeamNameUnique($service->getTeamName(), $service->getId());
