@@ -24,7 +24,6 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Surfnet\ServiceProviderDashboard\Application\Command\Service\CreateServiceCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\CreateServiceCommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
-use Surfnet\ServiceProviderDashboard\Application\Service\UuidValidator;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\Invite\CreateRoleRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
@@ -64,8 +63,6 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
             $this->repository,
             $this->inviteRepository,
             $this->translator,
-            'voor',
-            'voegsel',
             'https://example.org',
         );
     }
@@ -94,7 +91,6 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
 
         $service = new Service();
         $service->setName('Foobar');
-        $service->setTeamName('team-foobar');
         $service->setGuid('30dd879c-ee2f-11db-8314-0800200c9a66');
         $service->setPrivacyQuestionsEnabled(true);
         $service->setProductionEntitiesEnabled(true);
@@ -109,7 +105,6 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
 
         $command = new CreateServiceCommand('920392e8-a1fc-4627-acb4-b1f215e11dcd');
         $command->setName($service->getName());
-        $command->setTeamName($service->getTeamName());
         $command->setTeamManagerEmail('tiffany@aching.do');
         $command->setGuid($service->getGuid());
         $command->setPrivacyQuestionsEnabled($service->isPrivacyQuestionsEnabled());
@@ -158,7 +153,6 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
         $this->expectException(InvalidArgumentException::class);
         $command = new CreateServiceCommand('4b0e422d-d0d0-4b9e-a521-fdd1ee5d2bad');
         $command->setName('Foobar');
-        $command->setTeamName('team-foobar');
         $command->setTeamManagerEmail('tiffany@aching.do');
         $command->setGuid('30dd879c-ee2f-11db-8314-0800200c9a66');
         $command->setProductionEntitiesEnabled(true);

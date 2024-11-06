@@ -21,7 +21,6 @@ declare(strict_types = 1);
 namespace Surfnet\ServiceProviderDashboard\Application\Command\Service;
 
 use Surfnet\ServiceProviderDashboard\Application\Command\Command;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints as SpDashboardAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -38,8 +37,6 @@ class EditServiceCommand implements Command
         private string $guid,
         #[Assert\NotBlank]
         private string $name,
-        #[SpDashboardAssert\ExistingTeamName]
-        #[SpDashboardAssert\UrnFormattedTeamName]
         #[Assert\NotBlank]
         private string $teamName,
         private bool $productionEntitiesEnabled,

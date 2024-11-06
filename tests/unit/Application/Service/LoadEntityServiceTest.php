@@ -70,7 +70,7 @@ class LoadEntityServiceTest extends MockeryTestCase
         $this->attributesMetadataRepository = m::mock(AttributesMetadataRepository::class);
 
         $this->service = new Service();
-        $this->service->setTeamName('testteam');
+        $this->service->updateTeamName('testteam');
 
         $this->copyService = new LoadEntityService(
             $this->manageTestClient,

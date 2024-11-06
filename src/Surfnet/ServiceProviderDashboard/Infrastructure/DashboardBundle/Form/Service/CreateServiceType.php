@@ -128,17 +128,6 @@ class CreateServiceType extends AbstractType
                         'required' => true,
                         ]
                     )
-                    ->add(
-                        'teamName',
-                        null,
-                        [
-                        'label' => 'Team identifier',
-                        'attr' => [
-                            'class' => 'teamName',
-                            'readonly' => true,
-                        ],
-                        ]
-                    )
             )
             ->add('save', SubmitType::class, ['attr' => ['class' => 'button']]);
     }
