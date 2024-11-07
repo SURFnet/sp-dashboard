@@ -87,7 +87,7 @@ services:
             $sendInviteRepository: '@Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeSendInviteRepository'
 
     Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeSendInviteRepository:
-
+    Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeDeleteInviteRepository:
     Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeCreateRoleRepository:
 
     Surfnet\ServiceProviderDashboard\Domain\Repository\Invite\CreateRoleRepository:
@@ -110,7 +110,7 @@ services:
             - '@Surfnet\ServiceProviderDashboard\Application\Service\EntityService'
             - '@Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteCommandFactory'
             - '@tactician.commandbus.default'
-            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\DeleteEntityClient'
+            - '@Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeDeleteInviteRepository'
             - '@logger'
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Service\DeleteServiceCommand }

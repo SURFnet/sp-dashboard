@@ -40,10 +40,12 @@ services:
           - '@Surfnet\ServiceProviderDashboard\Application\Service\EntityService'
           - '@Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteCommandFactory'
           - '@tactician.commandbus.default'
-          - '@Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\DeleteEntityClient'
+          - '@Surfnet\ServiceProviderDashboard\Infrastructure\Invite\InviteDeleteRepository'
           - '@logger'
     tags:
       - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Service\DeleteServiceCommand }
+
+  Surfnet\ServiceProviderDashboard\Infrastructure\Invite\InviteDeleteRepository:
 
   surfnet.dashboard.command_handler.delete_published_production_entity:
     class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\DeletePublishedProductionEntityCommandHandler
@@ -447,7 +449,6 @@ services:
 
   Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\ServiceController:
     arguments:
-      $defaultStemName: '%env(team_prefix_default_stem_name)%'
       $logger: '@logger'
       $manageId: '%env(spdashboard_manage_id)%'
       $inviteUrl: '%env(string:invite_host)%'

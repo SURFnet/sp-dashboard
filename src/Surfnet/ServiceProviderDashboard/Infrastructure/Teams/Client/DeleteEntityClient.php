@@ -32,41 +32,7 @@ class DeleteEntityClient implements DeleteTeamsEntityRepository
 {
     public function __construct(
         private readonly HttpClient $client,
-        private readonly LoggerInterface $logger,
     ) {
-    }
-
-    /**
-     * Delete a team by the internal id
-     *
-     * When deleting the entity succeeded the success status is returned: 'success' in all other situations
-     * an exception is thrown of type UnableToDeleteEntityException.
-     *
-     * @throws UnableToDeleteEntityException
-     * @throws RuntimeException
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function deleteTeam(int $teamId): string
-    {
-        try {
-            $result = $this->client->delete(
-                sprintf('/api/spdashboard/teams/%d/', $teamId)
-            );
-
-            if ($result->getStatusCode() !== 201) {
-                throw new UnableToDeleteEntityException(
-                    sprintf('Not allowed to delete entity with internal teams ID: "%d"', $teamId)
-                );
-            }
-
-            return self::RESULT_SUCCESS;
-        } catch (HttpException $e) {
-            throw new UnableToDeleteEntityException(
-                sprintf('Unable to delete entity with internal teams ID: "%s"', $teamId),
-                0,
-                $e
-            );
-        }
     }
 
     /**

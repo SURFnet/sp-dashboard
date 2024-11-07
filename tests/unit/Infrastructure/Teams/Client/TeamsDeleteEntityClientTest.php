@@ -47,23 +47,12 @@ class TeamsDeleteEntityClientTest extends MockeryTestCase
         $this->mockHandler = new MockHandler();
         $guzzle = new Client(['handler' => $this->mockHandler]);
 
-        $logger = m::mock(LoggerInterface::class);
-
         $this->client = new DeleteEntityClient(
             new TeamsClient(
                 $guzzle,
                 new NullLogger()
             ),
-            $logger
         );
-    }
-
-    public function test_it_can_delete_a_team()
-    {
-        $this->mockHandler->append(new Response(201, [], ''));
-        $response = $this->client->deleteTeam(1);
-
-        $this->assertEquals('success', $response);
     }
 
     public function test_it_can_delete_a_member()
