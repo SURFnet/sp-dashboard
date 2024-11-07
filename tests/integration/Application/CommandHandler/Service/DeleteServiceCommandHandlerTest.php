@@ -32,6 +32,7 @@ use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentExcept
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityServiceInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\Invite\DeleteInviteRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\DeleteEntityClient;
 
@@ -57,6 +58,7 @@ class DeleteServiceCommandHandlerTest extends MockeryTestCase
      */
     private $deleteEntityClient;
 
+    private DeleteInviteRepository $deleteInviteRepository;
 
     /** @var LoggerInterface|MockInterface */
     private $logger;
@@ -68,6 +70,7 @@ class DeleteServiceCommandHandlerTest extends MockeryTestCase
         $this->deleteCommandFactory = m::mock(DeleteCommandFactory::class);
         $this->commandBus = m::mock(CommandBus::class);
         $this->deleteEntityClient = m::mock(DeleteEntityClient::class);
+        $this->deleteInviteRepository = m::mock(DeleteInviteRepository::class);
         $this->logger = m::mock(LoggerInterface::class);
 
         $this->commandHandler = new DeleteServiceCommandHandler(
@@ -75,7 +78,7 @@ class DeleteServiceCommandHandlerTest extends MockeryTestCase
             $this->entityService,
             $this->deleteCommandFactory,
             $this->commandBus,
-            $this->deleteEntityClient,
+            $this->deleteInviteRepository,
             $this->logger
         );
     }
@@ -102,7 +105,7 @@ class DeleteServiceCommandHandlerTest extends MockeryTestCase
         $entity2->shouldReceive('setContact')->with($contact);
 
         $entityList = [$entity1, $entity2];
-        $command = new DeleteServiceCommand($serviceId, $contact, null);
+        $command = new DeleteServiceCommand($serviceId, $contact);
 
         $this->repository
             ->shouldReceive('findById')
@@ -114,6 +117,8 @@ class DeleteServiceCommandHandlerTest extends MockeryTestCase
             ->shouldReceive('getName')
             ->andReturn('Test SP')
             ->once();
+
+        $service->shouldReceive('getInviteRoleId')->andReturn(124);
 
         $this->logger
             ->shouldReceive('info')
@@ -147,6 +152,8 @@ class DeleteServiceCommandHandlerTest extends MockeryTestCase
             ->with($service)
             ->once();
 
+        $this->deleteInviteRepository->shouldReceive('deleteRole')->with(124)->once();
+
         $this->commandHandler->handle($command);
     }
 
@@ -161,7 +168,7 @@ class DeleteServiceCommandHandlerTest extends MockeryTestCase
 
         $entityList = [];
 
-        $command = new DeleteServiceCommand($serviceId, $contact, null);
+        $command = new DeleteServiceCommand($serviceId, $contact);
 
         $this->repository
             ->shouldReceive('findById')
@@ -173,6 +180,8 @@ class DeleteServiceCommandHandlerTest extends MockeryTestCase
             ->shouldReceive('getName')
             ->andReturn('Test SP')
             ->once();
+
+        $service->shouldReceive('getInviteRoleId')->andReturn(125);
 
         $this->logger
             ->shouldReceive('info')
@@ -188,6 +197,8 @@ class DeleteServiceCommandHandlerTest extends MockeryTestCase
             ->shouldReceive('delete')
             ->with($service)
             ->once();
+
+        $this->deleteInviteRepository->shouldReceive('deleteRole')->once()->with(125);
 
         $this->commandHandler->handle($command);
     }
@@ -203,7 +214,7 @@ class DeleteServiceCommandHandlerTest extends MockeryTestCase
 
         $entityList = [];
 
-        $command = new DeleteServiceCommand($serviceId, $contact, 1);
+        $command = new DeleteServiceCommand($serviceId, $contact);
 
         $this->repository
             ->shouldReceive('findById')
@@ -215,6 +226,8 @@ class DeleteServiceCommandHandlerTest extends MockeryTestCase
             ->shouldReceive('getName')
             ->andReturn('Test SP')
             ->once();
+
+        $service->shouldReceive('getInviteRoleId')->andReturn(124);
 
         $this->logger
             ->shouldReceive('info')
@@ -231,9 +244,9 @@ class DeleteServiceCommandHandlerTest extends MockeryTestCase
             ->with($service)
             ->once();
 
-        $this->deleteEntityClient
-            ->shouldReceive('deleteTeam')
-            ->with(1)
+        $this->deleteInviteRepository
+            ->shouldReceive('deleteRole')
+            ->with(124)
             ->once();
 
         $this->commandHandler->handle($command);
@@ -291,6 +304,8 @@ class DeleteServiceCommandHandlerTest extends MockeryTestCase
             ->andReturn('Test SP')
             ->once();
 
+        $service->shouldReceive('getInviteRoleId')->andReturn(124);
+
         $this->logger
             ->shouldReceive('info')
             ->times(2);
@@ -331,6 +346,8 @@ class DeleteServiceCommandHandlerTest extends MockeryTestCase
             ->shouldReceive('delete')
             ->with($service)
             ->once();
+
+        $this->deleteInviteRepository->shouldReceive('deleteRole')->once()->with(124);
 
         $this->commandHandler->handle($command);
     }

@@ -27,10 +27,12 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteCommandFac
 use Surfnet\ServiceProviderDashboard\Application\Command\Service\DeleteServiceCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Dto\EntityDto;
+use Surfnet\ServiceProviderDashboard\Application\Exception\ServiceNotFoundException;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityServiceInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\DeleteTeamsEntityRepository;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\Invite\DeleteInviteRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\InviteException;
 
 class DeleteServiceCommandHandler implements CommandHandler
 {
@@ -39,15 +41,23 @@ class DeleteServiceCommandHandler implements CommandHandler
         private readonly EntityServiceInterface $entityService,
         private readonly DeleteCommandFactory $deleteCommandFactory,
         private readonly CommandBus $commandBus,
-        private readonly DeleteTeamsEntityRepository $deleteTeamClient,
+        private readonly DeleteInviteRepository $deleteInviteRepository,
         private readonly LoggerInterface $logger,
     ) {
     }
 
+    /**
+     * @throws InviteException
+     * @throws ServiceNotFoundException
+     */
     public function handle(DeleteServiceCommand $command): void
     {
         $serviceId = $command->getId();
         $service = $this->serviceRepository->findById($serviceId);
+
+        if ($service === null) {
+            throw new ServiceNotFoundException(sprintf('Could not delete service %s because it cannot be found.', $command->getId()));
+        }
 
         $this->logger->info(sprintf('Removing "%s" and all its entities.', $service->getName()));
 
@@ -60,10 +70,9 @@ class DeleteServiceCommandHandler implements CommandHandler
             $this->removeEntitiesFrom($entities, $command->getContact());
         }
 
-        // Delete the team
-        $teamId = $command->getTeamId();
-        if ($teamId !== null && $teamId !== 0) {
-            $this->deleteTeamClient->deleteTeam($command->getTeamId());
+        // Delete the role in Invite
+        if ($service->getInviteRoleId() !== null) {
+            $this->deleteInviteRepository->deleteRole($service->getInviteRoleId());
         }
 
         // Finally delete the service

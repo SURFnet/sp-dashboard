@@ -60,4 +60,15 @@ class InviteHttpClient
             ['json' => $payload],
         );
     }
+
+    /**
+     * @throws TransportExceptionInterface
+     */
+    public function delete(string $path): ResponseInterface
+    {
+        return $this->httpClient->request(
+            'DELETE',
+            $path,
+        );
+    }
 }

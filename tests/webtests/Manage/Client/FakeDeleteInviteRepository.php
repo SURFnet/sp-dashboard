@@ -1,9 +1,7 @@
 <?php
 
-declare(strict_types = 1);
-
 /**
- * Copyright 2018 SURFnet B.V.
+ * Copyright 2024 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,26 +16,18 @@ declare(strict_types = 1);
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Application\Command\Service;
+namespace Surfnet\ServiceProviderDashboard\Webtests\Manage\Client;
 
-use Surfnet\ServiceProviderDashboard\Application\Command\Command;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\Invite\DeleteInviteRepository;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\InviteException;
 
-class DeleteServiceCommand implements Command
+class FakeDeleteInviteRepository implements DeleteInviteRepository
 {
-    public function __construct(
-        private readonly int $id,
-        private readonly Contact $contact,
-    ) {
-    }
 
-    public function getId(): int
+    public function deleteRole(int $roleId): void
     {
-        return $this->id;
-    }
-
-    public function getContact(): Contact
-    {
-        return $this->contact;
+        if($roleId === 1337){
+            throw new InviteException('Role does not exist in Invite..');
+        }
     }
 }

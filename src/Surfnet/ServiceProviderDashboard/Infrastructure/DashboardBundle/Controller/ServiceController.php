@@ -35,10 +35,8 @@ use Surfnet\ServiceProviderDashboard\Application\ViewObject\Service;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\ServiceList;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryTeamsRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Service\ResetServiceCommand;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Service\SelectServiceCommand;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Exception\RuntimeException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\CreateServiceType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\DeleteServiceType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\EditServiceType;
@@ -71,9 +69,7 @@ class ServiceController extends AbstractController
         private readonly ServiceStatusService $serviceStatusService,
         private readonly RouterInterface $router,
         private readonly EntityService $entityService,
-        private readonly QueryTeamsRepository $queryClient,
         private readonly LoggerInterface $logger,
-        private readonly string $defaultStemName,
         private readonly string $manageId,
         private readonly string $inviteUrl,
     ) {
@@ -258,21 +254,9 @@ class ServiceController extends AbstractController
             if ($form->getClickedButton()->getName() === 'delete') {
                 $service = $this->serviceService->getServiceById($serviceId);
 
-                // Get teaminfo for id
-                $sanitizedTeamName = str_replace($this->defaultStemName, '', $service->getTeamName());
-
-                try {
-                    $teamInfo = $this->queryClient->findTeamByUrn($sanitizedTeamName);
-                } catch (Exception $e) {
-                    $this->addFlash('error', $e->getMessage());
-                    return $this->redirectToRoute('service_admin_overview', ['serviceId' => $serviceId]);
-                }
-
-                $teamId = $teamInfo['teamId'];
-
                 // Remove the service
                 $contact = $this->authorizationService->getContact();
-                $command = new DeleteServiceCommand($service->getId(), $contact, $teamId);
+                $command = new DeleteServiceCommand($service->getId(), $contact);
                 $this->commandBus->handle($command);
 
                 // Reset the service switcher (the currently active service was just removed)

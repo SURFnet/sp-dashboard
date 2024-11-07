@@ -462,26 +462,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/CommandHandler/Service/CreateServiceCommandHandler.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Cannot call method getName\\(\\) on Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\Service\\|null\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/CommandHandler/Service/DeleteServiceCommandHandler.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$service of method Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\Service\\\\EntityServiceInterface\\:\\:getEntitiesForService\\(\\) expects Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\Service, Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\Service\\|null given\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/CommandHandler/Service/DeleteServiceCommandHandler.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$service of method Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Repository\\\\ServiceRepository\\:\\:delete\\(\\) expects Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\Service, Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\Service\\|null given\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/CommandHandler/Service/DeleteServiceCommandHandler.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$teamId of method Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Repository\\\\DeleteTeamsEntityRepository\\:\\:deleteTeam\\(\\) expects int, int\\|null given\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/CommandHandler/Service/DeleteServiceCommandHandler.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Parameter \\#1 \\$contractSigned of method Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\Service\\:\\:setContractSigned\\(\\) expects string, string\\|null given\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/CommandHandler/Service/EditServiceCommandHandler.php',
@@ -3362,22 +3342,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Controller/ServiceController.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Cannot call method getTeamName\\(\\) on Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\Service\\|null\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Controller/ServiceController.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Infrastructure\\\\DashboardBundle\\\\Controller\\\\ServiceController\\:\\:adminOverview\\(\\) has parameter \\$serviceId with no type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Controller/ServiceController.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Infrastructure\\\\DashboardBundle\\\\Controller\\\\ServiceController\\:\\:delete\\(\\) has parameter \\$serviceId with no type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Controller/ServiceController.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Offset \'teamId\' does not exist on array\\|null\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Controller/ServiceController.php',
 ];
@@ -4753,11 +4723,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Cannot call method getStatusCode\\(\\) on mixed\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/Teams/Client/DeleteEntityClient.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Surfnet\\\\ServiceProviderDashboard\\\\Infrastructure\\\\Teams\\\\Client\\\\DeleteEntityClient\\:\\:\\$logger is never read, only written\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/Teams/Client/DeleteEntityClient.php',
 ];

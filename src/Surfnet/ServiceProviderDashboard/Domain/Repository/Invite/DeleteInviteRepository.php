@@ -1,9 +1,7 @@
 <?php
 
-declare(strict_types = 1);
-
 /**
- * Copyright 2021 SURFnet B.V.
+ * Copyright 2024 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,14 +16,15 @@ declare(strict_types = 1);
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Domain\Repository;
+namespace Surfnet\ServiceProviderDashboard\Domain\Repository\Invite;
 
-interface DeleteTeamsEntityRepository
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\InviteException;
+
+interface DeleteInviteRepository
 {
-    public const RESULT_SUCCESS = 'success';
 
     /**
-     * Delete a membership from a team identified by the membership id
+     * @throws InviteException
      */
-    public function deleteMembership(int $memberId): string;
+    public function deleteRole(int $roleId): void;
 }
