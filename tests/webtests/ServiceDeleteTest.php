@@ -47,8 +47,6 @@ class ServiceDeleteTest extends WebTestCase
         $this->testDeleteClient->registerDeleteRequest('9729d851-cfdd-4283-a8f1-a29ba5036261');
         $this->testDeleteClient->registerDeleteRequest('7398d851-abd1-2283-a8f1-a29ba5036174');
 
-        $this->teamsQueryClient->registerTeam('demo:openconext:org:surf.nl', '{"teamId": 1}');
-        $this->teamsQueryClient->registerTeam('demo:openconext:org:ibuildings.nl', '{"teamId": 2}');
         $this->logIn();
     }
 

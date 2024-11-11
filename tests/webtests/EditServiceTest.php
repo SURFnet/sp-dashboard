@@ -29,7 +29,6 @@ class EditServiceTest extends WebTestCase
         parent::setUp();
 
         $this->loadFixtures();
-        $this->teamsQueryClient->registerTeam('demo:openconext:org:team-a', '{"teamId": 3}');
     }
 
     public function test_can_edit_existing_service()

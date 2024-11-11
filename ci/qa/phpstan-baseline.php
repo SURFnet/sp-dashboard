@@ -2667,11 +2667,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Domain/Repository/PrivacyQuestionsRepository.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Repository\\\\PublishTeamsRepository\\:\\:inviteMember\\(\\) has parameter \\$inviteObject with no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Domain/Repository/PublishTeamsRepository.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Repository\\\\QueryManageRepository\\:\\:findByInstitutionId\\(\\) return type has no value type specified in iterable type array\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Domain/Repository/QueryManageRepository.php',
@@ -2680,11 +2675,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Repository\\\\QueryManageRepository\\:\\:findOidcngResourceServersByTeamName\\(\\) return type has no value type specified in iterable type array\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Domain/Repository/QueryManageRepository.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Repository\\\\QueryTeamsRepository\\:\\:findTeamByUrn\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Domain/Repository/QueryTeamsRepository.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Repository\\\\ServiceRepository\\:\\:save\\(\\) has no return type specified\\.$#',
@@ -3352,26 +3342,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Controller/ServiceController.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Symfony\\\\Component\\\\HttpFoundation\\\\Session\\\\SessionInterface\\:\\:getFlashBag\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Controller/TeamsController.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot cast mixed to string\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Controller/TeamsController.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Infrastructure\\\\DashboardBundle\\\\Controller\\\\TeamsController\\:\\:createEmailsArray\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Controller/TeamsController.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$email of method Surfnet\\\\ServiceProviderDashboard\\\\Infrastructure\\\\DashboardBundle\\\\Controller\\\\TeamsController\\:\\:createEmailsArray\\(\\) expects string, mixed given\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Controller/TeamsController.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Negated boolean expression is always false\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/DependencyInjection/Compiler/IssueRepositoryCompilerPass.php',
@@ -3403,11 +3373,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Infrastructure\\\\DashboardBundle\\\\DependencyInjection\\\\DashboardExtension\\:\\:parseManageConfiguration\\(\\) has parameter \\$container with no type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/DependencyInjection/DashboardExtension.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Infrastructure\\\\DashboardBundle\\\\DependencyInjection\\\\DashboardExtension\\:\\:parseTeamsConfiguration\\(\\) has parameter \\$config with no value type specified in iterable type array\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/DependencyInjection/DashboardExtension.php',
 ];
@@ -4720,71 +4685,6 @@ $ignoreErrors[] = [
 	'message' => '#^Property Surfnet\\\\ServiceProviderDashboard\\\\Infrastructure\\\\Manage\\\\Service\\\\ManageQueryService\\:\\:\\$validEnvironments type has no value type specified in iterable type array\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/Manage/Service/ManageQueryService.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot call method getStatusCode\\(\\) on mixed\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/Teams/Client/DeleteEntityClient.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot call method getReasonPhrase\\(\\) on mixed\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/Teams/Client/PublishEntityClient.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot call method getStatusCode\\(\\) on mixed\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/Teams/Client/PublishEntityClient.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Infrastructure\\\\Teams\\\\Client\\\\PublishEntityClient\\:\\:inviteMember\\(\\) has parameter \\$inviteObject with no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/Teams/Client/PublishEntityClient.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$json of method Surfnet\\\\ServiceProviderDashboard\\\\Infrastructure\\\\Teams\\\\Client\\\\PublishEntityClient\\:\\:replaceEmailBrackets\\(\\) expects string, string\\|false given\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/Teams/Client/PublishEntityClient.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#2 \\$context of method Psr\\\\Log\\\\LoggerInterface\\:\\:error\\(\\) expects array, mixed given\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/Teams/Client/PublishEntityClient.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Variable \\$response on left side of \\?\\? is never defined\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/Teams/Client/PublishEntityClient.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Infrastructure\\\\Teams\\\\Client\\\\QueryClient\\:\\:findTeamByUrn\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/Teams/Client/QueryClient.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Infrastructure\\\\Teams\\\\Client\\\\QueryClient\\:\\:removeAcceptedInvites\\(\\) has parameter \\$invitations with no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/Teams/Client/QueryClient.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Infrastructure\\\\Teams\\\\Client\\\\QueryClient\\:\\:removeAcceptedInvites\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/Teams/Client/QueryClient.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Infrastructure\\\\Teams\\\\Client\\\\QueryClient\\:\\:transformTeamForFrontend\\(\\) has parameter \\$result with no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/Teams/Client/QueryClient.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Infrastructure\\\\Teams\\\\Client\\\\QueryClient\\:\\:transformTeamForFrontend\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/Teams/Client/QueryClient.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$result of method Surfnet\\\\ServiceProviderDashboard\\\\Infrastructure\\\\Teams\\\\Client\\\\QueryClient\\:\\:transformTeamForFrontend\\(\\) expects array, mixed given\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/Teams/Client/QueryClient.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Legacy\\\\Metadata\\\\Fetcher\\:\\:__construct\\(\\) has parameter \\$timeout with no type specified\\.$#',

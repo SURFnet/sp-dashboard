@@ -37,14 +37,12 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\Invite\CreateRoleReposito
 use Surfnet\ServiceProviderDashboard\Domain\Repository\Invite\SendInviteRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryManageRepository;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryTeamsRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\DataFixtures\ORM\WebTestFixtures;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ServiceRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Repository\DevelopmentIssueRepository;
 use Surfnet\ServiceProviderDashboard\Webtests\Debug\DebugFile;
-use Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeTeamsQueryClient;
 use Symfony\Component\BrowserKit\AbstractBrowser;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Panther\Client;
@@ -88,9 +86,6 @@ class WebTestCase extends PantherTestCase
 
     protected CreateRoleRepository $createRoleRepository;
     protected SendInviteRepository $sendInviteRepository;
-
-    /** @var QueryTeamsRepository&FakeTeamsQueryClient */
-    protected $teamsQueryClient;
 
     protected DevelopmentIssueRepository $jiraIssueRepository;
 
@@ -166,9 +161,6 @@ class WebTestCase extends PantherTestCase
         $this->testDeleteClient->reset();
         $this->prodDeleteClient = self::getContainer()
             ->get('surfnet.manage.client.delete_client.prod_environment');
-        $this->teamsQueryClient = self::getContainer()
-            ->get('Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\QueryClient');
-        $this->teamsQueryClient->reset();
         $this->jiraIssueRepository = self::getContainer()
             ->get('surfnet.dashboard.repository.issue');
         $this->surfConextRepresentativeAttributeName = self::getContainer()
@@ -332,9 +324,6 @@ class WebTestCase extends PantherTestCase
         $em->getConnection()->executeStatement("UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='service';");
 
         $executor->execute($loader->getFixtures());
-
-        $this->teamsQueryClient->registerTeam('demo:openconext:org:surf.nl', '{"teamId": 1}');
-        $this->teamsQueryClient->registerTeam('demo:openconext:org:ibuildings.nl', '{"teamId": 2}');
     }
 
     protected function clearFixtures(): void

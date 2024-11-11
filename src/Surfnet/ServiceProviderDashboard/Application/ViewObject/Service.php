@@ -28,6 +28,7 @@ class Service
         private readonly bool $privacyQuestionsEnabled,
         private readonly EntityList $entityList,
         private readonly RouterInterface $router,
+        private readonly ?int $inviteRoleId,
         private readonly bool $productionEntitiesEnabled = false,
     ) {
     }
@@ -40,6 +41,7 @@ class Service
             $service->isPrivacyQuestionsEnabled(),
             $entityList,
             $router,
+            $service->getInviteRoleId(),
             $service->isProductionEntitiesEnabled()
         );
     }
@@ -77,5 +79,10 @@ class Service
     public function isProductionEntitiesEnabled(): bool
     {
         return $this->productionEntitiesEnabled || $this->hasTestEntities();
+    }
+
+    public function getInviteRoleId(): ?int
+    {
+        return $this->inviteRoleId;
     }
 }

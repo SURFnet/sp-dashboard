@@ -30,7 +30,6 @@ services:
         arguments:
             - '%kernel.cache_dir%/sessions/'
             - 'MOCKSESSID'
-            - '@session.storage.metadata_bag'
 
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidLogoValidator:
         class: Surfnet\ServiceProviderDashboard\Webtests\Validator\Constraints\MockValidLogoValidator
@@ -114,18 +113,6 @@ services:
             - '@logger'
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Service\DeleteServiceCommand }
-
-    Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\DeleteEntityClient:
-        class: Surfnet\ServiceProviderDashboard\Webtests\Teams\FakeDeleteClient
-        public: true
-
-    Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\QueryClient:
-        class: Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeTeamsQueryClient
-        public: true
-
-    Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\PublishEntityClient:
-        class: Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakePublishTeamClient
-        public: true
 
     Surfnet\ServiceProviderDashboard\Application\Service\TicketService:
         arguments:
