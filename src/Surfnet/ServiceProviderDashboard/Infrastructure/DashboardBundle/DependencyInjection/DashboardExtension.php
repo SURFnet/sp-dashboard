@@ -58,8 +58,6 @@ class DashboardExtension extends Extension
             $this->parseManageConfiguration($environment, $manageConfig, $container);
         }
 
-        $this->parseTeamsConfiguration($config['teams'], $container);
-
         $container->setParameter(
             'surfnet.dashboard.security.authentication.administrator_teams',
             $config['administrator_teams']
@@ -93,19 +91,5 @@ class DashboardExtension extends Extension
             ->setFactory('Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfigFactory::fromConfig');
         $manageConfiguration->setArguments([$config, $environment]);
         $container->setDefinition('surfnet.manage.configuration.' . $environment, $manageConfiguration);
-    }
-
-    /**
-     * Creates a config aggregate based on the configuration in config.yml for teams.
-     */
-    public function parseTeamsConfiguration(array $config, ContainerBuilder $container): void
-    {
-        $configuration = new Definition(Config::class);
-        $configuration->setClass(Config::class);
-        $configuration->setFactory(
-            'Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfigFactory::fromConfig'
-        );
-        $container->setDefinition('surfnet.teams.configuration', $configuration);
-        $configuration->setArguments([$config]);
     }
 }

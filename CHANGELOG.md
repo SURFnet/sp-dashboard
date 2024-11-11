@@ -1,3 +1,25 @@
+## Unreleased
+Remove integration with Teams
+Add integration with Invite
+
+The following environment variables have become obsolete.
+```dotenv
+teams_host
+teams_username
+teams_password
+team_prefix_default_stem_name
+team_prefix_group_name_context
+```
+
+The following new environment variables are added.
+```dotenv
+invite_host
+invite_api_username
+invite_api_password
+invite_landing_url
+spdashboard_manage_id
+```
+
 ## 6.2.0
 - New field to set 'coin:ss:idp_visible_only'
 - An SP needs to explicitly connect an IdP, so it's more obvious when a dummy IdP is connected

@@ -28,7 +28,6 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\Invite\CreateRoleRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\CreateRoleResponse;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\PublishEntityClient;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -42,10 +41,6 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
     private $repository;
 
     private CreateRoleRepository $inviteRepository;
-    /**
-     * @var PublishEntityClient
-     */
-    private $publishEntityClient;
 
     /**
      * @var TranslatorInterface
@@ -55,7 +50,6 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
     public function setUp(): void
     {
         $this->repository = m::mock(ServiceRepository::class);
-        $this->publishEntityClient = m::mock(PublishEntityClient::class);
         $this->inviteRepository = m::mock(CreateRoleRepository::class);
         $this->translator = m::mock(TranslatorInterface::class);
 
@@ -76,9 +70,6 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
 
         $this->translator
             ->shouldReceive('trans');
-        $this->publishEntityClient
-            ->shouldReceive('createTeam')
-            -> andReturn([]);
         $this->inviteRepository->shouldReceive('createRole')->withArgs(
             [
                 'Foobar Organization Name EN',
@@ -135,9 +126,6 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
     {
         $this->translator
             ->shouldReceive('trans');
-        $this->publishEntityClient
-            ->shouldReceive('createTeam')
-            -> andReturn([]);
 
         $this->inviteRepository->shouldReceive('createRole')->withArgs(
             [

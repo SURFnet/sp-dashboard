@@ -28,7 +28,6 @@ class ServiceCreateTest extends WebTestCase
         parent::setUp();
 
         $this->loadFixtures();
-        $this->teamsQueryClient->registerTeam('demo:openconext:org:surf.nl', 'data');
         $this->logIn();
     }
 

@@ -443,33 +443,11 @@ services:
       - '@surfnet.manage.http.guzzle.test_environment'
       - '@logger'
 
-  Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\TeamsController:
-    arguments:
-      $defaultStemName: '%env(team_prefix_default_stem_name)%'
-
   Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\ServiceController:
     arguments:
       $logger: '@logger'
       $manageId: '%env(spdashboard_manage_id)%'
       $inviteUrl: '%env(string:invite_host)%'
-
-  Surfnet\ServiceProviderDashboard\Infrastructure\Teams\TeamsClient:
-    arguments:
-      - '@surfnet.teams.http.guzzle'
-      - '@logger'
-
-  Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\QueryClient:
-    arguments:
-      - '@Surfnet\ServiceProviderDashboard\Infrastructure\Teams\TeamsClient'
-
-  Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\PublishEntityClient:
-    arguments:
-      - '@Surfnet\ServiceProviderDashboard\Infrastructure\Teams\TeamsClient'
-      - '@logger'
-
-  Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\DeleteEntityClient:
-    arguments:
-      - '@Surfnet\ServiceProviderDashboard\Infrastructure\Teams\TeamsClient'
 
   surfnet.manage.client.delete_client.test_environment:
     class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\DeleteManageEntityClient
@@ -489,9 +467,6 @@ services:
       - '@logger'
 
   Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\ManageClientFactory:
-    public: false
-
-  Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\TeamsClientFactory:
     public: false
 
   surfnet.manage.http.guzzle.test_environment:
@@ -516,13 +491,6 @@ services:
   Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\EntityChangeRequestClient:
     arguments:
       $client: '@surfnet.manage.http.http_client.prod_environment'
-
-  surfnet.teams.http.http_client:
-    class: Surfnet\ServiceProviderDashboard\Infrastructure\Teams\TeamsClient
-    arguments:
-      - '@surfnet.teams.http.guzzle'
-      - '@logger'
-      - ''
 
   surfnet.manage.http.guzzle.prod_environment:
     class: GuzzleHttp\Client
@@ -621,9 +589,6 @@ services:
   Surfnet\ServiceProviderDashboard\Application\Service\EntityServiceInterface:
     '@Surfnet\ServiceProviderDashboard\Application\Service\EntityService'
 
-  Surfnet\ServiceProviderDashboard\Domain\Repository\PublishTeamsRepository:
-    '@Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\PublishEntityClient'
-
   Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository:
     '@Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository'
 
@@ -634,9 +599,6 @@ services:
 
   Surfnet\ServiceProviderDashboard\Application\Service\AttributeServiceInterface:
     '@Surfnet\ServiceProviderDashboard\Application\Service\AttributeService'
-
-  Surfnet\ServiceProviderDashboard\Domain\Repository\QueryTeamsRepository:
-    '@Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\QueryClient'
 
   Surfnet\ServiceProviderDashboard\Domain\Repository\PrivacyQuestionsRepository:
     '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\PrivacyQuestionsRepository'
@@ -677,3 +639,9 @@ services:
       $path: '/api/external/v1'
       $username: '%env(string:invite_api_username)%'
       $password: '%env(string:invite_api_password)%'
+
+  Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Twig\InviteDeeplinkExtension:
+    tags: [ twig.extension ]
+    public: true
+    arguments:
+      $inviteUrl: '%env(string:invite_host)%'

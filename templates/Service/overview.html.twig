@@ -47,13 +47,15 @@
                                 </a>
                             </li>
                             <li class="service-status-title-action-item">
+                                {% if service.inviteRoleId is not null %}
                                 <a
                                     class="button admin title service-status-title-button"
-                                    href="{{ path('service_manage_team', {'serviceId': service.id}) }}"
+                                    href="{{ service.inviteRoleId|to_invite_deeplink }}"
                                 >
                                     <i class="fa fa-address-book" aria-hidden="true"></i>
                                     {{ 'service.overview.action.serviceManageTeam'|trans }}
                                 </a>
+                                {% endif %}
                             </li>
                         {% endif %}
                         {% if service.arePrivacyQuestionsEnabled %}

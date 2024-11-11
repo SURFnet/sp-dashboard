@@ -34,7 +34,6 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\Invite\DeleteInviteRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\DeleteEntityClient;
 
 class DeleteServiceCommandHandlerTest extends MockeryTestCase
 {
@@ -53,10 +52,6 @@ class DeleteServiceCommandHandlerTest extends MockeryTestCase
     /** @var CommandBus|MockInterface */
     private $commandBus;
 
-    /**
-     * @var DeleteEntityClient
-     */
-    private $deleteEntityClient;
 
     private DeleteInviteRepository $deleteInviteRepository;
 
@@ -69,7 +64,6 @@ class DeleteServiceCommandHandlerTest extends MockeryTestCase
         $this->entityService = m::mock(EntityServiceInterface::class);
         $this->deleteCommandFactory = m::mock(DeleteCommandFactory::class);
         $this->commandBus = m::mock(CommandBus::class);
-        $this->deleteEntityClient = m::mock(DeleteEntityClient::class);
         $this->deleteInviteRepository = m::mock(DeleteInviteRepository::class);
         $this->logger = m::mock(LoggerInterface::class);
 

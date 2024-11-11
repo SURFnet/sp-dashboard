@@ -61,7 +61,6 @@ class WebTestFixtures extends Fixture
     {
         $service = new Service();
         $service->setName($name);
-        $service->updateTeamName($teamName);
         $service->setGuid(Uuid::v4());
         $service->setInstitutionId(Uuid::v4());
         $service->setGuid(Uuid::v4());
@@ -69,6 +68,7 @@ class WebTestFixtures extends Fixture
         $service->setOrganizationNameNl($name);
         $service->setContractSigned('no');
         $service->setSurfconextRepresentativeApproved('yes');
+        $service->registerInvite($teamName, 123456);
         return $service;
     }
 

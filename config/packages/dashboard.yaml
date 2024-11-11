@@ -15,8 +15,3 @@ dashboard:
         username: "%env(manage_prod_username)%"
         password: "%env(manage_prod_password)%"
       publication_status: "%env(manage_prod_publication_status)%"
-  teams:
-    connection:
-      host: "%env(teams_host)%"
-      username: "%env(teams_username)%"
-      password: "%env(teams_password)%"
