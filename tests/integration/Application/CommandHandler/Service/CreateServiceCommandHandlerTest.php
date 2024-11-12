@@ -18,7 +18,6 @@
 
 namespace Surfnet\ServiceProviderDashboard\Tests\Integration\Application\CommandHandler\Service;
 
-use Hamcrest\Core\IsEqual;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Surfnet\ServiceProviderDashboard\Application\Command\Service\CreateServiceCommand;
@@ -108,11 +107,16 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
         $command->setContractSigned($service->getContractSigned());
         $command->setInstitutionId($service->getInstitutionId());
 
-        $this->repository->shouldReceive('save')->with(IsEqual::equalTo($service))
+        $this->repository->shouldReceive('save')
+            ->withArgs(function($actualService) use ($service) {
+                return json_encode($actualService, JSON_THROW_ON_ERROR) === json_encode($service, JSON_THROW_ON_ERROR);
+            })
             ->andReturnUsing(function ($service) {
                 $service->setId(123);
                 return $service;
-            })->once();
+            })
+            ->once();
+
         $this->repository->shouldReceive('isUnique')->andReturn(true)->once();
         $this->commandHandler->handle($command);
 

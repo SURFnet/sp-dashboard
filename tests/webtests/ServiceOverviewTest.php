@@ -159,7 +159,6 @@ class ServiceOverviewTest extends WebTestCase
 
     public function test_service_overview_shows_message_when_no_service_selected()
     {
-        $this->loadFixtures();
         $this->logOut();
         $this->logIn();
 
@@ -172,7 +171,6 @@ class ServiceOverviewTest extends WebTestCase
     {
         $service = $this->getServiceRepository()->findByName('SURFnet');
         $this->logIn($service);
-        $this->loadFixtures();
         $crawler = self::$pantherClient->request('GET', '/');
         // Verify the checkbox is on the page (used to trigger the modal when clicking the link)
         $testCheckbox = $crawler->filter('#add-for-test-SURFnet');
@@ -182,7 +180,6 @@ class ServiceOverviewTest extends WebTestCase
 
     public function test_entity_list_shows_add_to_production_link()
     {
-        $this->loadFixtures();
         // Ibuildings is allowed to create production entities.
         $service = $this->getServiceRepository()->findByName('Ibuildings B.V.');
         $this->logIn($service);
