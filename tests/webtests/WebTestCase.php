@@ -24,6 +24,7 @@ use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
 use Facebook\WebDriver\Chrome\ChromeOptions;
+use Facebook\WebDriver\Exception\StaleElementReferenceException;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverElement;
 use PHPUnit\Framework\ExpectationFailedException;
@@ -411,9 +412,17 @@ class WebTestCase extends PantherTestCase
         self::findBy('.button')->click();
         $crawler = self::$pantherClient->refreshCrawler();
 
-        // Do we have a consent screen?
-        if ($crawler->filter('.page__title')->count() > 0 && $crawler->filter('.page__title')->getText() === 'Review your information that will be shared.') {
-            $crawler->filter('.cta_consent_ok')->click();
+        $retryCount = 0;
+        while ($retryCount < 3) {
+            try {
+                if ($crawler->filter('.page__title')->count() > 0 && $crawler->filter('.page__title')->getText() === 'Review your information that will be shared.') {
+                    $crawler->filter('.cta_consent_ok')->click();
+                }
+                break;
+            } catch (StaleElementReferenceException) {
+                $retryCount++;
+                $crawler = self::$pantherClient->refreshCrawler();
+            }
         }
 
         return $crawler;
