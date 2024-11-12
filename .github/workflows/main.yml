@@ -2,10 +2,9 @@ name: Build docker container for the SP Dashboard
 
 on:
   pull_request:
-  release:
-    types: [published]
   push:
-    branches: [develop]
+    tags:
+      - "*.*.*"
   workflow_dispatch:
 
 jobs:
@@ -13,7 +12,7 @@ jobs:
     runs-on: ubuntu-20.04
     permissions:
       packages: write
-      contents: read
+      contents: write
 
     steps:
       - name: Check out the repo
@@ -62,3 +61,11 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          generate_release_notes: true
+        if: startsWith(github.ref, 'refs/tags/')
+        

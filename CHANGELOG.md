@@ -1,8 +1,12 @@
-## 6.1.0
+## 6.2.0
+- New field to set 'coin:ss:idp_visible_only'
+- An SP needs to explicitly connect an IdP, so it's more obvious when a dummy IdP is connected
 - Adds a SURFConext representative role to SPD, which grants access to a new page that displays SP/IdP connections
 - Type Of Service can now be configured on SAML and OIDC entities
 - Revision notes are more detailed (change request and new entity creation)
 - The new Manage ARP params (release_as and name_id_override) are supported by SPD
+- The [devconf](https://github.com/OpenConext/OpenConext-devconf) project is now used as a basis for development
+- A release is automatically created when a tag is set, no more manual releases
 
 ## 6.0.2
 - Fix the mixup of DPA_TYPE_MODEL_SURF and DPA_TYPE_IN_SURF_AGREEMENT #614
