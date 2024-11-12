@@ -21,7 +21,6 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfig as Config;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\IdentityProviderRepository;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\EntityId;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\InstitutionId;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\HttpException\HttpException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\QueryIdentityProviderException;

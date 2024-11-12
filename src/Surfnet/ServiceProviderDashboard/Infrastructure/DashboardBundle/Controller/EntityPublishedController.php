@@ -30,9 +30,6 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class EntityPublishedController extends AbstractController
 {
-    /**
-     *
-     */
     #[IsGranted('ROLE_USER')]
     #[Route(path: '/entity/published/production', name: 'entity_published_production', methods: ['GET'])]
     #[Route(path: '/entity/published/test', name: 'entity_published_test', methods: ['GET'])]
@@ -69,9 +66,6 @@ class EntityPublishedController extends AbstractController
         return $this->render('@Dashboard/EntityPublished/publishedProduction.html.twig', $parameters);
     }
 
-    /**
-     *
-     */
     #[IsGranted('ROLE_USER')]
     #[Route(path: '/entity/change-request', name: 'entity_change_request', methods: ['GET'])]
     public function changeRequest(): Response

@@ -20,7 +20,6 @@ declare(strict_types = 1);
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle;
 
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Factory\SamlFactory;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 

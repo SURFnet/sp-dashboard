@@ -19,7 +19,6 @@ declare(strict_types = 1);
 namespace Surfnet\ServiceProviderDashboard\Application\ViewObject;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
-use Symfony\Component\Serializer\Attribute\Ignore;
 
 class EntityConnection
 {

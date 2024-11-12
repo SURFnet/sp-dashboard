@@ -23,7 +23,7 @@ use JsonSerializable;
 class ServiceStatusDto implements JsonSerializable
 {
     /**
-     * ServiceStatusDto constructor.
+     *
      *
      * @param string[] $states
      * @param string[] $labels

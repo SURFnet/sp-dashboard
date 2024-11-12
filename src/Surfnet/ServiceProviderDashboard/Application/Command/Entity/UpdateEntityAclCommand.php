@@ -22,7 +22,6 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Command;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class UpdateEntityAclCommand implements Command
