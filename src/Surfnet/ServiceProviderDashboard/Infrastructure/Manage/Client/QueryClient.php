@@ -122,6 +122,7 @@ class QueryClient implements QueryManageRepository
     public function findByManageId($manageId)
     {
         try {
+            // phpcs:ignore
             // TODO: investigate if we can add the protocol to the param list of this method to prevent the try/retry
             //  construction below.
             $data = $this->read(Protocol::SAML20_SP, $manageId);

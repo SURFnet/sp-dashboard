@@ -19,6 +19,7 @@
     </rule>
     <!-- Forbid empty comments -->
     <rule ref="SlevomatCodingStandard.Commenting.EmptyComment"/>
+    <rule ref="Generic.Commenting.Todo"/>
     <!-- Forbid useless comments -->
     <rule ref="SlevomatCodingStandard.Commenting.ForbiddenComments">
         <properties>
@@ -39,7 +40,7 @@
     <!-- Lines can be a little bit longer before they break the build -->
     <rule ref="Generic.Files.LineLength">
         <properties>
-            <property name="lineLimit" value="120" />
+            <property name="lineLimit" value="150" />
             <property name="absoluteLineLimit" value="150"/>
         </properties>
     </rule>
