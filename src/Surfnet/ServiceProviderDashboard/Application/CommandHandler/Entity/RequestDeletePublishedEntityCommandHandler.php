@@ -26,7 +26,6 @@ use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryManageRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Webmozart\Assert\Assert;
 
 /**

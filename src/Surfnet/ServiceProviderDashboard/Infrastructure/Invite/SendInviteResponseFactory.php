@@ -18,7 +18,6 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\Invite;
 
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\CreateRoleResponse;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\SendInviteResponse;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\InviteException;
 use Symfony\Component\HttpFoundation\Response;

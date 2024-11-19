@@ -20,8 +20,6 @@ declare(strict_types = 1);
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\Api;
 
-use League\Tactician\CommandBus;
-
 use Surfnet\ServiceProviderDashboard\Application\Assembler\ServiceStatusAssembler;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceStatusService;

@@ -20,7 +20,6 @@ declare(strict_types = 1);
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\EventListener;
 
-use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Exception\UnknownServiceException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;

@@ -23,6 +23,7 @@ use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
 interface TicketRepository
 {
     /**
+     * // phpcs:ignore
      * TODO set the required parameters to build an issue.
      *
      * @return Ticket

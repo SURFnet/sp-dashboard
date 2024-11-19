@@ -20,7 +20,6 @@ declare(strict_types = 1);
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity;
 
-use Surfnet\ServiceProviderDashboard\Application\Service\EntityAclService;
 use Surfnet\ServiceProviderDashboard\Application\Service\IdpServiceInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
 use Symfony\Component\Form\AbstractType;

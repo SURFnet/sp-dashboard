@@ -18,7 +18,6 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 
-use Surfnet\ServiceProviderDashboard\Application\Command\Command;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 

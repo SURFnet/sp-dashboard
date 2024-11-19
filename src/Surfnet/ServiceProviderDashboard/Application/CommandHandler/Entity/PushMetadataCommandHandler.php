@@ -24,7 +24,6 @@ use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PushMetadataException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Service\ManagePublishService;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 class PushMetadataCommandHandler implements CommandHandler
 {

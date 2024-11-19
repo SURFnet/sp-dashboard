@@ -19,7 +19,6 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints;
 
 use Exception;
-use Symfony\Component\Form\Extension\Core\EventListener\FixUrlProtocolListener;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
