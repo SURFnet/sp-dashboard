@@ -201,8 +201,8 @@ class CollectionWidget {
 
   private registerSendHandler($sendButton: JQuery<HTMLElement>) {
     const handleSubmit = () => {
-      this.disableInputs();
       if (this.hasConnectionRequests()) {
+        this.disableInputs();
         this.disableParsleyValidation();
       }
       $sendButton.click();
