@@ -10,6 +10,7 @@ class CollectionWidget {
   private errorMessage: string;
   private $sendButton: JQuery;
   private $connectionRequestForm: JQuery;
+  private $emptyCollectionMessage: JQuery;
 
   /**
    * @param $collectionWidget The collection widget
@@ -19,7 +20,7 @@ class CollectionWidget {
   ) {
     this.$collectionWidget = $collectionWidget;
     this.$collectionList = this.$collectionWidget.find('table.collection-list');
-    this.$collectionList.hide();
+    this.$emptyCollectionMessage = this.$collectionWidget.find('.empty-connection-list-message');
     this.prototype = this.$collectionWidget.data('prototype');
     this.$input = $(this.prototype);
     this.$sendButton = $('button[id="connection_request_container_send"]');
@@ -96,6 +97,7 @@ class CollectionWidget {
     newElement.append('</tr>');
     collectionEntry.append(newElement);
     this.$collectionList.append(collectionEntry);
+    this.$emptyCollectionMessage.hide();
 
     this.index += 1;
   }
@@ -108,8 +110,8 @@ class CollectionWidget {
     const element = $(el.target);
 
     element.closest('.collection-entry').remove();
-    if (this.$collectionList.find('tr').length === 1) {
-      this.$collectionList.hide();
+    if (!this.hasConnectionRequests()) {
+      this.$emptyCollectionMessage.show()
     }
   }
 
@@ -199,8 +201,8 @@ class CollectionWidget {
 
   private registerSendHandler($sendButton: JQuery<HTMLElement>) {
     const handleSubmit = () => {
-      this.disableInputs();
       if (this.hasConnectionRequests()) {
+        this.disableInputs();
         this.disableParsleyValidation();
       }
       $sendButton.click();

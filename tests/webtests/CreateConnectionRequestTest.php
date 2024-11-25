@@ -20,6 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 use Facebook\WebDriver\WebDriverBy;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\DataFixtures\ORM\WebTestFixtures;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CreateConnectionRequestTest extends WebTestCase
 {
@@ -61,6 +62,10 @@ class CreateConnectionRequestTest extends WebTestCase
         self::assertSelectorIsDisabled('#connection_request_container_send');
         self::assertSelectorIsEnabled('#connection_request_container_cancel');
 
+        /** @var TranslatorInterface $translator */
+        $translator = self::getContainer()->get(TranslatorInterface::class);
+
+        self::assertSelectorTextContains('.empty-connection-list-message', $translator->trans('entity.create_connection_request.emptyConnectionListPlaceholder'));
         $this->fillFormField($form, '#connection_request_container_connectionRequests___name___institution', 'Institution 1');
         $this->fillFormField($form, '#connection_request_container_connectionRequests___name___name', 'Jesse');
         $this->fillFormField($form, '#connection_request_container_connectionRequests___name___email', 'jesse-james@gmail.com');
@@ -68,8 +73,9 @@ class CreateConnectionRequestTest extends WebTestCase
 
         self::assertSelectorExists('.collection-list');
         self::assertSelectorIsVisible('.collection-list');
+        self::assertSelectorTextNotContains('.empty-connection-list-message', $translator->trans('entity.create_connection_request.emptyConnectionListPlaceholder'));
 
-        self::assertSelectorTextContains('.collection-list td:nth-child(1)', 'Institution 1');
+        self::assertSelectorTextContains('.collection-list tr.collection-entry td:nth-child(1)', 'Institution 1');
         self::assertSelectorIsVisible('.remove_collection_entry');
 
         self::assertSelectorIsEnabled('#connection_request_container_send');
