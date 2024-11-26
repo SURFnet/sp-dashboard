@@ -54,6 +54,7 @@
     "symfony/flex": "^2.4.7",
     "symfony/form": "^6.4.13",
     "symfony/framework-bundle": "^6.4.13",
+    "symfony/http-client": "6.4.*",
     "symfony/mailer": "^6.4.13",
     "symfony/monolog-bundle": "^3.10.0",
     "symfony/polyfill-apcu": "^1.31",

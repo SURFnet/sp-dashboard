@@ -26,7 +26,7 @@ services:
   Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\SendInviteCommandHandler:
     autowire: true
     tags:
-      - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Service\CreateServiceCommand }
+      - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Service\SendInviteCommand }
     arguments:
       $sendInviteRepository: '@Surfnet\ServiceProviderDashboard\Infrastructure\Invite\SendInviteRepository'
 
