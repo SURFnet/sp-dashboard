@@ -110,15 +110,16 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     #[Assert\Length(max: 300)]
     private ?string $applicationUrl = null;
 
-    /** @var TypeOfService[] */
+    /**
+     * // phpcs:ignore
+     * `new Assert\NotBlank(),` TODO enable in https://github.com/SURFnet/sp-dashboard/issues/1322
+     * @var TypeOfService[]
+     */
     #[Assert\All([
-        new Assert\NotBlank(),
         new Assert\Type(type: TypeOfService::class),
     ])]
     #[Assert\Count(
-        min: 1,
         max: 3,
-        minMessage: 'validator.type-of-service.min',
         maxMessage: 'validator.type-of-service.max',
     )]
     private array $typeOfService = [];

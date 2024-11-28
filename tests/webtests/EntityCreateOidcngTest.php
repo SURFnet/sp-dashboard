@@ -189,7 +189,7 @@ class EntityCreateOidcngTest extends WebTestCase
             'dashboard_bundle_entity_type[metadata][isPublicClient]' => true,
             'dashboard_bundle_entity_type[metadata][grants]' => ['authorization_code'],
             'dashboard_bundle_entity_type[metadata][accessTokenValidity]' => '3600',
-            'dashboard_bundle_entity_type[metadata][typeOfService][]' => 'Research',
+//            'dashboard_bundle_entity_type[metadata][typeOfService][]' => 'Research',
             'dashboard_bundle_entity_type[attributes][displayNameAttribute][requested]' => true,
             'dashboard_bundle_entity_type[attributes][displayNameAttribute][motivation]' => 'We really need it!',
             'dashboard_bundle_entity_type[contactInformation][administrativeContact][firstName]' => 'John',
