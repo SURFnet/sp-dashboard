@@ -43,8 +43,10 @@ class InviteHttpClient
             ],
         ];
 
+        $baseUri = InviteHttpClientUrlSanitizer::buildBaseUri($path, $host);
+
         $this->httpClient = HttpClient::createForBaseUri(
-            $host . $path,
+            $baseUri,
             $options
         );
     }
@@ -54,6 +56,7 @@ class InviteHttpClient
      */
     public function post(string $path, array $payload): ResponseInterface
     {
+        $path = InviteHttpClientUrlSanitizer::ensureRelativePath($path);
         return $this->httpClient->request(
             'POST',
             $path,
@@ -66,6 +69,7 @@ class InviteHttpClient
      */
     public function delete(string $path): ResponseInterface
     {
+        $path = InviteHttpClientUrlSanitizer::ensureRelativePath($path);
         return $this->httpClient->request(
             'DELETE',
             $path,
