@@ -15,7 +15,9 @@
             {% endfor %}
         {% endfor %}
 
-        {{ form_errors(form) }}
+        {% for error in form.vars.errors %}
+            <div class="message error">{{ error.message|trans }}</div>
+        {% endfor %}
 
         <h2>{{ ('entity.idps.info.title')|trans }}</h2>
         <div class="wysiwyg">{{ ('entity.idps.info.html')|trans|wysiwyg }}</div>
