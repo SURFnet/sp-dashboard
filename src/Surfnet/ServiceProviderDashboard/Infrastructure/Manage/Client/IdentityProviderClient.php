@@ -54,7 +54,9 @@ class IdentityProviderClient implements IdentityProviderRepository
                 "state" => $this->manageConfig->getPublicationStatus()->getStatus(),
                 ]
             );
+
             $list = [];
+
             if ($result === null) {
                 return $list;
             }

@@ -204,6 +204,9 @@
 {# Use a table to display the list of idp's for the entity acl's. #}
 {% block acl_list_widget %}
     {% apply spaceless %}
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" data-table="table" placeholder="{{ 'entity.idps.filter'|trans }}">
+        </div>
         <table class="aclList" {{ block('widget_container_attributes') }}>
             <tr>
                 <th class="coll1">&nbsp;</th>
