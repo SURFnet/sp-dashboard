@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 /**
  * Copyright 2024 SURFnet B.V.
@@ -33,7 +33,7 @@ class IdpEntityType extends AbstractType
     {
         $builder
             ->add('testEntities', TestIdpListType::class)
-            ->add('institutionEntities', InstitutionIdpListType::class)
+            ->add('institutionEntities', InstitutionIdpListType::class, ['attr' => ['show_filter' => true]])
             ->add('save', SubmitType::class, ['attr' => ['class' => 'button']]);
     }
 
