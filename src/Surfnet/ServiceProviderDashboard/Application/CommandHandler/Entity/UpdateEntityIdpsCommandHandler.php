@@ -27,16 +27,18 @@ use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\AllowedIdentityProviders;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 class UpdateEntityIdpsCommandHandler implements CommandHandler
 {
     public function __construct(
         private readonly PublishEntityRepository $publishClient,
         private readonly LoggerInterface $logger,
-        private readonly RequestStack $requestStack,
     ) {
     }
+
+    /**
+     * @throws Exception
+     */
     public function handle(UpdateEntityIdpsCommand $command): void
     {
         $this->logger->info(
@@ -67,7 +69,7 @@ class UpdateEntityIdpsCommandHandler implements CommandHandler
                     $e->getMessage()
                 )
             );
-            $this->requestStack->getSession()->getFlashBag()->add('error', 'entity.edit.error.publish');
+            throw $e;
         }
     }
 }

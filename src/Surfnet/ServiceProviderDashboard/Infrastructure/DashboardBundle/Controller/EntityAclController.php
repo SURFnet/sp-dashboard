@@ -22,19 +22,17 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Contro
 
 use League\Tactician\CommandBus;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PushMetadataCommand;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\UpdateEntityAclCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\UpdateEntityIdpsCommand;
-use Surfnet\ServiceProviderDashboard\Application\Factory\EntityDetailFactory;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityAclService;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\AclEntityType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\IdpEntityType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Throwable;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -46,7 +44,6 @@ class EntityAclController extends AbstractController
         private readonly EntityService $entityService,
         private readonly AuthorizationService $authorizationService,
         private readonly EntityAclService $entityAclService,
-        private readonly EntityDetailFactory $entityDetailFactory,
     ) {
     }
 
@@ -74,10 +71,20 @@ class EntityAclController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->commandBus->handle($command);
-            $this->commandBus->handle(new PushMetadataCommand(Constants::ENVIRONMENT_TEST));
+            try {
+                $this->commandBus->handle($command);
+                $this->commandBus->handle(new PushMetadataCommand(Constants::ENVIRONMENT_TEST));
 
-            return $this->redirectToRoute('entity_published_test');
+                // the new entity flow
+                if ($request->getSession()->get('published.entity.clone') !== null) {
+                    return $this->redirectToRoute('entity_published_test');
+                }
+
+                // edit idps for existing entity flow
+                $this->addFlash('success', 'entity.idps.saved');
+            } catch (Throwable $e) {
+                $this->addFlash('error', 'entity.edit.error.publish');
+            }
         }
 
         return $this->render(
@@ -85,47 +92,6 @@ class EntityAclController extends AbstractController
             [
                 'form' => $form->createView(),
                 'isAdmin' => $this->authorizationService->isAdministrator(),
-            ]
-        );
-    }
-
-    #[Route(path: '/entity/acl/{serviceId}/{id}', name: 'entity_acl', methods: ['GET', 'POST'])]
-    public function acl(Request $request, string $serviceId, string $id): Response
-    {
-        $allowed = $this->authorizationService->getAllowedServiceNamesById();
-        if (!array_key_exists($serviceId, $allowed)) {
-            throw $this->createAccessDeniedException(
-                'You are not allowed to view ACLs of another service'
-            );
-        }
-
-        $service = $this->authorizationService->changeActiveService($serviceId);
-        $entity = $this->entityService->getEntityByIdAndTarget($id, Constants::ENVIRONMENT_TEST, $service);
-
-        $selectedIdps = $this->entityAclService->getAllowedIdpsFromEntity($entity);
-
-        $command = new UpdateEntityAclCommand(
-            $entity,
-            $selectedIdps,
-            $entity->getAllowedIdentityProviders()->isAllowAll(),
-            $this->authorizationService->getContact(),
-        );
-        $form = $this->createForm(AclEntityType::class, $command);
-
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->commandBus->handle($command);
-            $this->commandBus->handle(new PushMetadataCommand(Constants::ENVIRONMENT_TEST));
-        }
-
-        $viewObject = $this->entityDetailFactory->buildFrom($entity);
-
-        return $this->render(
-            '@Dashboard/EntityAcl/acl.html.twig',
-            [
-            'form' => $form->createView(),
-            'entity' => $viewObject,
-            'isAdmin' => $this->authorizationService->isAdministrator(),
             ]
         );
     }

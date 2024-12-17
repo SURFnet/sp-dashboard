@@ -170,6 +170,10 @@ class EntityCreateSamlTest extends WebTestCase
             'https://entity-id.url',
             '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'
         );
+        $this->testPublicationClient->registerPublishResponse(
+            'https://entity-id.test',
+            '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'
+        );
         $crawler = self::$pantherClient->request('GET', '/entity/create/2/saml20/test');
 
         // Find the asc collection entry, fill the input with a syntactically valid URL and click the + button.
@@ -219,6 +223,10 @@ class EntityCreateSamlTest extends WebTestCase
     {
         $this->testPublicationClient->registerPublishResponse(
             'https://entity-id.url',
+            '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'
+        );
+        $this->testPublicationClient->registerPublishResponse(
+            'https://entity-id.test',
             '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'
         );
 

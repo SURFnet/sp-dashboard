@@ -137,13 +137,6 @@ services:
     tags:
       - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\PushMetadataCommand }
 
-  surfnet.dashboard.command_handler.update_entity_acl:
-    class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\UpdateEntityAclCommandHandler
-    arguments:
-      $publishClient: '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient'
-    tags:
-      - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\UpdateEntityAclCommand }
-
   surfnet.dashboard.command_handler.update_entity_idps:
     class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\UpdateEntityIdpsCommandHandler
     arguments:
@@ -565,11 +558,6 @@ services:
       - '%env(jira_host)%'
       - '%env(jira_personal_access_token)%'
       - '@logger'
-
-  Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\AclListType:
-    arguments:
-      - '@Surfnet\ServiceProviderDashboard\Application\Service\EntityAclService'
-    tags: [ 'form.type' ]
 
   Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\InstitutionIdpListType:
     arguments:
