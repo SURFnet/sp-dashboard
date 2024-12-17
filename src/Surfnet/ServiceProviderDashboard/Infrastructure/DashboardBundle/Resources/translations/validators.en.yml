@@ -22,3 +22,4 @@ validator.unique_redirect_urls.duplicate_found: 'Duplicate redirect URIs are not
 validator.redirect_url.reverse_does_not_contain_client_id: 'A reverse redirect URL must have the client id as hostname.'
 validator.type-of-service.min: 'You must choose at least one type of service'
 validator.type-of-service.max: 'You are allowed to choose a maximum of 3 types of service'
+validator.entity.idps.institution-idps: 'You must choose at least one IDP'
