@@ -312,6 +312,7 @@ entity.idps.info.title: Which IdP's should be connected to your entity?
 entity.idps.info.html: "
 <p>In order to be able to login to your service you need to connect an IdP to it. You can either connect one of our test IdP's or you can connect one of the test Idp's of an institution.</p>
 "
+entity.idps.filter: Enter text to filter...
 
 entity.idps.test-idps.title: Test IdP's
 entity.idps.test-idps.html: "

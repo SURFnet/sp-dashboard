@@ -23,5 +23,6 @@ import './components/tooltips.js';
 import './components/modal.ts';
 import './components/site_notice.ts'
 import './components/a11y.ts';
+import './components/table_filter.ts';
 // Bootstrap the Stimulus components
 import '../bootstrap';
