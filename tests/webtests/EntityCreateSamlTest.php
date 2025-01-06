@@ -265,10 +265,15 @@ class EntityCreateSamlTest extends WebTestCase
         );
         $crawler = self::$pantherClient->reload();
         $this->assertOnPage('Connect some Idp\'s to your entity');
-        // Continue without selecting test IdPs
+
         $form = $crawler
             ->selectButton('Save')
             ->form();
+
+        $checkbox = $crawler->filter('input[name="idp_entity[testEntities][]"][value="bfe8f00d-317a-4fbc-9cf8-ad2f3b2af578"]')->first();
+        $checkbox->click();
+
+
         $crawler = self::$pantherClient->submit($form);
 
         $pageTitle = $crawler->filter('h1')->first()->text();
@@ -417,7 +422,7 @@ class EntityCreateSamlTest extends WebTestCase
             'dashboard_bundle_entity_type[metadata][nameNl]' => 'The A Team',
             'dashboard_bundle_entity_type[metadata][metadataUrl]' => 'https://metadata-url.net',
             'dashboard_bundle_entity_type[metadata][entityId]' => 'https://entity-id.url',
-            'dashboard_bundle_entity_type[metadata][typeOfService][]' => 'Research',
+//            'dashboard_bundle_entity_type[metadata][typeOfService][]' => 'Research',
             'dashboard_bundle_entity_type[metadata][logoUrl]' =>
                 'https://spdasboarddev.openconext.local/images/surfconext-logo.png',
             'dashboard_bundle_entity_type[contactInformation][administrativeContact][firstName]' => 'John',

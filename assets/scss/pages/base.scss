@@ -63,3 +63,7 @@
 .hidden {
   display: none;
 }
+
+div.form-row:has(#dashboard_bundle_entity_type_metadata_typeOfService) {
+  display: none;
+}
