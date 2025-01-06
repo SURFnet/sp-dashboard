@@ -30,6 +30,9 @@ spdashboard_manage_id
 - The [devconf](https://github.com/OpenConext/OpenConext-devconf) project is now used as a basis for development
 - A release is automatically created when a tag is set, no more manual releases
 
+## 6.0.3
+- Upgrade saml2 library 
+
 ## 6.0.2
 - Fix the mixup of DPA_TYPE_MODEL_SURF and DPA_TYPE_IN_SURF_AGREEMENT #614
 - Security upgrades

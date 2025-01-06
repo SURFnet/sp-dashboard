@@ -24,8 +24,10 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Command;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\AtLeastOneSelected;
 use Symfony\Component\Validator\Constraints as Assert;
 
+#[AtLeastOneSelected(fieldNames: ['testEntities', 'institutionEntities'])]
 class UpdateEntityIdpsCommand implements Command
 {
     public function __construct(

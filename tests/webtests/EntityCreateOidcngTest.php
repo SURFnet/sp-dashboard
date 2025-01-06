@@ -128,10 +128,13 @@ class EntityCreateOidcngTest extends WebTestCase
         $crawler = self::$pantherClient->reload();
         $this->assertOnPage('Connect some Idp\'s to your entity');
 
-        // Continue without selecting test IdPs
         $form = $crawler
             ->selectButton('Save')
             ->form();
+
+        $checkbox = $crawler->filter('input[name="idp_entity[testEntities][]"][value="bfe8f00d-317a-4fbc-9cf8-ad2f3b2af578"]')->first();
+        $checkbox->click();
+
         $crawler = self::$pantherClient->submit($form);
 
         $label = $crawler->filter('.monospaced label')->first()->text();
@@ -189,7 +192,7 @@ class EntityCreateOidcngTest extends WebTestCase
             'dashboard_bundle_entity_type[metadata][isPublicClient]' => true,
             'dashboard_bundle_entity_type[metadata][grants]' => ['authorization_code'],
             'dashboard_bundle_entity_type[metadata][accessTokenValidity]' => '3600',
-            'dashboard_bundle_entity_type[metadata][typeOfService][]' => 'Research',
+//            'dashboard_bundle_entity_type[metadata][typeOfService][]' => 'Research',
             'dashboard_bundle_entity_type[attributes][displayNameAttribute][requested]' => true,
             'dashboard_bundle_entity_type[attributes][displayNameAttribute][motivation]' => 'We really need it!',
             'dashboard_bundle_entity_type[contactInformation][administrativeContact][firstName]' => 'John',
