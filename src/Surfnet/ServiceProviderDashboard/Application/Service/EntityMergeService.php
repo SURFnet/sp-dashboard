@@ -71,7 +71,7 @@ class EntityMergeService
             $command->getNameNl(),
             $this->buildContactListFromCommand($command),
             $this->buildOrganizationFromCommand($command),
-            $this->buildCoinFromCommand($command),
+            $this->buildCoinFromCommand($command, $manageEntity),
             $this->buildLogoFromCommand($command)
         );
         $attributes = $this->buildAttributesFromCommand($command);
@@ -206,7 +206,7 @@ class EntityMergeService
         );
     }
 
-    private function buildCoinFromCommand(SaveEntityCommandInterface $command): Coin
+    private function buildCoinFromCommand(SaveEntityCommandInterface $command, ManageEntity $manageEntity): Coin
     {
         $typeOfServiceCollection = new TypeOfServiceCollection();
         foreach ($command->getTypeOfService() as $typeOfService) {
@@ -222,7 +222,7 @@ class EntityMergeService
             $typeOfServiceCollection,
             $command->getEulaUrl(),
             null,
-            null,
+            $manageEntity->getMetaData()?->getCoin()->getContractualBase(),
             // Note when the dashboard sets the isPublicInDashboard to be true
             // That means the metaDataFields.coin:ss:idp_visible_only must be false
             !$command->isPublicInDashboard(),
