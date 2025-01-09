@@ -53,4 +53,16 @@ class ContractualBaseService
         // 4. Set the coin value on the entity
         $entity->getMetaData()?->getCoin()->setContractualBase($contractualBase);
     }
+
+    public function writeContractualBaseForTestEntity(ManageEntity $entity, ManageEntity $originalEntity): void
+    {
+        if ($entity->getEnvironment() !== Constants::ENVIRONMENT_TEST) {
+            return;
+        }
+
+        $originalContractualBase = $originalEntity->getMetaData()?->getCoin()->getContractualBase();
+        if ($originalContractualBase !== null) {
+            $entity->getMetaData()?->getCoin()->setContractualBase($originalContractualBase);
+        }
+    }
 }

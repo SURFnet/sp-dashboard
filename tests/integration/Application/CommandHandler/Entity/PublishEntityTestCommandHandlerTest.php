@@ -20,8 +20,10 @@ namespace Application\CommandHandler\Entity;
 
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityServiceInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Coin;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\MetaData;
+use Surfnet\ServiceProviderDashboard\Domain\Service\ContractualBaseService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\Mock;
@@ -56,6 +58,7 @@ class PublishEntityTestCommandHandlerTest extends MockeryTestCase
 
         $this->commandHandler = new PublishEntityTestCommandHandler(
             $this->client,
+            new ContractualBaseService(),
             $this->entityService,
             $this->logger,
             $this->requestStack
@@ -67,14 +70,25 @@ class PublishEntityTestCommandHandlerTest extends MockeryTestCase
     public function test_it_can_publish_to_manage()
     {
         $manageEntity = m::mock(ManageEntity::class);
+        $metaData = m::mock(MetaData::class);
+        $coin = m::mock(Coin::class);
+
         $manageEntity
-            ->shouldReceive('getMetaData->getNameEn')
+            ->shouldReceive('getMetaData')
+            ->andReturn($metaData);
+
+        $metaData
+            ->shouldReceive('getNameEn')
             ->andReturn('Test Entity Name')
-            ->shouldReceive('geMetaData->getManageId')
-            ->shouldReceive('getProtocol->geProtocol')
-            ->shouldReceive('setIdpAllowAll')
-            ->shouldReceive('setIdpWhitelistRaw')
-            ->andReturn(Constants::TYPE_OPENID_CONNECT_TNG);
+            ->shouldReceive('getManageId')
+            ->shouldReceive('getProtocol')
+            ->andReturn(Constants::TYPE_OPENID_CONNECT_TNG)
+            ->shouldReceive('getCoin')
+            ->andReturn($coin);
+
+        $coin
+            ->shouldReceive('getContractualBase')
+            ->andReturn('some_contractual_base_value');
 
         $this->logger
             ->shouldReceive('info')
@@ -97,8 +111,7 @@ class PublishEntityTestCommandHandlerTest extends MockeryTestCase
             ->andReturn('uuid');
         $manageEntity->shouldReceive('setId');
         $manageEntity
-            ->shouldReceive('getEnvironment')
-            ->andReturn('test');
+            ->shouldReceive('getEnvironment');
 
         $this->entityService
             ->shouldReceive('getPristineManageEntityById')
@@ -117,14 +130,29 @@ class PublishEntityTestCommandHandlerTest extends MockeryTestCase
     public function test_it_handles_failing_publish()
     {
         $manageEntity = m::mock(ManageEntity::class);
+        $metaData = m::mock(MetaData::class);
+        $coin = m::mock(Coin::class);
+
         $manageEntity
-            ->shouldReceive('getMetaData->getNameEn')
+            ->shouldReceive('getMetaData')
+            ->andReturn($metaData);
+
+        $metaData
+            ->shouldReceive('getNameEn')
             ->andReturn('Test Entity Name')
-            ->shouldReceive('geMetaData->getManageId')
-            ->shouldReceive('getProtocol->geProtocol')
-            ->shouldReceive('setIdpAllowAll')
-            ->shouldReceive('setIdpWhitelistRaw')
-            ->andReturn(Constants::TYPE_OPENID_CONNECT_TNG);
+            ->shouldReceive('getManageId')
+            ->shouldReceive('getProtocol')
+            ->andReturn(Constants::TYPE_OPENID_CONNECT_TNG)
+            ->shouldReceive('getCoin')
+            ->andReturn($coin);
+
+        $coin
+            ->shouldReceive('getContractualBase')
+            ->andReturn('some_contractual_base_value');
+
+        $coin
+            ->shouldReceive('setContractualBase')
+            ->with('some_contractual_base_value');
 
         $manageEntity
             ->shouldReceive('getAllowedIdentityProviders->getAllowedIdentityProviders')
