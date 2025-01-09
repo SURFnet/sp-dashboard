@@ -55,6 +55,77 @@ class ContractualBaseServiceTest extends TestCase
         $this->assertEquals($expectedContractualBase, $entity->getMetaData()->getCoin()->getContractualBase());
     }
 
+    public function testContractualBaseForTest(): void
+    {
+        $entity = $this->createMockEntity(
+            Constants::ENVIRONMENT_TEST,
+            Constants::TYPE_SAML,
+            Constants::SERVICE_TYPE_INSTITUTE
+        );
+        $this->assertNull($entity->getMetaData()->getCoin()->getContractualBase());
+
+        $pristine = $this->createMockEntity(
+            Constants::ENVIRONMENT_TEST,
+            Constants::TYPE_SAML,
+            Constants::SERVICE_TYPE_INSTITUTE,
+        );
+        $pristine->getMetaData()->getCoin()->setContractualBase(Constants::CONTRACTUAL_BASE_IX);
+
+        $this->service->writeContractualBaseForTestEntity($entity, $pristine);
+
+        $this->assertSame(Constants::CONTRACTUAL_BASE_IX, $entity->getMetaData()->getCoin()->getContractualBase());
+    }
+
+    public function testWriteContractualBaseForTestEntityWithNonTestEnvironment(): void
+    {
+        $entity = $this->createMockEntity(
+            Constants::ENVIRONMENT_PRODUCTION,
+            Constants::TYPE_SAML,
+            Constants::SERVICE_TYPE_INSTITUTE
+        );
+        $pristine = $this->createMockEntity(
+            Constants::ENVIRONMENT_TEST,
+            Constants::TYPE_SAML,
+            Constants::SERVICE_TYPE_INSTITUTE
+        );
+        $pristine->getMetaData()->getCoin()->setContractualBase(Constants::CONTRACTUAL_BASE_IX);
+
+        $this->service->writeContractualBaseForTestEntity($entity, $pristine);
+
+        $this->assertNull($entity->getMetaData()->getCoin()->getContractualBase());
+    }
+
+    public function testWriteContractualBaseForTestEntityWithNullPristineEntity(): void
+    {
+        $entity = $this->createMockEntity(
+            Constants::ENVIRONMENT_TEST,
+            Constants::TYPE_SAML,
+            Constants::SERVICE_TYPE_INSTITUTE
+        );
+
+        $this->service->writeContractualBaseForTestEntity($entity, null);
+
+        $this->assertNull($entity->getMetaData()->getCoin()->getContractualBase());
+    }
+
+    public function testWriteContractualBaseForTestEntityWithNullOriginalContractualBase(): void
+    {
+        $entity = $this->createMockEntity(
+            Constants::ENVIRONMENT_TEST,
+            Constants::TYPE_SAML,
+            Constants::SERVICE_TYPE_INSTITUTE
+        );
+        $pristine = $this->createMockEntity(
+            Constants::ENVIRONMENT_TEST,
+            Constants::TYPE_SAML,
+            Constants::SERVICE_TYPE_INSTITUTE
+        );
+
+        $this->service->writeContractualBaseForTestEntity($entity, $pristine);
+
+        $this->assertNull($entity->getMetaData()->getCoin()->getContractualBase());
+    }
+
     public function contractualBaseDataProvider(): array
     {
         return [
