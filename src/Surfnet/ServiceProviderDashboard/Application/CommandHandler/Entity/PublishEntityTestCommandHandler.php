@@ -26,6 +26,7 @@ use Surfnet\ServiceProviderDashboard\Application\Service\EntityServiceInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
+use Surfnet\ServiceProviderDashboard\Domain\Service\ContractualBaseService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataException;
 use Symfony\Component\HttpFoundation\RequestStack;
 use function array_key_exists;
@@ -34,6 +35,7 @@ class PublishEntityTestCommandHandler implements CommandHandler
 {
     public function __construct(
         private readonly PublishEntityRepository $publishClient,
+        private readonly ContractualBaseService $contractualBaseHelper,
         private readonly EntityServiceInterface $entityService,
         private readonly LoggerInterface $logger,
         private readonly RequestStack $requestStack,
@@ -50,6 +52,7 @@ class PublishEntityTestCommandHandler implements CommandHandler
         if ($entity->isManageEntity()) {
             // The entity as it is now known in Manage
             $pristineEntity = $this->entityService->getPristineManageEntityById($entity->getId(), $entity->getEnvironment());
+            $this->contractualBaseHelper->writeContractualBaseForTestEntity($entity, $pristineEntity);
         }
         try {
             $this->logger->info(
@@ -58,7 +61,6 @@ class PublishEntityTestCommandHandler implements CommandHandler
                     $entity->getMetaData()->getNameEn()
                 )
             );
-
             $publishResponse = $this->publishClient->publish(
                 $entity,
                 $pristineEntity,
