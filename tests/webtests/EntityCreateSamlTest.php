@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
+use Facebook\WebDriver\Exception\NoSuchElementException;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\DataFixtures\ORM\WebTestFixtures;
@@ -213,6 +214,24 @@ class EntityCreateSamlTest extends WebTestCase
 
         $pageTitle = $crawler->filter('h1')->first()->text();
         self::assertEquals('Successfully published the entity to test', $pageTitle);
+    }
+
+    public function test_it_does_not_show_hidden_type_of_services_as_options()
+    {
+        $this->expectException(NoSuchElementException::class);
+        $this->expectExceptionMessage('Cannot locate option with value: SURF');
+
+        $crawler = self::$pantherClient->request('GET', '/entity/create/2/saml20/test');
+
+        $form = $crawler
+            ->selectButton('Publish')
+            ->form();
+
+        $form['dashboard_bundle_entity_type[metadata][typeOfService][]']->setValue('Research');
+        $form['dashboard_bundle_entity_type[metadata][typeOfService][]']->setValue('SURF');
+
+        $formData = $this->buildValidFormData();
+        self::$pantherClient->submit($form, $formData);
     }
 
     public function test_it_can_publish_multiple_acs_locations()
@@ -422,7 +441,7 @@ class EntityCreateSamlTest extends WebTestCase
             'dashboard_bundle_entity_type[metadata][nameNl]' => 'The A Team',
             'dashboard_bundle_entity_type[metadata][metadataUrl]' => 'https://metadata-url.net',
             'dashboard_bundle_entity_type[metadata][entityId]' => 'https://entity-id.url',
-//            'dashboard_bundle_entity_type[metadata][typeOfService][]' => 'Research',
+            'dashboard_bundle_entity_type[metadata][typeOfService][]' => 'Research',
             'dashboard_bundle_entity_type[metadata][logoUrl]' =>
                 'https://spdasboarddev.openconext.local/images/surfconext-logo.png',
             'dashboard_bundle_entity_type[contactInformation][administrativeContact][firstName]' => 'John',

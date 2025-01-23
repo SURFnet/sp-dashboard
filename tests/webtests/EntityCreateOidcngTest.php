@@ -106,6 +106,8 @@ class EntityCreateOidcngTest extends WebTestCase
             ->selectButton('Publish')
             ->form();
 
+        $form['dashboard_bundle_entity_type[metadata][typeOfService][]']->setValue('Research');
+
         $crawler = self::$pantherClient->submit($form, $formData);
 
         // Now add a redirect Url
@@ -142,6 +144,24 @@ class EntityCreateOidcngTest extends WebTestCase
         // A secret should be displayed
         $this->assertEquals('Secret', $label);
         $this->assertSame(20, strlen($span));
+    }
+    public function test_it_does_not_show_hidden_type_of_services_as_options()
+    {
+        $this->expectException(NoSuchElementException::class);
+        $this->expectExceptionMessage('Cannot locate option with value: SURF');
+
+        $this->testPublicationClient->registerPublishResponse('https://entity-id.test', '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}');
+        $formData = $this->buildValidFormData();
+        $crawler = self::$pantherClient->request('GET', "/entity/create/2/oidcng/test");
+
+        $form = $crawler
+            ->selectButton('Publish')
+            ->form();
+
+        $form['dashboard_bundle_entity_type[metadata][typeOfService][]']->setValue('Research');
+        $form['dashboard_bundle_entity_type[metadata][typeOfService][]']->setValue('SURF');
+
+        self::$pantherClient->submit($form, $formData);
     }
 
     public function test_it_stays_on_create_action_when_publish_failed()
@@ -192,7 +212,7 @@ class EntityCreateOidcngTest extends WebTestCase
             'dashboard_bundle_entity_type[metadata][isPublicClient]' => true,
             'dashboard_bundle_entity_type[metadata][grants]' => ['authorization_code'],
             'dashboard_bundle_entity_type[metadata][accessTokenValidity]' => '3600',
-//            'dashboard_bundle_entity_type[metadata][typeOfService][]' => 'Research',
+            'dashboard_bundle_entity_type[metadata][typeOfService][]' => 'Research',
             'dashboard_bundle_entity_type[attributes][displayNameAttribute][requested]' => true,
             'dashboard_bundle_entity_type[attributes][displayNameAttribute][motivation]' => 'We really need it!',
             'dashboard_bundle_entity_type[contactInformation][administrativeContact][firstName]' => 'John',

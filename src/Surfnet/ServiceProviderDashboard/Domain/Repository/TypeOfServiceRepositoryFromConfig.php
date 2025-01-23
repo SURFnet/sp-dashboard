@@ -59,7 +59,8 @@ class TypeOfServiceRepositoryFromConfig implements TypeOfServiceRepository
         }
         $this->collection = new TypeOfServiceCollection();
         foreach ($data as $entry) {
-            $typeOfService = new TypeOfService($entry->typeEn, $entry->typeNl);
+            $typeHidden = $entry->typeHidden ?? false;
+            $typeOfService = new TypeOfService($entry->typeEn, $entry->typeNl, $typeHidden);
             $this->collection->add($typeOfService);
         }
     }
@@ -69,7 +70,7 @@ class TypeOfServiceRepositoryFromConfig implements TypeOfServiceRepository
      */
     public function getTypesOfServiceChoices(): array
     {
-        return $this->collection->getArray();
+        return $this->collection->filterHidden()->getArray();
     }
 
     public function findByEnglishTypeOfService(string $enTos): ?TypeOfService

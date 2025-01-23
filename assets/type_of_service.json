@@ -1,7 +1,8 @@
 [
   {
     "typeEn" : "SURF",
-    "typeNl" : "SURF"
+    "typeNl" : "SURF",
+    "typeHidden": true
   },
   {
     "typeEn" : "Education",
@@ -25,7 +26,8 @@
   },
   {
     "typeEn" : "Recommended",
-    "typeNl" : "Aangeraden"
+    "typeNl" : "Aangeraden",
+    "typeHidden": true
   },
   {
     "typeEn" : "Productivity",

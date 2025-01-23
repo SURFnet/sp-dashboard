@@ -42,7 +42,9 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityChangeRequestRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Service\ContractualBaseService;
+use Surfnet\ServiceProviderDashboard\Domain\Service\TypeOfServiceService;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Issue;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\TypeOfService;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\TypeOfServiceCollection;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -74,6 +76,7 @@ class EntityChangeRequestCommandHandlerTest extends MockeryTestCase
         $this->commandHandler = new EntityChangeRequestCommandHandler(
             $this->entityChangeRequestRepository,
             new ContractualBaseService(),
+            new TypeOfServiceService(),
             $this->entityService,
             $this->ticketService,
             $this->requestStack,
@@ -131,9 +134,6 @@ class EntityChangeRequestCommandHandlerTest extends MockeryTestCase
         $this->commandHandler->handle($command);
     }
 
-    /**
-     * @return ManageEntity
-     */
     private function createEntity(): ManageEntity
     {
         $coin = new Coin(
@@ -176,4 +176,48 @@ class EntityChangeRequestCommandHandlerTest extends MockeryTestCase
         return $manageEntity;
     }
 
+    public function test_it_should_ensure_hidden_type_of_service_selections_are_preserved()
+    {
+        $manageEntity = $this->createEntity();
+
+        $applicant = new Contact('john:doe', 'john@example.com', 'John Doe');
+
+        /** @var ManageEntity $pristineEntity */
+        $pristineEntity = unserialize(serialize($manageEntity));
+        $pristineEntity->getMetaData()->getCoin()->getTypeOfService()->add(new TypeOfService('SURF', 'SURF', true));
+        $pristineEntity->getMetaData()->getCoin()->getTypeOfService()->add(new TypeOfService('Education', 'Onderwijs', false));
+        $manageEntity->getMetaData()->getCoin()->getTypeOfService()->add(new TypeOfService('Productivity', 'Productiviteit', false));
+
+        $manageEntity->getMetaData()->getCoin()->getTypeOfService()->add(new TypeOfService('Privacy/security', 'Privacy/beveiliging', false));
+        $manageEntity->getMetaData()->getCoin()->getTypeOfService()->add(new TypeOfService('Recommended', 'Aangeraden', true));
+        $manageEntity->getMetaData()->getCoin()->getTypeOfService()->add(new TypeOfService('Productivity', 'Productiviteit', false));
+
+        $this->entityService->shouldReceive('getPristineManageEntityById')
+            ->once()
+            ->with($manageEntity->getId(), $manageEntity->getEnvironment())
+            ->andReturn($pristineEntity);
+
+        $this->ticketService->shouldReceive('createJiraTicket')
+            ->once()
+            ->andReturn(new Issue('ISSUE-123', 'foo', 'bar'));
+
+        $expectedDiff = [
+            'metaDataFields.coin:ss:type_of_service:en' => 'Productivity,Privacy/security,SURF',
+            'metaDataFields.coin:ss:type_of_service:nl' => 'Productiviteit,Privacy/beveiliging,SURF',
+            'metaDataFields.coin:contractual_base' => 'IX',
+        ];
+
+        $this->entityChangeRequestRepository->shouldReceive('openChangeRequest')
+            ->once()
+            ->withArgs(function($entity, $pristineEntity) use ($expectedDiff){
+                if($pristineEntity->diff($entity)->getDiff() !== $expectedDiff){
+                    $this->fail(var_export($pristineEntity->diff($entity)->getDiff(), true) . ' is not equal to ' . var_export($expectedDiff, true));
+                }
+                return $pristineEntity->diff($entity)->getDiff() === $expectedDiff;
+            })
+            ->andReturn(['id' => 1]);
+
+        $command = new EntityChangeRequestCommand($manageEntity, $applicant);
+        $this->commandHandler->handle($command);
+    }
 }

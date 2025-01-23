@@ -26,17 +26,28 @@ use Mockery\Mock;
 use Psr\Log\LoggerInterface;
 use Surfnet\SamlBundle\Security\Authentication\Token\SamlToken;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityTestCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PublishEntityProductionCommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityServiceInterface;
 use Surfnet\ServiceProviderDashboard\Application\Service\MailService;
 use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\AllowedIdentityProviders;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\AttributeList;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Coin;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\ContactList;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Logo;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\MetaData;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Organization;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Protocol;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Service\ContractualBaseService;
+use Surfnet\ServiceProviderDashboard\Domain\Service\TypeOfServiceService;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\TypeOfService;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\TypeOfServiceCollection;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Identity;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
@@ -92,6 +103,7 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
         $this->commandHandler = new PublishEntityProductionCommandHandler(
             $this->publishEntityClient,
             new ContractualBaseService(),
+            new TypeOfServiceService(),
             $this->entityService,
             $this->ticketService,
             $this->requestStack,
@@ -115,6 +127,9 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
 
         $coin = m::mock(Coin::class);
         $coin->shouldReceive('setContractualBase')->with(Constants::CONTRACTUAL_BASE_IX);
+        $coin->shouldReceive('hasTypeOfService')->andReturn(false);
+        $coin->shouldReceive('getTypeOfService')->andReturn(new TypeOfServiceCollection());
+        $coin->shouldReceive('setTypeOfService');
         $manageEntity->shouldReceive('getMetaData->getCoin')->andReturn($coin);
 
         $protocol = m::mock(Protocol::class);
@@ -191,6 +206,8 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
 
         $coin = m::mock(Coin::class);
         $coin->shouldReceive('setContractualBase')->with(Constants::CONTRACTUAL_BASE_IX);
+        $coin->shouldReceive('hasTypeOfService')->andReturn(false);
+        $coin->shouldReceive('setTypeOfService');
         $manageEntity->shouldReceive('getMetaData->getCoin')->andReturn($coin);
 
         $protocol = m::mock(Protocol::class);
@@ -301,6 +318,8 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
 
         $coin = m::mock(Coin::class);
         $coin->shouldReceive('setContractualBase')->with(Constants::CONTRACTUAL_BASE_IX);
+        $coin->shouldReceive('hasTypeOfService')->andReturn(false);
+        $coin->shouldReceive('setTypeOfService');
         $manageEntity->shouldReceive('getMetaData->getCoin')->andReturn($coin);
 
         $protocol = m::mock(Protocol::class);
@@ -346,5 +365,108 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
         $command = new PublishEntityProductionCommand($manageEntity, $applicant);
         $command->markPublishClientReset();
         $this->commandHandler->handle($command);
+    }
+
+
+    public function test_it_should_ensure_hidden_type_of_service_selections_are_preserved()
+    {
+        $manageEntity = $this->createEntity();
+
+        $applicant = new Contact('john:doe', 'john@example.com', 'John Doe');
+
+        /** @var ManageEntity $pristineEntity */
+        $pristineEntity = unserialize(serialize($manageEntity));
+        $pristineEntityCoin = $pristineEntity->getMetaData()->getCoin()->getTypeOfService();
+        $manageEntityCoin = $manageEntity->getMetaData()->getCoin()->getTypeOfService();
+
+        $pristineEntityCoin->add(new TypeOfService('SURF', 'SURF', true));
+        $pristineEntityCoin->add(new TypeOfService('Education', 'Onderwijs', false));
+
+        $manageEntityCoin->add(new TypeOfService('Productivity', 'Productiviteit', false));
+        $manageEntityCoin->add(new TypeOfService('Privacy/security', 'Privacy/beveiliging', false));
+        $manageEntityCoin->add(new TypeOfService('Recommended', 'Aangeraden', true));
+        $manageEntityCoin->add(new TypeOfService('Productivity', 'Productiviteit', false));
+
+        $this->logger
+            ->shouldReceive('info')
+            ->times(2);
+
+        $this->entityService->shouldReceive('getPristineManageEntityById')
+            ->once()
+            ->with($manageEntity->getId(), $manageEntity->getEnvironment())
+            ->andReturn($pristineEntity);
+
+        $this->ticketService->shouldReceive('createJiraTicket')
+            ->once()
+            ->andReturn(new \Surfnet\ServiceProviderDashboard\Domain\ValueObject\Issue('ISSUE-123', 'foo', 'bar'));
+
+        $expectedTypeOfService = new TypeOfServiceCollection();
+        $expectedTypeOfService->add(new TypeOfService('Productivity', 'Productiviteit', false));
+        $expectedTypeOfService->add(new TypeOfService('Privacy/security', 'Privacy/beveiliging', false));
+        $expectedTypeOfService->add(new TypeOfService('SURF', 'SURF', true));
+
+        $command = new PublishEntityProductionCommand($manageEntity, $applicant);
+
+        $this->publishEntityClient
+            ->shouldReceive('publish')
+            ->once()
+            ->withArgs(function (ManageEntity $entity, $pristineEntity, $applicant) use ($expectedTypeOfService){
+                if ($expectedTypeOfService->getArray() != $entity->getMetaData()->getCoin()->getTypeOfService()->getArray()) {
+                    $this->fail(
+                        var_export($entity->getMetaData()->getCoin()->getTypeOfService()->getArray(), true) . ' is not equal to ' . var_export(
+                            $expectedTypeOfService->getArray(),
+                            true
+                        )
+                    );
+                }
+                return true;
+            })
+            ->andReturn([
+                'id' => '123',
+            ]);
+
+        $this->commandHandler->handle($command);
+    }
+
+    private function createEntity(): ManageEntity
+    {
+        $coin = new Coin(
+            null,
+            null,
+            null,
+            null,
+            null,
+            new TypeOfServiceCollection(),
+            null,
+            null,
+            null,
+            null
+        );
+
+        $manageEntity = new ManageEntity(
+            1,
+            new AttributeList(),
+            new MetaData(
+                'https://test.entity.id',
+                'https://test.metadata.url',
+                null,
+                null,
+                'Test Description',
+                null,
+                'Test Entity',
+                null,
+                new ContactList(),
+                new Organization('Test org', "Test organisation", null, null, null, null),
+                $coin,
+                new Logo(null, null, null)
+            ),
+            new AllowedIdentityProviders([], true), new Protocol(Constants::TYPE_SAML),
+            null,
+            new Service()
+        );
+        $manageEntity->setId('f1e394b2-815b-4018-b780-898976322016');
+        $manageEntity->setEnvironment('production');
+        $manageEntity->setStatus('published');
+        return $manageEntity;
     }
 }
