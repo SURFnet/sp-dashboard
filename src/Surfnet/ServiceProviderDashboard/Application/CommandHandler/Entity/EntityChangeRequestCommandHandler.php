@@ -31,9 +31,13 @@ use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\JiraTicketNumber;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityChangeRequestRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Service\ContractualBaseService;
+use Surfnet\ServiceProviderDashboard\Domain\Service\TypeOfServiceService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataException;
 use Symfony\Component\HttpFoundation\RequestStack;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class EntityChangeRequestCommandHandler implements CommandHandler
 {
     private readonly string $summaryTranslationKey;
@@ -43,6 +47,7 @@ class EntityChangeRequestCommandHandler implements CommandHandler
     public function __construct(
         private readonly EntityChangeRequestRepository $repository,
         private readonly ContractualBaseService $contractualBaseHelper,
+        private readonly TypeOfServiceService $typeOfServiceService,
         private readonly EntityServiceInterface $entityService,
         private readonly TicketService $ticketService,
         private readonly RequestStack $requestStack,
@@ -67,6 +72,7 @@ class EntityChangeRequestCommandHandler implements CommandHandler
             throw new EntityNotFoundException('Unable to request changes to a unkown entity in Manage');
         }
         $pristineEntity = $this->entityService->getPristineManageEntityById($entity->getId(), $entity->getEnvironment());
+
         try {
             $this->logger->info(
                 sprintf(
@@ -74,7 +80,10 @@ class EntityChangeRequestCommandHandler implements CommandHandler
                     $entity->getMetaData()->getNameEn()
                 )
             );
+
             $this->contractualBaseHelper->writeContractualBase($entity);
+            $entity->getMetaData()?->getCoin()->setTypeOfService($this->typeOfServiceService->restoreHiddenTypes($entity, $pristineEntity));
+
             // Create the Jira ticket (we need the ticket id for the revision notes in manage later on)
             $ticket = $this->ticketService->createJiraTicket(
                 $entity,

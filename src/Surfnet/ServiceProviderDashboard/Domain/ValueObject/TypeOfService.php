@@ -25,6 +25,7 @@ readonly class TypeOfService
     public function __construct(
         public string $typeEn,
         public string $typeNl = '',
+        public bool $typeHidden = false
     ) {
     }
 }

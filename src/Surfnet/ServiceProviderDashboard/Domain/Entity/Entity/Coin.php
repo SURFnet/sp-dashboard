@@ -126,6 +126,11 @@ class Coin implements Comparable
         return $this->typeOfService;
     }
 
+    public function hasTypeOfService(): bool
+    {
+        return $this->typeOfService !== null;
+    }
+
     public function getContractualBase(): ?string
     {
         return $this->contractualBase;
@@ -175,5 +180,10 @@ class Coin implements Comparable
             'metaDataFields.coin:contractual_base' => $this->getContractualBase(),
             'metaDataFields.coin:ss:idp_visible_only' => $this->isIdpVisibleOnly(),
         ];
+    }
+
+    public function setTypeOfService(TypeOfServiceCollection $typeOfService): void
+    {
+        $this->typeOfService = $typeOfService;
     }
 }

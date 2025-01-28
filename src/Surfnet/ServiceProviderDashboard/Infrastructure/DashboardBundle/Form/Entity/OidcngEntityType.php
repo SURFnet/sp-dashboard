@@ -263,12 +263,13 @@ class OidcngEntityType extends AbstractType
                 'typeOfService',
                 ChoiceType::class,
                 [
-                    'required' => false,
+                    'required' => true,
                     'choices' => $this->typeOfServiceProvider->getTypesOfServiceChoices(),
                     'choice_value' => fn(TypeOfService $tos): string => $tos->typeEn,
                     'choice_label' => fn(TypeOfService $tos): string => $tos->typeEn,
                     'choice_attr' => fn(): array => [
                         'class' => 'decorated',
+                        'data-parsley-mincheck' => 1,
                         'data-parsley-maxcheck' => 3,
                     ],
                     'autocomplete' => true, // Enables the UX-Autocomplete

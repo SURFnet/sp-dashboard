@@ -116,4 +116,12 @@ class TypeOfServiceCollection
         }
         return $services;
     }
+
+    public function filterHidden(): self
+    {
+        $filteredCollection = new self();
+        $filteredCollection->types = array_values(array_filter($this->types, static fn ($type) => $type->typeHidden !== true));
+
+        return $filteredCollection;
+    }
 }

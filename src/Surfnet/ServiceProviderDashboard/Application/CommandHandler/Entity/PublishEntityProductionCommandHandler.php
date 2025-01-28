@@ -30,6 +30,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Service\ContractualBaseService;
+use Surfnet\ServiceProviderDashboard\Domain\Service\TypeOfServiceService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataException;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -45,6 +46,7 @@ class PublishEntityProductionCommandHandler implements CommandHandler
     public function __construct(
         private readonly PublishEntityRepository $publishClient,
         private readonly ContractualBaseService $contractualBaseHelper,
+        private readonly TypeOfServiceService $typeOfServiceService,
         private readonly EntityServiceInterface $entityService,
         private readonly TicketService $ticketService,
         private readonly RequestStack $requestStack,
@@ -77,6 +79,7 @@ class PublishEntityProductionCommandHandler implements CommandHandler
             // The entity as it is now known in Manage
             $pristineEntity = $this->entityService->getPristineManageEntityById($entity->getId(), $entity->getEnvironment());
         }
+
         try {
             $this->logger->info(
                 sprintf(
@@ -84,7 +87,10 @@ class PublishEntityProductionCommandHandler implements CommandHandler
                     $entity->getMetaData()->getNameEn()
                 )
             );
+
             $this->contractualBaseHelper->writeContractualBase($entity);
+            $entity->getMetaData()?->getCoin()->setTypeOfService($this->typeOfServiceService->restoreHiddenTypes($entity, $pristineEntity));
+
             $publishResponse = $this->publishClient->publish(
                 $entity,
                 $pristineEntity,
