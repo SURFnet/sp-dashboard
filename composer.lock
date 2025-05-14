@@ -2674,16 +2674,16 @@
         },
         {
             "name": "lesstif/php-jira-rest-client",
-            "version": "5.9.0",
+            "version": "5.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lesstif/php-jira-rest-client.git",
-                "reference": "06c20a4b6ff263cbbeb90b270f49ac8e697e320f"
+                "reference": "46b20408c34138615acbdd58a86b8b624d864d0c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lesstif/php-jira-rest-client/zipball/06c20a4b6ff263cbbeb90b270f49ac8e697e320f",
-                "reference": "06c20a4b6ff263cbbeb90b270f49ac8e697e320f",
+                "url": "https://api.github.com/repos/lesstif/php-jira-rest-client/zipball/46b20408c34138615acbdd58a86b8b624d864d0c",
+                "reference": "46b20408c34138615acbdd58a86b8b624d864d0c",
                 "shasum": ""
             },
             "require": {
@@ -2735,9 +2735,9 @@
             ],
             "support": {
                 "issues": "https://github.com/lesstif/php-jira-rest-client/issues",
-                "source": "https://github.com/lesstif/php-jira-rest-client/tree/5.9.0"
+                "source": "https://github.com/lesstif/php-jira-rest-client/tree/5.10.0"
             },
-            "time": "2024-09-16T11:00:42+00:00"
+            "time": "2025-04-05T12:50:11+00:00"
         },
         {
             "name": "lexik/translation-bundle",
@@ -13102,7 +13102,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
@@ -13120,9 +13120,9 @@
         "ext-simplexml": "*",
         "ext-xml": "*"
     },
-    "platform-dev": [],
+    "platform-dev": {},
     "platform-overrides": {
         "php": "8.2"
     },
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }
