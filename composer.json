@@ -3,6 +3,8 @@
   "description": "Dashboard application for SURFconext Service Providers",
   "license": "Apache-2.0",
   "type": "project",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
   "autoload": {
     "psr-4": {
       "Surfnet\\": "src/Surfnet"
@@ -39,7 +41,7 @@
     "jeremykendall/php-domain-parser": "~1.3.1",
     "knplabs/knp-menu-bundle": "^3.0.0",
     "league/tactician-bundle": "^1.1.17",
-    "lesstif/php-jira-rest-client": "^5.2",
+    "lesstif/php-jira-rest-client": "dev-main#efb2951436731d3e95be4d63e7b092bb6b181f36",
     "lexik/translation-bundle": "^v6.0",
     "nelmio/security-bundle": "^v3.1",
     "openconext/monitor-bundle": "^3.1.0",
@@ -182,6 +184,12 @@
       "!/vendor"
     ]
   },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/lesstif/php-jira-rest-client.git"
+    }
+  ],
   "extra": {
     "patches": {
       "stfalcon/tinymce-bundle": {
