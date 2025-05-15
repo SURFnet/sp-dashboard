@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cbda7eb6a178f20e66af55cbb9c53804",
+    "content-hash": "0a4ff50bdb6201de4344c263326250a4",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -2750,12 +2750,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/lesstif/php-jira-rest-client.git",
-                "reference": "3e1e925461788fcd7978a0ea7d8acdb0f453847a"
+                "reference": "0b0d4f9cfcfb7104749c25c2b2da02a31ed786ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lesstif/php-jira-rest-client/zipball/3e1e925461788fcd7978a0ea7d8acdb0f453847a",
-                "reference": "3e1e925461788fcd7978a0ea7d8acdb0f453847a",
+                "url": "https://api.github.com/repos/lesstif/php-jira-rest-client/zipball/0b0d4f9cfcfb7104749c25c2b2da02a31ed786ff",
+                "reference": "0b0d4f9cfcfb7104749c25c2b2da02a31ed786ff",
                 "shasum": ""
             },
             "require": {
