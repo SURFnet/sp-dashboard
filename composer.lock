@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4d71bdd21c0a2fbc092a58be12e3c6eb",
+    "content-hash": "d851e369806de2ca937f88ab902a499b",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -2674,16 +2674,16 @@
         },
         {
             "name": "lesstif/php-jira-rest-client",
-            "version": "5.10.0",
+            "version": "dev-main",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lesstif/php-jira-rest-client.git",
-                "reference": "46b20408c34138615acbdd58a86b8b624d864d0c"
+                "reference": "0b0d4f9cfcfb7104749c25c2b2da02a31ed786ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lesstif/php-jira-rest-client/zipball/46b20408c34138615acbdd58a86b8b624d864d0c",
-                "reference": "46b20408c34138615acbdd58a86b8b624d864d0c",
+                "url": "https://api.github.com/repos/lesstif/php-jira-rest-client/zipball/0b0d4f9cfcfb7104749c25c2b2da02a31ed786ff",
+                "reference": "0b0d4f9cfcfb7104749c25c2b2da02a31ed786ff",
                 "shasum": ""
             },
             "require": {
@@ -2702,6 +2702,7 @@
             "suggest": {
                 "vlucas/phpdotenv": "^5.0|^6.0"
             },
+            "default-branch": true,
             "type": "library",
             "extra": {
                 "laravel": {
@@ -2735,9 +2736,9 @@
             ],
             "support": {
                 "issues": "https://github.com/lesstif/php-jira-rest-client/issues",
-                "source": "https://github.com/lesstif/php-jira-rest-client/tree/5.10.0"
+                "source": "https://github.com/lesstif/php-jira-rest-client/tree/main"
             },
-            "time": "2025-04-05T12:50:11+00:00"
+            "time": "2025-04-05T13:08:01+00:00"
         },
         {
             "name": "lexik/translation-bundle",
@@ -13102,7 +13103,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {},
+    "stability-flags": {
+        "lesstif/php-jira-rest-client": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
