@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cf3727b3336e262f6047f1d083d0a131",
+    "content-hash": "43a9a0aa17e31dc3a468ed6ecfa1170c",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -2746,16 +2746,16 @@
         },
         {
             "name": "lesstif/php-jira-rest-client",
-            "version": "5.10.0",
+            "version": "dev-main",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lesstif/php-jira-rest-client.git",
-                "reference": "46b20408c34138615acbdd58a86b8b624d864d0c"
+                "reference": "efb2951436731d3e95be4d63e7b092bb6b181f36"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lesstif/php-jira-rest-client/zipball/46b20408c34138615acbdd58a86b8b624d864d0c",
-                "reference": "46b20408c34138615acbdd58a86b8b624d864d0c",
+                "url": "https://api.github.com/repos/lesstif/php-jira-rest-client/zipball/efb2951436731d3e95be4d63e7b092bb6b181f36",
+                "reference": "efb2951436731d3e95be4d63e7b092bb6b181f36",
                 "shasum": ""
             },
             "require": {
@@ -2774,6 +2774,7 @@
             "suggest": {
                 "vlucas/phpdotenv": "^5.0|^6.0"
             },
+            "default-branch": true,
             "type": "library",
             "extra": {
                 "laravel": {
@@ -2787,7 +2788,11 @@
                     "JiraRestApi\\": "src"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "JiraRestApi\\Test\\": "tests"
+                }
+            },
             "license": [
                 "Apache-2.0"
             ],
@@ -2806,10 +2811,10 @@
                 "rest"
             ],
             "support": {
-                "issues": "https://github.com/lesstif/php-jira-rest-client/issues",
-                "source": "https://github.com/lesstif/php-jira-rest-client/tree/5.10.0"
+                "source": "https://github.com/lesstif/php-jira-rest-client/tree/main",
+                "issues": "https://github.com/lesstif/php-jira-rest-client/issues"
             },
-            "time": "2025-04-05T12:50:11+00:00"
+            "time": "2025-04-05T13:08:01+00:00"
         },
         {
             "name": "lexik/translation-bundle",
@@ -13146,9 +13151,11 @@
         }
     ],
     "aliases": [],
-    "minimum-stability": "stable",
-    "stability-flags": {},
-    "prefer-stable": false,
+    "minimum-stability": "dev",
+    "stability-flags": {
+        "lesstif/php-jira-rest-client": 20
+    },
+    "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": "^8.2",
