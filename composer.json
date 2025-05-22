@@ -38,7 +38,7 @@
     "guzzlehttp/guzzle": "^7.9.2",
     "knplabs/knp-menu-bundle": "^3.5.0",
     "league/tactician-bundle": "^1.5.1",
-    "lesstif/php-jira-rest-client": "^5.9",
+    "lesstif/php-jira-rest-client": "dev-main#0b0d4f9cfcfb7104749c25c2b2da02a31ed786ff",
     "lexik/translation-bundle": "^v6.0",
     "nelmio/security-bundle": "^3.4.2",
     "openconext/monitor-bundle": "^4.3.1",
@@ -189,6 +189,12 @@
         "Fix dependency injection issue": "./patches/dependency-injection-for-TinymceBundle.patch"
       }
     },
+    "repositories": [
+      {
+        "type": "vcs",
+        "url": "https://github.com/lesstif/php-jira-rest-client.git"
+      }
+    ],
     "symfony": {
       "allow-contrib": false,
       "require": "6.4.*"
