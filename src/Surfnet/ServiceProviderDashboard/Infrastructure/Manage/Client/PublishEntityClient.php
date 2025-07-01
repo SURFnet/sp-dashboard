@@ -113,12 +113,30 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
             throw new PushMetadataException('Unable to push the metadata to Engineblock', 0, $e);
         }
 
-        if ($response['status'] != "OK") {
+        if (!is_array($response)) {
             $this->logger->error(
-                'Manage rejected the push to Engineblock',
-                $response ?? []
+                'Manage did not return a valid response',
+                ['response' => $response]
             );
             throw new PushMetadataException('Pushing did not succeed.');
+        }
+
+        if (count($response) === 0) {
+            $this->logger->error(
+                'Manage did not return an inner response',
+                ['response' => $response]
+            );
+            throw new PushMetadataException('Pushing did not succeed.');
+        }
+
+        foreach ($response as $system => $innerResponse) {
+            if ($innerResponse['status'] !== 'OK') {
+                $this->logger->error(
+                    sprintf('Manage "%s" rejected the push to Engineblock', $system),
+                    $innerResponse ?? []
+                );
+                throw new PushMetadataException('Pushing did not succeed.');
+            }
         }
         return $response;
     }
