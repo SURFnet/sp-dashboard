@@ -198,10 +198,24 @@ class PublishEntityClientTest extends MockeryTestCase
 
     public function test_it_can_push_to_engineblock()
     {
-        $this->mockHandler->append(new Response(200, [], '{"status":"OK"}'));
+        $responseJson = '{
+          "pdp": {
+            "status": "OK"
+          },
+          "eb": {
+            "status": "OK"
+          },
+          "oidc": {
+            "status": "OK"
+          }
+        }';
+
+        $this->mockHandler->append(new Response(200, [], $responseJson));
 
         $response = $this->client->pushMetadata();
-        $this->assertEquals('OK', $response['status']);
+        $this->assertEquals('OK', $response['pdp']['status']);
+        $this->assertEquals('OK', $response['eb']['status']);
+        $this->assertEquals('OK', $response['oidc']['status']);
     }
 
     public function test_it_handles_failing_push_action()
@@ -220,8 +234,21 @@ class PublishEntityClientTest extends MockeryTestCase
     {
         $this->expectExceptionMessage("Pushing did not succeed");
         $this->expectException(PushMetadataExceptionAlias::class);
-        // First call represents the 'xml to json' POST on the Manage endpoint
-        $this->mockHandler->append(new Response(200, [], '{"status": "failed", "validation": "invalid enum"}'));
+
+        $responseJson = '{
+          "pdp": {
+            "status": "OK"
+          },
+          "eb": {
+            "status": "failed",
+            "validation": "invalid enum"
+          },
+          "oidc": {
+            "status": "OK"
+          }
+        }';
+
+        $this->mockHandler->append(new Response(200, [], $responseJson));
 
         $this->logger
             ->shouldReceive('error')

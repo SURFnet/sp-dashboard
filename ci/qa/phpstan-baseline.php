@@ -4327,17 +4327,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/Manage/Client/PublishEntityClient.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Cannot access offset \'status\' on mixed\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/Manage/Client/PublishEntityClient.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Cannot call method diff\\(\\) on Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\ManageEntity\\|null\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/Manage/Client/PublishEntityClient.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#2 \\$context of method Psr\\\\Log\\\\LoggerInterface\\:\\:error\\(\\) expects array, mixed given\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/Manage/Client/PublishEntityClient.php',
 ];
