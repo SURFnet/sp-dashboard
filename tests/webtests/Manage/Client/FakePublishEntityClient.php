@@ -62,7 +62,31 @@ class FakePublishEntityClient implements PublishEntityRepositoryInterface
 
     public function pushMetadata(): mixed
     {
-        $response = $this->pushOk ? '{"status":"OK"}' : '{"status":"400"}';
+        if ($this->pushOk) {
+            $response = '{
+                "pdp": {
+                    "status": "OK"
+                },
+                "eb": {
+                    "status": "OK"
+                },
+                "oidc": {
+                    "status": "OK"
+                }
+            }';
+        } else {
+            $response = '{
+                "pdp": {
+                    "status": "400"
+                },
+                "eb": {
+                    "status": "400"
+                },
+                "oidc": {
+                    "status": "400"
+                }
+            }';
+        }
         return json_decode($response, true);
     }
 
