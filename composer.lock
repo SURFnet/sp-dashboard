@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d851e369806de2ca937f88ab902a499b",
+    "content-hash": "46ced38839e6fadec9219f7395af17b9",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -3662,16 +3662,16 @@
         },
         {
             "name": "simplesamlphp/saml2",
-            "version": "v4.16.14",
+            "version": "v4.18.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/simplesamlphp/saml2.git",
-                "reference": "fe6c7bdda5e166e326d19d78f230d959ab51d01d"
+                "reference": "78b1c6735db8e2f78dcea9bcac0317ad2b200d72"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/simplesamlphp/saml2/zipball/fe6c7bdda5e166e326d19d78f230d959ab51d01d",
-                "reference": "fe6c7bdda5e166e326d19d78f230d959ab51d01d",
+                "url": "https://api.github.com/repos/simplesamlphp/saml2/zipball/78b1c6735db8e2f78dcea9bcac0317ad2b200d72",
+                "reference": "78b1c6735db8e2f78dcea9bcac0317ad2b200d72",
                 "shasum": ""
             },
             "require": {
@@ -3717,9 +3717,9 @@
             "description": "SAML2 PHP library from SimpleSAMLphp",
             "support": {
                 "issues": "https://github.com/simplesamlphp/saml2/issues",
-                "source": "https://github.com/simplesamlphp/saml2/tree/v4.16.14"
+                "source": "https://github.com/simplesamlphp/saml2/tree/v4.18.1"
             },
-            "time": "2024-12-01T22:26:30+00:00"
+            "time": "2025-03-16T11:37:44+00:00"
         },
         {
             "name": "stfalcon/tinymce-bundle",
@@ -3869,16 +3869,16 @@
         },
         {
             "name": "surfnet/stepup-saml-bundle",
-            "version": "6.0.4",
+            "version": "6.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/OpenConext/Stepup-saml-bundle.git",
-                "reference": "381d7bcf45aa702f8e691a8103062da7afb8c4e9"
+                "reference": "3ee8ae9e45dd45104945d8766a1d8e5a022701df"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/OpenConext/Stepup-saml-bundle/zipball/381d7bcf45aa702f8e691a8103062da7afb8c4e9",
-                "reference": "381d7bcf45aa702f8e691a8103062da7afb8c4e9",
+                "url": "https://api.github.com/repos/OpenConext/Stepup-saml-bundle/zipball/3ee8ae9e45dd45104945d8766a1d8e5a022701df",
+                "reference": "3ee8ae9e45dd45104945d8766a1d8e5a022701df",
                 "shasum": ""
             },
             "require": {
@@ -3887,11 +3887,11 @@
                 "php": "^8.1",
                 "robrichards/xmlseclibs": "^3.1.1",
                 "simplesamlphp/saml2": "^4.6",
-                "symfony/dependency-injection": "5.4.*|^6",
-                "symfony/framework-bundle": "5.4.*|^6",
-                "symfony/security-bundle": "5.4.*|^6",
-                "symfony/templating": "5.4.*|^6",
-                "twig/twig": "^2|^3"
+                "symfony/dependency-injection": "^6.3",
+                "symfony/framework-bundle": "^6.3",
+                "symfony/security-bundle": "^6.3",
+                "symfony/templating": "^6.3",
+                "twig/twig": "^3"
             },
             "require-dev": {
                 "ext-zlib": "*",
@@ -3906,7 +3906,7 @@
                 "sebastian/exporter": "^4.0.5",
                 "sebastian/phpcpd": "^6.0",
                 "squizlabs/php_codesniffer": "^3.7.1",
-                "symfony/phpunit-bridge": "5.4.*|^6"
+                "symfony/phpunit-bridge": "^6.3"
             },
             "type": "symfony-bundle",
             "extra": {
@@ -3925,7 +3925,7 @@
             "license": [
                 "Apache-2.0"
             ],
-            "description": "A Symfony 5|6 bundle that integrates the simplesamlphp\\saml2 library with Symfony.",
+            "description": "A Symfony 6 bundle that integrates the simplesamlphp\\saml2 library with Symfony.",
             "keywords": [
                 "SAML2",
                 "saml",
@@ -3935,9 +3935,9 @@
             ],
             "support": {
                 "issues": "https://github.com/OpenConext/Stepup-saml-bundle/issues",
-                "source": "https://github.com/OpenConext/Stepup-saml-bundle/tree/6.0.4"
+                "source": "https://github.com/OpenConext/Stepup-saml-bundle/tree/6.2.0"
             },
-            "time": "2023-10-10T07:52:25+00:00"
+            "time": "2025-05-26T09:04:11+00:00"
         },
         {
             "name": "symfony/asset",

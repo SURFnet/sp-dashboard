@@ -6,6 +6,8 @@
 parameters:
     locale: en
     router.request_context.base_url: ''
+    acs_location_route_name: 'dashboard_saml_consume_assertion'
+    authentication_context_class_ref: ~
 
 services:
     # default configuration for services in *this* file

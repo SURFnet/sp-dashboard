@@ -1,8 +1,38 @@
 ---
-
-version: "3.8"
+include:
+  - ../OpenConext-devconf/core/docker-compose.yml
 
 services:
+  spdashboard:
+    image:  ghcr.io/openconext/openconext-basecontainers/php82-apache2-node20-composer2:latest
+    environment:
+      PHP_MEMORY_LIMIT: 256M
+    volumes:
+      - ../OpenConext-devconf/core/:/config
+      - ./:/var/www/html/
+      - ./docker/conf/zz-docker.conf:/usr/local/etc/php/conf.d/zz-docker.ini
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      coreconextdev:
+    hostname: spdashboard.docker
+    depends_on:
+      engine:
+        condition: service_healthy
+      mariadb:
+        condition: service_healthy
+
+  test-browser:
+    image: selenium/standalone-chrome:latest
+    hostname: test-browser
+    ports:
+      - "5900:5900"
+      - "4444:4444"
+    privileged: true
+    shm_size: 2g
+    networks:
+      coreconextdev:
+
   cypress:
     image: cypress/included:10.8.0
     working_dir: /e2e

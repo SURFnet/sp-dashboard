@@ -44,7 +44,7 @@
     "openconext/monitor-bundle": "^4.3.1",
     "stfalcon/tinymce-bundle": "^3.2.0",
     "stof/doctrine-extensions-bundle": "^1.13",
-    "surfnet/stepup-saml-bundle": "6.0.4",
+    "surfnet/stepup-saml-bundle": "6.2.0",
     "symfony/asset": "^6.4.13",
     "symfony/browser-kit": "^6.4.13",
     "symfony/console": "^6.4.17",
