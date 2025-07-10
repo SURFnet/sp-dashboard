@@ -1,16 +1,14 @@
 ---
-include:
-  - ../OpenConext-devconf/core/docker-compose.yml
-
 services:
   spdashboard:
     image:  ghcr.io/openconext/openconext-basecontainers/php82-apache2-node20-composer2:latest
     environment:
+      APP_ENV: test
       PHP_MEMORY_LIMIT: 256M
     volumes:
-      - ../OpenConext-devconf/core/:/config
-      - ./:/var/www/html/
-      - ./docker/conf/zz-docker.conf:/usr/local/etc/php/conf.d/zz-docker.ini
+      - ${PWD}/../OpenConext-devconf/core/:/config
+      - ${PWD}/:/var/www/html/
+      - ${PWD}/docker/conf/zz-docker.conf:/usr/local/etc/php/conf.d/zz-docker.ini
     extra_hosts:
       - "host.docker.internal:host-gateway"
     networks:
@@ -23,7 +21,7 @@ services:
         condition: service_healthy
 
   test-browser:
-    image: selenium/standalone-chrome:latest
+    image: selenium/standalone-chrome:120.0
     hostname: test-browser
     ports:
       - "5900:5900"
@@ -40,4 +38,4 @@ services:
     networks:
       coreconextdev:
     volumes:
-      - .:/e2e
+      - ${PWD}:/e2e

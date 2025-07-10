@@ -1,0 +1,7 @@
+---
+name: core
+
+include:
+  - path:
+    - ../OpenConext-devconf/core/docker-compose.yml
+    - ./docker-compose-ci.yml

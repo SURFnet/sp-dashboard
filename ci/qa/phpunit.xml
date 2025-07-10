@@ -6,7 +6,6 @@
          colors="true"
          bootstrap="../../tests/bootstrap.php"
          beStrictAboutTestsThatDoNotTestAnything="true"
-         stopOnFailure="true"
          failOnRisky="true">
 
   <coverage>
