@@ -1,7 +1,6 @@
 name: Build docker container for the SP Dashboard
 
 on:
-  pull_request:
   push:
     tags:
       - "*.*.*"
