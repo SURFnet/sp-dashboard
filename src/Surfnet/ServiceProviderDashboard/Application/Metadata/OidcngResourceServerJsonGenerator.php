@@ -181,9 +181,11 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
     {
         $metadata = [];
         if ($entity->getOidcClient() instanceof OidcClientInterface) {
-            $secret = $entity->getOidcClient()->getClientSecret();
-            if ($secret !== '' && $secret !== '0') {
-                $metadata['secret'] = $secret;
+            if (!$entity->getOidcClient()->isPublicClient()) {
+                $secret = $entity->getOidcClient()->getClientSecret();
+                if ($secret !== '' && $secret !== '0') {
+                    $metadata['secret'] = $secret;
+                }
             }
         }
         return $metadata;
