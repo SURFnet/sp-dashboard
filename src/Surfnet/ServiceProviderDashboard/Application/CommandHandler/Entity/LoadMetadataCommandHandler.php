@@ -27,6 +27,7 @@ use Surfnet\ServiceProviderDashboard\Application\Metadata\ParserInterface;
 use Surfnet\ServiceProviderDashboard\Application\Service\AttributeNameServiceInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Exception\AttributeNotFoundException;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Metadata;
+use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Exception\ParserException;
 
 class LoadMetadataCommandHandler implements CommandHandler
 {
@@ -60,6 +61,12 @@ class LoadMetadataCommandHandler implements CommandHandler
         }
 
         $metadata = $this->metadataParser->parseXml($xml);
+
+        if ($command->isUrlSet()) {
+            if ($metadata->nameIdFormat === null || $metadata->nameIdFormat === '') {
+                throw new ParserException('Missing the NameIDFormat');
+            }
+        }
 
         $this->mapTextFields($targetCommand, $metadata);
         $this->mapContacts($targetCommand, $metadata);
