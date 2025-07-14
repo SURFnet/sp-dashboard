@@ -12,10 +12,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
-      DOCKER_COMPOSE: docker compose -f docker-compose.yml -f docker-compose-ci.yml
-      DOCKER_COMPOSE_PHP: docker compose -f docker-compose.yml -f docker-compose-ci.yml exec -T spdashboard
-      DOCKER_COMPOSE_CYPRESS: docker compose -f docker-compose.yml -f docker-compose-ci.yml exec -T cypress
-      DOCKER_RUN_SPD_AS_WWW: docker exec --user 33:33 spdashboard-spdashboard-1
+      DOCKER_COMPOSE: docker compose -f docker-compose.yml
+      DOCKER_COMPOSE_PHP: docker compose -f docker-compose.yml exec -T spdashboard
+      DOCKER_COMPOSE_CYPRESS: docker compose -f docker-compose.yml exec -T cypress
+      DOCKER_RUN_SPD_AS_WWW: docker compose -f docker-compose.yml exec --user 33:33 spdashboard
 
     steps:
       - name: Check out the repo
@@ -26,16 +26,18 @@ jobs:
       - name: Checkout openconext-devconf
         uses: actions/checkout@v4
         with:
-          path: OpenConext-devconf
           repository: OpenConext/OpenConext-devconf
+          ref: main
+          path: OpenConext-devconf
+          sparse-checkout: core
 
       - name: Bootstrap the openconext environment
-        working-directory: spdashboard
-        run: bash ../OpenConext-devconf/core/scripts/init.sh
-      
+        working-directory: OpenConext-devconf/core
+        run: ./scripts/init.sh
+
       - name: Start the docker images for testing
         working-directory: spdashboard
-        run: ${DOCKER_COMPOSE} up -d
+        run: ${DOCKER_COMPOSE} up -d mariadb spdashboard cypress
 
       - name: Instantiate the env file
         run: cp spdashboard/.env.dist spdashboard/.env
@@ -58,10 +60,10 @@ jobs:
         working-directory: spdashboard
         run: |
           ${DOCKER_COMPOSE_PHP} yarn run encore production
-      
+
       - name: Delete the database if present
         working-directory: spdashboard
-        run: | 
+        run: |
           ${DOCKER_COMPOSE_PHP} rm -f /tmp/spdashboard-webtests.sqlite
 
       - name: Get the database up and running

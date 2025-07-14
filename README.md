@@ -16,11 +16,8 @@ their services. This can be both SAML 2.0, OpenID Connect Relying Parties and Oa
 
 - [PHP](https://secure.php.net/manual/en/install.php) (8.2)
 - [Composer](https://getcomposer.org/doc/00-intro.md)
-- [Apache Ant](https://ant.apache.org/manual/install.html)
 - [Docker](https://docs.docker.com/engine/install/)
 - [Docker Compose](https://docs.docker.com/compose/install/)
-
-Use `docker compose up -d` to create and build the development environment.
 
 An entry in your hostsfile is still required for things to work. An example entry would look like:
 
@@ -43,29 +40,31 @@ dir/
   - sp-dashboard/
   - OpenConext-devconf/
 
-In order to start the development environment, run `docker compose --profile teams up -d`. This will start the container that is
-used in development to run the application. 
 
-You can then bootstrap the environment. It will ensure that a complete working OpenConext setup is running:
-```
-sh ../OpenConext-devconf/core/scripts/init.sh
-```
+To bootstrap the development environment, you'll need a working Devconf setup.
+Please follow the instructions in the [OpenConext-devconf README](https://github.com/OpenConext/OpenConext-devconf/blob/main/README.md)
 
-Then start the command line in the container with `docker compose exec -ti spdashboard bash`. This will start a shell
 
-Run `composer install`. This will install all PHP dependencies, including the development dependencies.
+If Devconf is provisioned and up and running then you can start the command line in the container with
+`./start-dev-env.sh spdashboard:/home/bas/Projects/surf/sp-dashboard` in the `OpenConext-devconf/core` directory.
+
+Then run the following commands to install the PHP and JS dependencies:
+
+```bash
+Run `composer install --ignore-platform-req=ext-zip`. This will install all PHP dependencies, including the development dependencies.
 Run `yarn install`. This will install all js dependencies, including the development dependencies.
 Run `yarn encore dev`. This will build the frontend.
 
 Install database migrations
 ```
-$ docker compose exec spdashboard /var/www/html/bin/console doctrine:migrations:migrate
+bin/console doctrine:migrations:migrate --env=dev
 ```
 
 The application is now up and running and can be accessed at
-[https://spdashboard.dev.openconext.local/](https://spdashboard.dev.openconext.local). Note that in development the `app_dev.php`
-front controller is used automatically, so you don't have to include `/app_dev.php/` in the URLs.
-* To view mails caught by Mailcatcher, visit [spdashboard.dev.openconext.local:1080](https://spdashboard.dev.openconext.local:1080/)
+[https://spdashboard.dev.openconext.local/](https://spdashboard.dev.openconext.local). 
+
+Be aware that you will now log in as admin, you can change that behaviour if you would like to:
+See: [Testing the front-end with different priviliges](docs/testing-with-different-priviliges.md)
 
 ### Running the tests
 
@@ -82,7 +81,6 @@ Some remarks:
 
 ## Other resources
 
- - [SAML configuration for development](docs/saml-dev-setup.md)
  - [Developer documentation](docs/index.md)
  - [Issue tracker](https://www.pivotaltracker.com/n/projects/1400064)
  - [License](LICENSE.txt)

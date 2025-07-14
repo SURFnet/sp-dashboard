@@ -1,4 +1,5 @@
 surfnet_saml:
+  enable_authentication: true
   hosted:
     service_provider:
       enabled: true
