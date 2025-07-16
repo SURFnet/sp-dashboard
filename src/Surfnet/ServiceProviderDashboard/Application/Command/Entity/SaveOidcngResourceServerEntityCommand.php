@@ -223,7 +223,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
      */
     public function setEntityId($entityId): void
     {
-        $this->entityId = strtolower($entityId);
+        $this->entityId = $entityId;
     }
 
     /**
@@ -231,7 +231,11 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
      */
     public function getClientId(): ?string
     {
-        return $this->entityId;
+        if (is_string($this->entityId)) {
+            return strtolower($this->entityId);
+        }
+
+        return null;
     }
 
     /**
