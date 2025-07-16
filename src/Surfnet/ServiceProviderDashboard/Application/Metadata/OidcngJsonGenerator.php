@@ -211,9 +211,11 @@ class OidcngJsonGenerator implements GeneratorInterface
     {
         $metadata = [];
         if ($entity->getOidcClient() instanceof OidcClientInterface) {
-            $secret = $entity->getOidcClient()->getClientSecret();
-            if ($secret !== '' && $secret !== '0') {
-                $metadata['secret'] = $secret;
+            if (!$entity->getOidcClient()->isPublicClient()) {
+                $secret = $entity->getOidcClient()->getClientSecret();
+                if ($secret !== '' && $secret !== '0') {
+                    $metadata['secret'] = $secret;
+                }
             }
             // Reset the redirect URI list in order to get a correct JSON formatting (See #163646662)
             $metadata['redirectUrls'] = $entity->getOidcClient()->getRedirectUris();
