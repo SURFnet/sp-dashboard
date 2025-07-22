@@ -181,11 +181,14 @@ class EntityCreateConnectionRequestController extends AbstractController
         if (is_null($publishedEntity)) {
             return false;
         }
+        if ($publishedEntity->getOidcClient()->isPublicClient()) {
+            return false;
+        }
         $protocol = $publishedEntity->getProtocol()->getProtocol();
         $protocolUsesSecret = $protocol === Constants::TYPE_OPENID_CONNECT_TNG ||
             $protocol === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER ||
             $protocol === Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT;
 
-        return $publishedEntity && $protocolUsesSecret && $publishedEntity->getOidcClient()->getClientSecret();
+        return $protocolUsesSecret && $publishedEntity->getOidcClient()->getClientSecret();
     }
 }
