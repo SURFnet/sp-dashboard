@@ -27,12 +27,12 @@ interface OidcClientInterface
     /**
      * @return string
      */
-    public function getClientId();
+    public function getClientId(): string;
 
     /**
      * @return string
      */
-    public function getClientSecret();
+    public function getClientSecret(): ?string;
 
     /**
      * @return array

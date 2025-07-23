@@ -119,7 +119,7 @@ class OidcngClient implements Comparable, OidcClientInterface
         return $this->clientId;
     }
 
-    public function getClientSecret(): string
+    public function getClientSecret(): ?string
     {
         return $this->clientSecret;
     }
