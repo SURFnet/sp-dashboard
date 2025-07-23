@@ -181,7 +181,7 @@ class EntityCreateConnectionRequestController extends AbstractController
         if (is_null($publishedEntity)) {
             return false;
         }
-        if ($publishedEntity->getOidcClient()->isPublicClient()) {
+        if (!$publishedEntity->getOidcClient() || $publishedEntity->getOidcClient()->isPublicClient()) {
             return false;
         }
         $protocol = $publishedEntity->getProtocol()->getProtocol();
