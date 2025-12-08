@@ -1,3 +1,6 @@
+## 6.2.8
+- Update xmlseclibs dependency to fix canonicalization bypass error
+
 ## 6.2.0
 - New field to set 'coin:ss:idp_visible_only'
 - An SP needs to explicitly connect an IdP, so it's more obvious when a dummy IdP is connected
