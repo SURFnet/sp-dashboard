@@ -184,11 +184,6 @@
     ]
   },
   "extra": {
-    "patches": {
-      "stfalcon/tinymce-bundle": {
-        "Fix dependency injection issue": "./patches/dependency-injection-for-TinymceBundle.patch"
-      }
-    },
     "repositories": [
       {
         "type": "vcs",
