@@ -349,7 +349,10 @@ class WebTestCase extends PantherTestCase
     protected function logIn(Service $service = null, Service $secondService = null): Crawler
     {
         $crawler = self::$pantherClient->request('GET', 'https://spdashboard.dev.openconext.local');
-
+        // Browser will be redirected to EB
+        // Click on the intermediate IdP selection element (wayf screen)
+        $crawler->findElement(WebDriverBy::cssSelector('.wayf__idp[data-entityid="http://mock-idp"]'))->click();
+        $crawler = self::$pantherClient->refreshCrawler();
         $form = $crawler->findElement(WebDriverBy::cssSelector('form.login-form'));
         $this->fillFormField($form, '#username', 'John Doe');
         $this->fillFormField($form, '#password', 'secret');
@@ -377,7 +380,10 @@ class WebTestCase extends PantherTestCase
     protected function logInSurfConextResponsible(string $institutionId): void
     {
         $crawler = self::$pantherClient->request('GET', 'https://spdashboard.dev.openconext.local');
-
+        // Browser will be redirected to EB
+        // Click on the intermediate IdP selection element (wayf screen)
+        $crawler->findElement(WebDriverBy::cssSelector('.wayf__idp[data-entityid="http://mock-idp"]'))->click();
+        $crawler = self::$pantherClient->refreshCrawler();
         $form = $crawler->findElement(WebDriverBy::cssSelector('form.login-form'));
         $this->fillFormField($form, '#username', 'John Dart');
         $this->fillFormField($form, '#password', 'secret');
