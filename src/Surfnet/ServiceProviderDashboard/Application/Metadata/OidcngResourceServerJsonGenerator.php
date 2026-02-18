@@ -101,6 +101,7 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
             'metaDataId' => $entity->getId(),
             'type' => 'oauth20_rs',
             'pathUpdates' => $this->generateForChangeRequest($differences),
+            'ticketKey' => $jiraTicketNumber,
             'auditData' => [
                 'user' => $contact->getEmailAddress(),
                 'notes' => $revisionNote,

@@ -101,6 +101,7 @@ class JsonGenerator implements GeneratorInterface
             'metaDataId' => $entity->getId(),
             'type' => 'saml20_sp',
             'pathUpdates' => $this->generateForChangeRequest($entity, $differences),
+            'ticketKey' => $jiraTicketNumber,
             'auditData' => [
                 'user' => $contact->getEmailAddress(),
                 'notes' => $revisionNote,
