@@ -19,7 +19,6 @@
     "cypress": "^10.8",
     "cypress-axe": "^0.10.0",
     "cypress-html-validate": "^1.4.1",
-    "extract-loader": "^3.0.0",
     "file-loader": "^2.0.0",
     "html-validate": "^7.12",
     "jest": "^28",
