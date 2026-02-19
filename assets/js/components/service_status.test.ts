@@ -6,10 +6,6 @@ import { loadServiceStatus } from "./service_status";
 
 import * as $ from "jquery";
 
-jest
-    .dontMock('fs')
-    .dontMock('jquery');
-
 (<any>window).$ = $;
 
 (<any>window).$.ajax = function() {

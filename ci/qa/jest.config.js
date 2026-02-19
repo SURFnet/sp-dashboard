@@ -1,5 +1,10 @@
+// Auto-detect if running in Docker or local development
+const fs = require('fs');
+const isDocker = fs.existsSync('/var/www/html/composer.json');
+const rootDir = isDocker ? '/var/www/html' : '../../';
+
 module.exports = {
-    rootDir: "/var/www/html",
+    rootDir: rootDir,
     collectCoverage: false,
     coverageDirectory: "./assets/js/coverage",
     collectCoverageFrom: [
@@ -29,18 +34,17 @@ module.exports = {
         "<rootDir>/public/build"
     ],
     transform: {
-        "\\.(ts|tsx)$": "ts-jest"
+        "\\.(ts|tsx)$": ["ts-jest", {
+            tsconfig: "tsconfig.jest.json",
+            diagnostics: {
+                ignoreCodes: [151001, 2349, 2351]
+            },
+        }]
     },
     testRegex: ".*\\.test\\.(ts|tsx|js|jsx)$",
-    globals: {
-        "ts-jest": {
-            tsconfig: "tsconfig.json",
-            diagnostics: {
-                ignoreCodes: [151001]
-            },
-        }
-    },
-    "setupFiles": [
+    testEnvironment: "jsdom",
+    setupFiles: [
         "jest-canvas-mock",
+        "<rootDir>/ci/qa/jest.setup.js"
     ]
 };

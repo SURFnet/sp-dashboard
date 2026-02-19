@@ -7,10 +7,6 @@ import { loadEntityOidcForm } from "./collection_widget";
 import * as $ from "jquery";
 import * as jQuery from "jquery";
 
-jest
-  .dontMock('fs')
-  .dontMock('jquery');
-
 describe('validate collection widget', function() {
 
   let stateHtml = `

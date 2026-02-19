@@ -5,10 +5,6 @@
 import { loadEntityAclForm } from "./entity_acl_form";
 import * as $ from "jquery";
 
-jest
-  .dontMock('fs')
-  .dontMock('jquery');
-
 (<any>window).$ = $;
 
 describe('validate visibility toggling of acl list on the entity acl form', function() {
