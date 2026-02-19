@@ -104,7 +104,7 @@ class OidcngJsonGenerator implements GeneratorInterface
             'metaDataId' => $entity->getId(),
             'type' => 'oidc10_rp',
             'pathUpdates' => $this->generateForChangeRequest($differences, $entity),
-            'ticketKey' => $jiraTicketNumber,
+            'ticketKey' => (string) $jiraTicketNumber,
             'auditData' => [
                 'user' => $contact->getEmailAddress(),
                 'notes' => $revisionNote,

@@ -297,6 +297,7 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
         $this->assertStringContainsString('Change request by user A.F.Th. van der Heijden with email address "j.doe@example.com', $data['note']);
         $this->assertStringContainsString('CHR-7432', $data['note']);
         $this->assertStringContainsString('revisionnote', $data['note']);
+        $this->assertEquals('CHR-7432', $data['ticketKey']);
     }
 
     private function createManageEntity(

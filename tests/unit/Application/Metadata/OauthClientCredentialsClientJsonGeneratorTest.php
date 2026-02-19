@@ -76,6 +76,7 @@ class OauthClientCredentialsClientJsonGeneratorTest extends MockeryTestCase
         $this->assertStringContainsString('Change request by user A.F.Th. van der Heijden with email address "j.doe@example.com"', $data['note']);
         $this->assertStringContainsString('CHR-421', $data['note']);
         $this->assertStringContainsString('revisionnote', $data['note']);
+        $this->assertEquals('CHR-421', $data['ticketKey']);
     }
 
     public function test_it_generate_has_revision_note_for_a_new_entity()
