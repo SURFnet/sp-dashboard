@@ -2,8 +2,22 @@
  * @jest-environment jsdom
  */
 
-import { loadServiceStatus } from "./service_status";
+// Mock Chart.js before importing service_status
+jest.mock('chart.js', () => ({
+  Chart: Object.assign(
+    jest.fn().mockImplementation(() => ({})),
+    { register: jest.fn() }
+  ),
+  DoughnutController: {},
+  ArcElement: {},
+  Tooltip: {},
+  Legend: {},
+  TooltipItem: {},
+}));
 
+jest.mock('chartjs-plugin-datalabels', () => ({}));
+
+import { loadServiceStatus } from "./service_status";
 import * as $ from "jquery";
 
 (<any>window).$ = $;
@@ -73,8 +87,8 @@ describe('validate donut status graph', function() {
         loadServiceStatus();
 
         let expected = `
-            <div class="service-status-container"> <div class="service-status-graph" data-service-id="2"><div class="service-status-canvas"><canvas style="display: block;" height="0" class="chartjs-render-monitor" width="0"></canvas></div><div class="service-status-legend"><div class="legend-item" style="background-color: rgb(209, 210, 214);"></div><div class="legend-item" style="background-color: rgb(246, 170, 97);"></div><div class="legend-item" style="background-color: rgb(103, 169, 121);"></div></div><div class="service-status-percentage"></div></div></div>
-            <div class="service-status-container"> <div class="service-status-graph" data-service-id="1"><div class="service-status-canvas"><canvas style="display: block;" height="0" class="chartjs-render-monitor" width="0"></canvas></div><div class="service-status-legend"><div class="legend-item" style="background-color: rgb(209, 210, 214);"></div><div class="legend-item" style="background-color: rgb(246, 170, 97);"></div><div class="legend-item" style="background-color: rgb(103, 169, 121);"></div></div><div class="service-status-percentage"></div></div></div>
+            <div class="service-status-container"> <div class="service-status-graph" data-service-id="2"><div class="service-status-canvas"><canvas></canvas></div><div class="service-status-legend"><div class="legend-item" style="background-color: rgb(209, 210, 214);"></div><div class="legend-item" style="background-color: rgb(246, 170, 97);"></div><div class="legend-item" style="background-color: rgb(103, 169, 121);"></div></div><div class="service-status-percentage"></div></div></div>
+            <div class="service-status-container"> <div class="service-status-graph" data-service-id="1"><div class="service-status-canvas"><canvas></canvas></div><div class="service-status-legend"><div class="legend-item" style="background-color: rgb(209, 210, 214);"></div><div class="legend-item" style="background-color: rgb(246, 170, 97);"></div><div class="legend-item" style="background-color: rgb(103, 169, 121);"></div></div><div class="service-status-percentage"></div></div></div>
         `;
 
         let actual = $('.fieldset.card').html();

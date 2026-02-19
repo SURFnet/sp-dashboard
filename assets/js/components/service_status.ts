@@ -1,8 +1,18 @@
 
-import * as Chart from 'chart.js';
-import { ChartTooltipItem } from 'chart.js';
+import {
+  Chart,
+  ChartConfiguration,
+  DoughnutController,
+  ArcElement,
+  Tooltip,
+  Legend,
+  TooltipItem
+} from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 import * as $ from 'jquery';
-import 'chartjs-plugin-datalabels';
+
+// Register required Chart.js components for tree-shaking
+Chart.register(DoughnutController, ArcElement, Tooltip, Legend, ChartDataLabels);
 
 interface StatesDictionary {
   [key: string]: string;
@@ -87,7 +97,9 @@ export class ServiceStatus {
       tooltips.push(states.service.tooltips[key]);
     }
 
-    const customTooltip = function (this: any, tooltipModel: any) {
+    const customTooltip = function (context: {chart: Chart, tooltip: any}) {
+      const tooltipModel = context.tooltip;
+      
       // Tooltip Element
       let tooltipEl = document.getElementById('chartjs-tooltip');
 
@@ -128,8 +140,8 @@ export class ServiceStatus {
         tooltipEl.innerHTML = innerHtml;
       }
 
-      // `this` will be the overall tooltip
-      const position = this._chart.canvas.getBoundingClientRect();
+      // Use context.chart instead of this._chart
+      const position = context.chart.canvas.getBoundingClientRect();
 
       // Display, position, and set styles for font
       tooltipEl.style.position = 'absolute';
@@ -137,9 +149,7 @@ export class ServiceStatus {
       tooltipEl.style.top = `${position.top + window.pageYOffset + tooltipModel.caretY}px`;
     };
 
-    Chart.platform.disableCSSInjection = true;
-
-    const options: Chart.ChartConfiguration = {
+    const options: ChartConfiguration<'doughnut'> = {
       type: 'doughnut',
       data: {
         labels,
@@ -149,7 +159,7 @@ export class ServiceStatus {
         }],
       },
       options: {
-        cutoutPercentage: 75,
+        cutout: '75%',
         responsive: true,
         aspectRatio: 1,
         layout: {
@@ -160,32 +170,25 @@ export class ServiceStatus {
             bottom: 60,
           },
         },
-        legend: {
-          display: false,
-        },
-        title: {
-          display: false,
-        },
-        animation: {
-          animateScale: true,
-          animateRotate: true,
-        },
-        tooltips: {
-          // Disable the on-canvas tooltip
-          enabled: false,
-          mode: 'index',
-          position: 'nearest',
-          custom: customTooltip,
-          callbacks: {
-            label: (tooltipItem: ChartTooltipItem) => {
-              if (tooltipItem.index === undefined) {
-                return '';
-              }
-              return tooltips[tooltipItem.index];
+        plugins: {
+          legend: {
+            display: false,
+          },
+          title: {
+            display: false,
+          },
+          tooltip: {
+            // Disable the on-canvas tooltip
+            enabled: false,
+            mode: 'index',
+            position: 'nearest',
+            external: customTooltip,
+            callbacks: {
+              label: (tooltipItem: TooltipItem<'doughnut'>) => {
+                return tooltips[tooltipItem.dataIndex];
+              },
             },
           },
-        },
-        plugins: {
           datalabels: {
             backgroundColor: null,
             borderColor: 'none',
@@ -201,6 +204,10 @@ export class ServiceStatus {
             anchor: 'end',
             textAlign: 'center',
           },
+        },
+        animation: {
+          animateScale: true,
+          animateRotate: true,
         },
       },
     };

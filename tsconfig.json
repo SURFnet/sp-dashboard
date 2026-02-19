@@ -17,6 +17,7 @@
     "noImplicitThis": true,                /* Raise error on 'this' expressions with an implied 'any' type. */
     "alwaysStrict": true,
     "skipLibCheck": true,                  /* Parse in strict mode and emit "use strict" for each source file. */
+    "moduleResolution": "node",
 
     /* Additional Checks */
     "noUnusedLocals": true,                /* Report errors on unused locals. */
