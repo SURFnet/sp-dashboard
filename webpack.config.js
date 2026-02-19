@@ -20,9 +20,6 @@ Encore
         };
     })
     .addLoader({ test: /\.scss$/, loader: 'webpack-import-glob-loader' })
-    .configureLoaderRule('eslint', loaderRule => {
-        loaderRule.test = /\.(jsx?|vue)$/
-    })
     .disableSingleRuntimeChunk()
     .configureBabel(() => {}, {
         useBuiltIns: 'entry',
