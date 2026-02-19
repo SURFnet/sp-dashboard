@@ -124,6 +124,7 @@ class OauthClientCredentialsClientJsonGenerator implements GeneratorInterface
             'metaDataId' => $entity->getId(),
             'type' => 'oidc10_rp',
             'pathUpdates' => $this->generateForChangeRequest($differences),
+            'ticketKey' => $jiraTicketNumber,
             'auditData' => [
                 'user' => $contact->getEmailAddress(),
                 'notes' => $revisionNote
