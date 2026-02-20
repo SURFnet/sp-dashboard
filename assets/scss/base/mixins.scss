@@ -1,3 +1,7 @@
+@use "sass:color";
+@use "../vars" as *;
+@use "../utilities/media_queries" as *;
+
 /**
  * This mixin adds "offensively defensive" animations.
  * It utilizes the prefers-reduced-motion mediaquery to do so.
@@ -111,7 +115,7 @@
       box-shadow: 0 0 0 0 white;
     }
     70% {
-      box-shadow: 0 0 10px 8px lighten($blue, 15%);
+      box-shadow: 0 0 10px 8px color.adjust($blue, $lightness: 15%);
     }
     100% {
       box-shadow: 0 0 0 0 white;

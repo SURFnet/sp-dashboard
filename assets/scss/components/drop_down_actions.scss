@@ -1,10 +1,13 @@
+@use "../vars" as *;
+@use "sass:color";
+
 section.drop-down-actions {
   position: absolute;
   display: flex;
   flex-direction: column;
   box-shadow: 1px 2px 6px 2px $lighter-grey;
   width: 220px;
-  color: lighten($dark-grey, 10%);
+  color: color.adjust($dark-grey, $lightness: 10%);
   background-color: white;
   border-radius: $br;
   z-index: 5;

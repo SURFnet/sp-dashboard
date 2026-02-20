@@ -1,13 +1,55 @@
-@import "~compass-mixins";
-@include global-reset ;
-
+// Modern SASS: @use instead of @import
+// Variables must be set before @use statements
 $fa-font-path: "../fonts";
-@import "fonts/font-awesome";
-@import "fonts/roboto";
 
-@import "vars";
-@import "./utilities/*";
+// @use with "as *" makes members globally available (like @import did)
+@use "fonts/font-awesome";
+@use "fonts/roboto";
+@use "vars" as *;
+@use "./utilities/functions" as *;
+@use "./utilities/media_queries" as *;
+@use "./utilities/placeholders" as *;
+@use "./utilities/reset" as *;
+@use "./base/mixins" as *;
+@use "./base/base" as *;
 
-@import "./base/*";
-@import "./components/*";
-@import "./pages/*";
+// Components - need explicit @use for each file (glob not supported)
+@use "./components/actions";
+@use "./components/auto_complete";
+@use "./components/button";
+@use "./components/checkbox";
+@use "./components/collection_widget";
+@use "./components/confirmation_dialog";
+@use "./components/connection_request";
+@use "./components/details";
+@use "./components/drop_down_actions";
+@use "./components/entity_acl_list";
+@use "./components/entity_detail";
+@use "./components/flash";
+@use "./components/flash_message";
+@use "./components/footer";
+@use "./components/form";
+@use "./components/header";
+@use "./components/icon_legend";
+@use "./components/link";
+@use "./components/modal";
+@use "./components/modal_add_entity";
+@use "./components/navigation";
+@use "./components/notification";
+@use "./components/persons_autocomplete";
+@use "./components/service_status";
+@use "./components/service_switcher";
+@use "./components/sort_drop_down";
+@use "./components/table";
+@use "./components/tooltip";
+@use "./components/wysiwyg";
+
+// Pages
+@use "./pages/base";
+@use "./pages/change_request";
+@use "./pages/choose_entity_type";
+@use "./pages/newService";
+@use "./pages/open-connection-request";
+@use "./pages/privacy_questions";
+@use "./pages/service-connection";
+@use "./pages/service_edit";

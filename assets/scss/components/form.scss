@@ -1,3 +1,5 @@
+@use "../vars" as *;
+@use "../base/mixins" as *;
 form {
   .form-row {
     position: relative;

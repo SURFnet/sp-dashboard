@@ -1,4 +1,4 @@
-@import "~select2";
+@use "~select2" as *;
 
 li.service-switcher {
   .select2 {

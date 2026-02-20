@@ -1,4 +1,5 @@
-@import "jquery-modal";
+@use "../vars" as *;
+@use "jquery-modal";
 
 .blocker {
   background-color: rgba(95,95,95,.7);

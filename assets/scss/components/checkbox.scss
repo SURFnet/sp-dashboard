@@ -1,3 +1,6 @@
+@use "../vars" as *;
+@use "sass:color";
+
 div.checkbox {
 
   input[type="checkbox"] {
@@ -24,7 +27,7 @@ div.checkbox {
   }
 
   input[type="checkbox"]:disabled + label span {
-    border: 1px solid darken($medium-grey, 5%);
+    border: 1px solid color.adjust($medium-grey, $lightness: -5%);
     background-color: $light-grey;
     cursor: not-allowed;
   }

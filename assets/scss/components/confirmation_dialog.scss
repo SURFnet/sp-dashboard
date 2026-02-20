@@ -1,3 +1,6 @@
+@use "../vars" as *;
+@use "../base/mixins" as *;
+@use "../utilities/media_queries" as *;
 .confirmation-dialog-overlay {
   position: fixed;
   top: 0;

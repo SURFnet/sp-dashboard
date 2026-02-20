@@ -1,3 +1,5 @@
+@use "../vars" as *;
+@use "../base/mixins" as *;
 .service-status-container {
   display: block;
   padding: 2rem 0 0;
@@ -147,6 +149,7 @@
 
 .service-status-title-actions {
   display: flex;
+  list-style: none;
   margin-left: 1rem;
 }
 

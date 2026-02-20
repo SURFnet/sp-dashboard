@@ -1,3 +1,6 @@
+@use "../vars" as *;
+@use "sass:color";
+
 .connection-request-wrapper {
   .button-small {
     padding: 3px 10px;
@@ -41,7 +44,7 @@
     color: $black;
   }
   button[type="submit"]:disabled  {
-    border: 1px solid darken($medium-grey, 5%);
+    border: 1px solid color.adjust($medium-grey, $lightness: -5%);
     background-color: $light-grey;
     cursor: not-allowed;
   }

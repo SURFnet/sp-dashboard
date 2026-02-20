@@ -1,3 +1,7 @@
+@use "../vars" as *;
+@use "../base/mixins" as *;
+@use "sass:color";
+
 /* The stylint specificty rule is disabled because this stylint rule was added after the initial scss was set up and now will cost to much time to refactor, feel free to do so! */
 /* stylelint-disable no-descending-specificity */
 .navigation-container {
@@ -5,7 +9,7 @@
   background-color: $blue;
 
   a {
-    color: lighten($light-blue, 5);
+    color: color.adjust($light-blue, $lightness: 5%);
     margin-right: 50px;
     padding-bottom: 12px;
     @include no-text-decoration;
@@ -20,6 +24,7 @@
 
     ul {
       height: 38px;
+      list-style: none;
 
       li {
         float: left;

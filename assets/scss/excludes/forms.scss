@@ -1,6 +1,10 @@
-div {
-  margin-bottom: 25px;
-}
+@use "../vars" as *;
+@use "../utilities/media_queries" as *;
+
+@mixin card-forms {
+  div {
+    margin-bottom: 25px;
+  }
 
 .card div .no-margin-bottom{
   margin-bottom: 0;
@@ -121,10 +125,11 @@ div.radio-container {
   }
 }
 
-@include phone {
-  section.buttons {
-    .button {
-      min-width: inherit;
+  @include phone {
+    section.buttons {
+      .button {
+        min-width: inherit;
+      }
     }
   }
 }

@@ -1,3 +1,7 @@
+@use "../vars" as *;
+@use "../base/mixins" as *;
+@use "../excludes/forms" as forms;
+
 .page-container {
   @include page;
 
@@ -20,7 +24,7 @@
 
   .card {
     @include card;
-    @import "../excludes/forms";
+    @include forms.card-forms;
     padding: 25px;
 
     &--second {

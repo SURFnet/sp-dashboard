@@ -1,3 +1,8 @@
+@use "../vars" as *;
+@use "../base/mixins" as *;
+@use "../utilities/media_queries" as *;
+@use "sass:color";
+
 footer {
   border-top: 3px solid white;
   font-size: $smallFont;
@@ -21,7 +26,7 @@ footer {
     }
 
     a {
-      color: darken($blue, 10%);
+      color: color.adjust($blue, $lightness: -10%);
       &:visited, &:hover {
         text-decoration: none;
       }
