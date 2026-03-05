@@ -410,10 +410,6 @@ services:
   surfnet.manage.configuration.production:
     class: Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfig
 
-  # For details, see the DashboardExtension.
-  surfnet.teams.configuration:
-    class: Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfig
-
   surfnet.manage.client.publish_client.prod_environment:
     class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient
     arguments:
@@ -475,12 +471,6 @@ services:
     factory: [ '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\ManageClientFactory', 'createClient' ]
     arguments:
       - "@surfnet.manage.configuration.test"
-
-  surfnet.teams.http.guzzle:
-    class: GuzzleHttp\Client
-    factory: [ '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\ManageClientFactory', 'createClient' ]
-    arguments:
-      - "@surfnet.teams.configuration"
 
   surfnet.manage.http.http_client.prod_environment:
     class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\ManageClient
