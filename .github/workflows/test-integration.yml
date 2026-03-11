@@ -70,6 +70,7 @@ jobs:
         working-directory: spdashboard
         run: |
           ${DOCKER_RUN_SPD_AS_WWW} bin/console doctrine:schema:create
+          ${DOCKER_RUN_SPD_AS_WWW} bin/console doctrine:fixtures:load --no-interaction
         env:
           APP_ENV: test
 
@@ -89,8 +90,39 @@ jobs:
         run: |
           ${DOCKER_COMPOSE_PHP} sh -c 'composer jest'
 
+      - name: Configure Mujina IdP attributes for Cypress tests
+        working-directory: spdashboard
+        run: |
+          ${DOCKER_COMPOSE_PHP} php -r "
+            \$attrs = json_encode([
+              'urn:mace:dir:attribute-def:uid'                         => ['Tiffany'],
+              'urn:mace:dir:attribute-def:cn'                          => ['Tiffany Aching'],
+              'urn:mace:dir:attribute-def:givenName'                   => ['Tiffany'],
+              'urn:mace:dir:attribute-def:sn'                          => ['Aching'],
+              'urn:mace:dir:attribute-def:displayName'                 => ['Tiffany Aching'],
+              'urn:mace:dir:attribute-def:mail'                        => ['tiffany@example.com'],
+              'urn:mace:terena.org:attribute-def:schacHomeOrganization' => ['dev.openconext.local'],
+              'urn:mace:dir:attribute-def:eduPersonPrincipalName'       => ['tiffany@dev.openconext.local'],
+              'urn:oasis:names:tc:SAML:attribute:subject-id'           => ['tiffany@dev.openconext.local'],
+              'urn:mace:dir:attribute-def:isMemberOf'                  => [
+                'urn:collab:group:dev.openconext.local:demo:openconext:org:surf.nl',
+                'urn:collab:group:dev.openconext.local:demo:openconext:org:ibuildings.nl',
+                'urn:collab:group:dev.openconext.local:dev:openconext:local:spd_admin',
+              ],
+            ]);
+            \$ch = curl_init('https://mujina-idp.dev.openconext.local/api/attributes');
+            curl_setopt_array(\$ch, [
+              CURLOPT_CUSTOMREQUEST => 'PUT',
+              CURLOPT_POSTFIELDS    => \$attrs,
+              CURLOPT_HTTPHEADER    => ['Content-Type: application/json'],
+              CURLOPT_SSL_VERIFYPEER => false,
+              CURLOPT_RETURNTRANSFER => true,
+            ]);
+            \$result = curl_exec(\$ch);
+            echo 'Mujina attributes configured: ' . \$result . PHP_EOL;
+          "
+
       - name: Run Cypress tests
         working-directory: spdashboard
         run: |
           ${DOCKER_COMPOSE_CYPRESS} cypress run --browser chrome -C ./ci/qa/cypress.config.ts
-        continue-on-error: true

@@ -49,6 +49,7 @@ class CollectionWidget {
     const $input = this.$input;
     $input.removeAttr('name');
     $input.removeAttr('id');
+    $input.find('input, select, textarea').removeAttr('name');
 
     $collectionContainer.append(this.$input);
     $collectionContainer.append($addEntryButton);
@@ -64,7 +65,7 @@ class CollectionWidget {
     this.registerAddClickHandler($addEntryButton);
     this.registerBeforeSubmitHandler($addEntryButton);
     this.registerPreventFormSubmitHandler($input);
-    this.registerSendHandler(this.$sendButton);
+    this.registerSendHandler();
   }
 
   /**
@@ -199,16 +200,12 @@ class CollectionWidget {
     $form.on('submit', handleBeforeSubmit);
   }
 
-  private registerSendHandler($sendButton: JQuery<HTMLElement>) {
-    const handleSubmit = () => {
-      if (this.hasConnectionRequests()) {
-        this.disableInputs();
-        this.disableParsleyValidation();
-      }
-      $sendButton.click();
-    };
+  private registerSendHandler() {
     const $form = this.$collectionWidget.closest('form');
-    $form.on('submit', handleSubmit);
+    $form.on('submit', () => {
+      // Disable prototype inputs so Parsley skips them and they are not submitted.
+      this.$input.find('input, select, textarea').prop('disabled', true);
+    });
   }
 
   private enableButton($button: JQuery<HTMLElement>) {
@@ -223,20 +220,11 @@ class CollectionWidget {
     this.$input.find('input').val('');
   }
 
-  private disableInputs() {
-    this.$input.find('input').prop('disabled', true);
-  }
-
   private hasValidInputs() {
     // @ts-ignore
     $(this.$connectionRequestForm).parsley().validate();
     // @ts-ignore
     return $(this.$connectionRequestForm).parsley().isValid();
-  }
-
-  private disableParsleyValidation() {
-    // @ts-ignore
-    $(this.$connectionRequestForm).parsley().disable();
   }
 
   private hasConnectionRequests() {

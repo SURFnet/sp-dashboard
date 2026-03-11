@@ -182,12 +182,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Command/Entity/SaveOauthClientCredentialClientCommand.php',
 ];
 $ignoreErrors[] = [
-	// identifier: property.notFound
-	'message' => '#^Access to an undefined property Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\Command\\\\Entity\\\\SaveOidcngEntityCommand\\:\\:\\$organizationUnitAttribute\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Command/Entity/SaveOidcngEntityCommand.php',
-];
-$ignoreErrors[] = [
 	// identifier: function.impossibleType
 	'message' => '#^Call to function is_null\\(\\) with string will always evaluate to false\\.$#',
 	'count' => 1,
@@ -3848,6 +3842,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Controller/EntityEditController.php',
 ];
 $ignoreErrors[] = [
+	// identifier: attribute.notRepeatable
+	'message' => '#^Attribute class Symfony\\\\Component\\\\Routing\\\\Attribute\\\\Route is not repeatable but is already present above the method\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Controller/EntityPublishedController.php',
+];
+$ignoreErrors[] = [
 	// identifier: method.nonObject
 	'message' => '#^Cannot call method getNameEn\\(\\) on Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\Entity\\\\MetaData\\|null\\.$#',
 	'count' => 1,
@@ -4508,24 +4508,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Service/AuthorizationService.php',
 ];
 $ignoreErrors[] = [
-	// identifier: missingType.parameter
-	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Infrastructure\\\\DashboardBundle\\\\Service\\\\CurlLogoValidationHelper\\:\\:validateLogo\\(\\) has parameter \\$url with no type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Service/CurlLogoValidationHelper.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Infrastructure\\\\DashboardBundle\\\\Service\\\\LogoValidationHelperInterface\\:\\:validateLogo\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Service/LogoValidationHelperInterface.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.parameter
-	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Infrastructure\\\\DashboardBundle\\\\Service\\\\LogoValidationHelperInterface\\:\\:validateLogo\\(\\) has parameter \\$url with no type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Service/LogoValidationHelperInterface.php',
-];
-$ignoreErrors[] = [
 	// identifier: method.nonObject
 	'message' => '#^Cannot call method getContact\\(\\) on Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null\\.$#',
 	'count' => 1,
@@ -4618,12 +4600,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: property.notFound
 	'message' => '#^Access to an undefined property Symfony\\\\Component\\\\Validator\\\\Constraint\\:\\:\\$message\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Validator/Constraints/ValidLogoValidator.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.parameter
-	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Infrastructure\\\\DashboardBundle\\\\Validator\\\\Constraints\\\\ValidLogoValidator\\:\\:getImageSizeValidation\\(\\) has parameter \\$value with no type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Validator/Constraints/ValidLogoValidator.php',
 ];

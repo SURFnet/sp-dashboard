@@ -2,6 +2,12 @@
 # typically to replace doctrine repositories with in-memory repositories.
 services:
 
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\DataFixtures\:
+        resource: '../../../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/DataFixtures'
+        autowire: true
+        autoconfigure: true
+
+
     Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PublishEntityTestCommandHandler:
         class: Surfnet\ServiceProviderDashboard\Webtests\CommandHandler\MockPublishEntityCommandHandler
         public: true

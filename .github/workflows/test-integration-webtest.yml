@@ -12,9 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
-      DOCKER_COMPOSE: docker compose -f docker-compose.yml
-      DOCKER_COMPOSE_PHP: docker compose -f docker-compose.yml exec -T spdashboard
-      DOCKER_RUN_SPD_AS_WWW: docker compose -f docker-compose.yml exec --user 33:33 spdashboard
+      DOCKER_COMPOSE: docker compose -f docker-compose.yml -f docker-compose-ci-webtests.yml
+      DOCKER_COMPOSE_PHP: docker compose -f docker-compose.yml -f docker-compose-ci-webtests.yml exec -T spdashboard
+      DOCKER_RUN_SPD_AS_WWW: docker compose -f docker-compose.yml -f docker-compose-ci-webtests.yml exec --user 33:33 spdashboard
 
     steps:
       - name: Check out the repo
