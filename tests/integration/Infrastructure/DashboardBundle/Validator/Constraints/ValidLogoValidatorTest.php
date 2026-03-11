@@ -38,7 +38,7 @@ class ValidLogoValidatorTest extends ConstraintValidatorTestCase
     {
         $this->validationHelper = m::mock(LogoValidationHelperInterface::class);
 
-        return new ValidLogoValidator($this->validationHelper);
+        return new ValidLogoValidator($this->validationHelper, 'prod');
     }
 
     public function test_success_png()
@@ -47,9 +47,9 @@ class ValidLogoValidatorTest extends ConstraintValidatorTestCase
 
         $this->validationHelper
             ->shouldReceive('validateLogo')
-            ->andReturn(null);
+            ->andReturn(file_get_contents(__DIR__.'/fixture/logo_validator/small.png'));
 
-        $this->validator->validate('file://'.__DIR__.'/fixture/logo_validator/small.png', $constraint);
+        $this->validator->validate('https://example.com/small.png', $constraint);
 
         $this->assertNoViolation();
     }
@@ -60,9 +60,9 @@ class ValidLogoValidatorTest extends ConstraintValidatorTestCase
 
         $this->validationHelper
             ->shouldReceive('validateLogo')
-            ->andReturn(null);
+            ->andReturn(file_get_contents(__DIR__.'/fixture/logo_validator/small.gif'));
 
-        $this->validator->validate('file://'.__DIR__.'/fixture/logo_validator/small.gif', $constraint);
+        $this->validator->validate('https://example.com/small.gif', $constraint);
 
         $this->assertNoViolation();
     }
@@ -81,9 +81,9 @@ class ValidLogoValidatorTest extends ConstraintValidatorTestCase
 
         $this->validationHelper
             ->shouldReceive('validateLogo')
-            ->andReturn(null);
+            ->andReturn('not valid image data');
 
-        $this->validator->validate('ufjd', $constraint);
+        $this->validator->validate('https://example.com/not-an-image', $constraint);
 
         $violations = $this->context->getViolations();
         $violation = $violations->get(0);
@@ -99,7 +99,7 @@ class ValidLogoValidatorTest extends ConstraintValidatorTestCase
             ->shouldReceive('validateLogo')
             ->andThrow(LogoInvalidTypeException::class);
 
-        $this->validator->validate(__DIR__.'/fixture/logo_validator/image.jpg', $constraint);
+        $this->validator->validate('https://example.com/image.jpg', $constraint);
 
         $violations = $this->context->getViolations();
         $violation = $violations->get(0);

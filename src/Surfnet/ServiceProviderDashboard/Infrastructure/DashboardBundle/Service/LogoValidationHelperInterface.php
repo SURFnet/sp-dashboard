@@ -33,11 +33,11 @@ interface LogoValidationHelperInterface
     public const IMAGE_TYPE_GIF = 'image/gif';
 
     /**
-     * Validates the logo, throws an exception if validation failed.
+     * Validates the logo and returns its body content.
+     * Throws an exception if validation failed.
      *
-     * @param  $url
      * @throws LogoInvalidTypeException
      * @throws LogoNotFoundException
      */
-    public function validateLogo($url);
+    public function validateLogo(string $url): string;
 }
