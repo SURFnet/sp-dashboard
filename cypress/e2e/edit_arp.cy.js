@@ -1,7 +1,7 @@
 context('Edit ARP', () => {
   before(() => {
     cy.login();
-    cy.selectService(2);
+    cy.createEntity([], 'test');
   });
 
   // Als ik een entity (oidcng en saml) ga wijzigen, en er staan onbekende attributen in de ARP in Manage, dan moeten deze blijven staan als ik op publish klik
@@ -20,6 +20,6 @@ context('Edit ARP', () => {
   });
 
   after(() => {
-    cy.deleteEntity();
+    cy.deleteEntity('saml20_sp', 'https://tiffany.aching.do/id');
   });
 });

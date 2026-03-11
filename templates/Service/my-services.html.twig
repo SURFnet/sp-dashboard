@@ -4,6 +4,8 @@
 
 {% block body_container %}
     <main>
+        {{ render(controller('Surfnet\\ServiceProviderDashboard\\Infrastructure\\DashboardBundle\\Controller\\SiteNoticeController::showGlobalSiteNotice')) }}
+
         {% include "@Dashboard/FlashMessage/flashMessages.html.twig" %}
 
         <h1 id="main" class="service-title">

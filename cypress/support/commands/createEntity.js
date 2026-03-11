@@ -26,8 +26,17 @@ Cypress.Commands.add('addCertificate', (certificate = '') => {
     cy.get('#dashboard_bundle_entity_type_metadata_certificate').type(certificate);
 });
 
-Cypress.Commands.add('addLogoUrl', (url = 'https://generative-placeholders.glitch.me/image?width=600&height=300') => {
+Cypress.Commands.add('addLogoUrl', (url = 'https://engine.dev.openconext.local/images/logo.png') => {
     cy.get('#dashboard_bundle_entity_type_metadata_logoUrl').type(url);
+});
+
+Cypress.Commands.add('addTypeOfService', (service = 'Education') => {
+    cy.window().then((win) => {
+        const select = win.document.querySelector('#dashboard_bundle_entity_type_metadata_typeOfService');
+        if (select && select.tomselect) {
+            select.tomselect.addItem(service);
+        }
+    });
 });
 
 Cypress.Commands.add('addNameNl', (name = 'Tiffany Aching') => {
@@ -88,6 +97,7 @@ Cypress.Commands.add('addComment', (comment = 'ya always know just what ta say, 
 Cypress.Commands.add('fillInCreateSamlForm', (attributes = [], entityId = '') => {
     cy.addAcsLocation();
     cy.addLogoUrl();
+    cy.addTypeOfService();
     cy.addNameNl();
     cy.addDescriptionNl();
     cy.addNameEn();
@@ -114,7 +124,7 @@ Cypress.Commands.add('verifyCreation', () => {
     cy.viewEntity();
     cy.checkContainsValue('ACS location', 'https://oidc.dev.support.surfconext.nl/saml/SSO');
     cy.checkCorrectTextValue('Entity ID', 'https://tiffany.aching.do/id');
-    cy.checkCorrectTextValue('Logo URL', 'https://generative-placeholders.glitch.me/image?width=600&height=300');
+    cy.checkCorrectTextValue('Logo URL', 'https://engine.dev.openconext.local/images/logo.png');
     cy.checkCorrectTextValue('Name NL', 'Tiffany Aching');
     cy.checkCorrectTextValue('Description NL', 'Ik, wat?  Geen pagina over Tiffany Aching in het Nederlands?  Ik ben verontwaardigd ende alsook zwaar op mijn teen getorten!  Schande!  Schreeuw het van de daken: SCHANDE!  Maar ik ben wel te lui om er één toe te voegen, dat dan weer wel.');
     cy.checkCorrectTextValue('Name EN', 'Tiffany Aching');
