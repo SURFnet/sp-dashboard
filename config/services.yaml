@@ -8,7 +8,7 @@ parameters:
     router.request_context.base_url: ''
     acs_location_route_name: 'dashboard_saml_consume_assertion'
     authentication_context_class_ref: ~
-    env(manage_verify_ssl): 'false'
+    env(manage_verify_ssl): 'true'
     manage_verify_ssl: '%env(bool:manage_verify_ssl)%'
 
 services:

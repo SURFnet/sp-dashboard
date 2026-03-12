@@ -92,35 +92,7 @@ jobs:
 
       - name: Configure Mujina IdP attributes for Cypress tests
         working-directory: spdashboard
-        run: |
-          ${DOCKER_COMPOSE_PHP} php -r "
-            \$attrs = json_encode([
-              'urn:mace:dir:attribute-def:uid'                         => ['Tiffany'],
-              'urn:mace:dir:attribute-def:cn'                          => ['Tiffany Aching'],
-              'urn:mace:dir:attribute-def:givenName'                   => ['Tiffany'],
-              'urn:mace:dir:attribute-def:sn'                          => ['Aching'],
-              'urn:mace:dir:attribute-def:displayName'                 => ['Tiffany Aching'],
-              'urn:mace:dir:attribute-def:mail'                        => ['tiffany@example.com'],
-              'urn:mace:terena.org:attribute-def:schacHomeOrganization' => ['dev.openconext.local'],
-              'urn:mace:dir:attribute-def:eduPersonPrincipalName'       => ['tiffany@dev.openconext.local'],
-              'urn:oasis:names:tc:SAML:attribute:subject-id'           => ['tiffany@dev.openconext.local'],
-              'urn:mace:dir:attribute-def:isMemberOf'                  => [
-                'urn:collab:group:dev.openconext.local:demo:openconext:org:surf.nl',
-                'urn:collab:group:dev.openconext.local:demo:openconext:org:ibuildings.nl',
-                'urn:collab:group:dev.openconext.local:dev:openconext:local:spd_admin',
-              ],
-            ]);
-            \$ch = curl_init('https://mujina-idp.dev.openconext.local/api/attributes');
-            curl_setopt_array(\$ch, [
-              CURLOPT_CUSTOMREQUEST => 'PUT',
-              CURLOPT_POSTFIELDS    => \$attrs,
-              CURLOPT_HTTPHEADER    => ['Content-Type: application/json'],
-              CURLOPT_SSL_VERIFYPEER => false,
-              CURLOPT_RETURNTRANSFER => true,
-            ]);
-            \$result = curl_exec(\$ch);
-            echo 'Mujina attributes configured: ' . \$result . PHP_EOL;
-          "
+        run: ${DOCKER_COMPOSE_PHP} sh /var/www/html/docker/conf/configure_mujina_idp.sh
 
       - name: Run Cypress tests
         working-directory: spdashboard

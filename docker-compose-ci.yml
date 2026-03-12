@@ -5,7 +5,6 @@ services:
     environment:
       APP_ENV: ci
       PHP_MEMORY_LIMIT: 256M
-      manage_verify_ssl: "false"
     volumes:
       - ${PWD}/../OpenConext-devconf/core/:/config
       - ${PWD}/:/var/www/html/
