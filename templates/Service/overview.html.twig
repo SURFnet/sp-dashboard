@@ -2,6 +2,8 @@
 
 {% block body_container %}
     <main>
+        {{ render(controller('Surfnet\\ServiceProviderDashboard\\Infrastructure\\DashboardBundle\\Controller\\SiteNoticeController::showGlobalSiteNotice')) }}
+
         {% include "@Dashboard/FlashMessage/flashMessages.html.twig" %}
 
         <h1 id="main" class="service-title">
@@ -17,7 +19,7 @@
 
         {% for service in services %}
             <article class="fieldset card service">
-                {% set shortName = service.name|replace({' ': '-'}) %}
+                {% set shortName = service.name|replace({' ': '-', '.': ''}) %}
                 {% set testId = "add-for-test-" ~ shortName %}
                 {% set productionId = "add-for-production-" ~ shortName %}
                 <input type="checkbox" id="{{ testId }}" name="{{ testId }}" />

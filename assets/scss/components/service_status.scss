@@ -3,7 +3,7 @@
   padding: 2rem 0 0;
 
   a {
-    color: #428bca;
+    color: $contrast-blue;
     text-decoration: underline;
   }
 
@@ -63,7 +63,7 @@
       @include motion {
         animation: fadein 2s;
       }
-      color: #d1d2d6;
+      color: $dark-grey;
       display: block;
       font-size: $h2Font;
       left: 200px;

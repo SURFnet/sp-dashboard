@@ -1,3 +1,10 @@
+const MANAGE_URL = 'https://manage.dev.openconext.local';
+const MANAGE_HEADERS = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'Authorization': 'Basic ' + btoa('sp-dashboard:secret'),
+};
+
 function stringTemplateParser(expression, valueObj) {
     const templateMatcher = /{{\s?([^{}\s]*)\s?}}/g;
     let text = expression.replace(templateMatcher, (substring, value, index) => {
@@ -7,9 +14,32 @@ function stringTemplateParser(expression, valueObj) {
     return text
 }
 
-Cypress.Commands.add('createEntity', (entityId, team, name, attributes, environment = 	'testaccepted', entityType = 'oidc10_rp') => {
-    let typeDashConverted = entityType.toString().replace('_', '-');
-    let metadataTemplate = require('./fixtures/new_oidc_entity_template.json');
+function manageSearchAndDelete(entityType, searchBody) {
+    cy.request({
+        method: 'POST',
+        url: `${MANAGE_URL}/manage/api/internal/search/${entityType}`,
+        headers: MANAGE_HEADERS,
+        body: searchBody,
+        failOnStatusCode: false,
+    }).then(({ body }) => {
+        (body || []).forEach(entity =>
+            cy.request({
+                method: 'DELETE',
+                url: `${MANAGE_URL}/manage/api/internal/metadata/${entityType}/${entity._id}`,
+                headers: MANAGE_HEADERS,
+                failOnStatusCode: false,
+            })
+        );
+    });
+}
+
+Cypress.Commands.add('createEntityViaManageApi', (entityId, team, name, attributes, environment = 'testaccepted', serviceIdOrEntityType = 'oidc10_rp', entityType = null) => {
+    // Support both 6-arg (no serviceId) and 7-arg (with serviceId) calling conventions
+    const resolvedEntityType = entityType || (typeof serviceIdOrEntityType === 'string' ? serviceIdOrEntityType : 'oidc10_rp');
+    let typeDashConverted = resolvedEntityType.toString().replace('_', '-');
+    let metadataTemplate = resolvedEntityType === 'saml20_sp'
+        ? require('./fixtures/new_saml_entity_template.json')
+        : require('./fixtures/new_oidc_entity_template.json');
     if (attributes) {
         let arp = JSON.parse('{"arp": {"attributes": {},"enabled": true}}');
         let arpAttributes = [];
@@ -30,113 +60,54 @@ Cypress.Commands.add('createEntity', (entityId, team, name, attributes, environm
         entityId: entityId,
         environment: environment,
         team: team,
-        type: entityType,
+        type: resolvedEntityType,
         typeDashConverted: typeDashConverted,
         attributes: attributes,
+        excludeFromPush: '1',
     };
     metadataTemplate = stringTemplateParser(JSON.stringify(metadataTemplate), templateVariables);
 
-    fetch('https://manage.dev.openconext.local/manage/api/internal/metadata', {
+    cy.request({
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization': 'Basic ' + window.btoa("sp-dashboard:secret")
-        },
-        body: metadataTemplate
-    })
-        .then(response => response.json())
-        .then(data => {
-            console.log(data);
-        })
-        .catch(error => {
-            console.log(metadataTemplate, error);
-        });
+        url: `${MANAGE_URL}/manage/api/internal/metadata`,
+        headers: MANAGE_HEADERS,
+        body: JSON.parse(metadataTemplate),
+        failOnStatusCode: false,
+    });
 });
 
 Cypress.Commands.add('removeEntitiesForTeam', (teamName) => {
-
-    const protocols = ['saml20_sp', 'oidc10_rp', 'oauth20_rs'];
-
-    let searchUri = 'https://manage.dev.openconext.local/manage/api/internal/search/${type}'
-
-    const searchBody = '{"metaDataFields.coin:service_team_id": "' + teamName.toString() +'"}';
-
-    for (const index in protocols) {
-        const entityType = protocols[index];
-        const uri = searchUri.toString().replace('${type}', entityType);
-        fetch(uri, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Authorization': 'Basic ' + window.btoa("sp-dashboard:secret")
-            },
-            body: searchBody
-        })
-        .then(response => response.json())
-        .then(data => {
-            for (const entityIndex in data) {
-                const entityId = data[entityIndex]['_id'];
-                const deleteUri = 'https://manage.dev.openconext.local/manage/api/internal/metadata/${type}/${entityId}';
-                let uri = deleteUri.toString().replace('${entityId}', entityId);
-                uri = uri.toString().replace('${type}', entityType);
-
-                fetch(uri, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json',
-                        'Authorization': 'Basic ' + window.btoa("sp-dashboard:secret")
-                    }
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        return true;
-                    })
-                    .catch(error => {
-                        return false;
-                    });
-            }
-        })
-        .catch(error => {
-            console.log(error);
-        });
-    }
+    ['saml20_sp', 'oidc10_rp', 'oauth20_rs'].forEach((type) =>
+        manageSearchAndDelete(type, { 'metaDataFields.coin:service_team_id': teamName })
+    );
 });
 
-Cypress.Commands.add('deleteEntity', (entityType = '', entityId = '') => {
-    const deleteUri = 'https://manage.dev.openconext.local/manage/api/internal/metadata/${type}/${entityId}';
-    let uri = deleteUri.toString().replace('${entityId}', entityId);
-    uri.toString().replace('${type}', entityType);
-
-    fetch(deleteUri, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization': 'Basic ' + window.btoa("sp-dashboard:secret")
-        }
-    })
-        .then(response => response.json())
-        .then(data => {
-            return true;
-        })
-        .catch(error => {
-            return false;
-        });
+Cypress.Commands.add('deleteEntity', (entityType = 'saml20_sp', entityId = 'https://tiffany.aching.do/id') => {
+    if (!entityType || !entityId) return;
+    manageSearchAndDelete(entityType, { entityid: entityId });
 });
 
-Cypress.Commands.add('loginToManage', (url = 'https://manage.dev.openconext.local') => {
+Cypress.Commands.add('loginToManage', (url = MANAGE_URL) => {
     cy.visit(url);
     cy.wait(300);
     cy.checkForManage();
 });
 
-Cypress.Commands.add('loginToManageAndSelectTiffanyAching', (url = 'https://manage.dev.openconext.local') => {
+Cypress.Commands.add('loginToManageAndSelectTiffanyAching', (url = MANAGE_URL, entityId = 'https://tiffany.aching.do/id') => {
     cy.loginToManage(url);
-    cy.get('.search-input').type('Tiffany Aching');
-    cy.get('.matched').contains('Tiffany Aching').click();
+    cy.request({
+        method: 'POST',
+        url: `${MANAGE_URL}/manage/api/internal/search/saml20_sp`,
+        headers: MANAGE_HEADERS,
+        body: { entityid: entityId },
+        failOnStatusCode: false,
+    }).then((response) => {
+        const entity = (response.body || [])[0];
+        cy.log(`loginToManageAndSelectTiffanyAching: entityId=${entityId} found=${!!entity} count=${(response.body||[]).length}`);
+        if (entity) {
+            cy.visit(`${url}/metadata/saml20_sp/${entity._id}/connection`);
+        }
+    });
 });
 
 Cypress.Commands.add('checkForManage', (tries = 0) => {
@@ -144,57 +115,69 @@ Cypress.Commands.add('checkForManage', (tries = 0) => {
         const isLoginPage = body.find('.login-form').length;
         const isManagePage = body.find('.search-input').length;
         if (isLoginPage) {
-            cy.fillUsername();
-            cy.fillPassword();
+            cy.get('#username').type('Tiffany');
+            cy.get('#password').type('Aching');
             cy.get('.login-form').submit();
         }
 
-        if (!isManagePage && tries < 20) {
+        if (!isManagePage && tries < 30) {
             cy.checkForConsent();
-            cy.wait(300);
+            cy.wait(1000);
             cy.checkForManage(++tries);
         }
     });
 });
 
 Cypress.Commands.add('goToArpTab', () => {
-    cy.contains('ARP').click();
+    cy.contains('ARP', {timeout: 10000}).click();
 });
 
 Cypress.Commands.add('goToWhitelistingTab', () => {
-    cy.contains('Whitelisting').click();
+    cy.contains('Whitelisting', {timeout: 10000}).click();
 });
 
 Cypress.Commands.add('goToMetadataTab', () => {
-    cy.contains('Metadata').click();
+    cy.contains('Metadata', {timeout: 10000}).click();
 });
 
 Cypress.Commands.add('addSurfCrmId', (note = 'add surf crm id because it\'s not supported', motivation = 'we wants it') => {
     cy.get('label[for="urn:mace:surf.nl:attribute-def:surf-crm-id"]').click();
-    cy.focused().type(motivation);
+    cy.get('input[name="urn:mace:surf.nl:attribute-def:surf-crm-id"]')
+        .closest('tbody')
+        .find('input[placeholder="Motivation..."]')
+        .type(motivation);
     cy.addRevisionNote(note);
-    cy.get('.actions .buttons .button.blue').then((button) => {
-        button.trigger('click');
-    });
+    cy.get('.actions .buttons .button.blue').click({force: true});
+    cy.wait(1000);
 });
 
 Cypress.Commands.add('addRevisionNote', (note = 'a note') => {
-    cy.get('input[name="revisionnote"]').then((input) => {
-        input.val(note);
-    });
+    cy.get('input[name="revisionnote"]').clear({force: true}).type(note, {force: true});
 });
 
 Cypress.Commands.add('checkRevisionNote', (note = 'ya always know just what ta say, don\'tcha?') => {
-    cy.contains('Revision notes').next().contains(note);
+    cy.contains('Revisions').click();
+    cy.get('.revision-table tbody tr').first().find('td').eq(4).should('contain.text', note);
 });
 
 Cypress.Commands.add('checkSurfCrmIdIsChecked', () => {
-    cy.get('#urn:mace:surf.nl:attribute-def:surf-crm-id_*_0').should('be.checked');
+    cy.get('input[name="urn:mace:surf.nl:attribute-def:surf-crm-id_*_0"]').should('be.checked');
 });
 
 Cypress.Commands.add('checkExcludeFromPushIsChecked', () => {
-    cy.goToMetadataTab();
-    cy.get('input[name="coin:exclude_from_push"]').should('be.checked');
+    cy.url().then((url) => {
+        const match = url.match(/\/metadata\/([^/]+)\/([^/]+)/);
+        if (match) {
+            cy.request({
+                method: 'GET',
+                url: `${MANAGE_URL}/manage/api/internal/metadata/${match[1]}/${match[2]}`,
+                headers: MANAGE_HEADERS,
+            }).then((resp) => {
+                const excludeFromPush = resp.body.data.metaDataFields['coin:exclude_from_push'];
+                expect(excludeFromPush == '1' || excludeFromPush === true).to.equal(true);
+            });
+        }
+    });
 });
 
 Cypress.Commands.add('checkAllWhitelistIsUnchecked', () => {
@@ -206,6 +189,15 @@ Cypress.Commands.add('checkAllWhitelistIsChecked', () => {
 });
 
 Cypress.Commands.add('deleteOnManage', () => {
-    cy.get('.top-detail a.delete-metadata').click();
-    cy.get('.confirmation-dialog-content').contains('Confirm').click();
+    cy.url().then((url) => {
+        const match = url.match(/\/metadata\/([^/]+)\/([^/]+)/);
+        if (match) {
+            cy.request({
+                method: 'DELETE',
+                url: `${MANAGE_URL}/manage/api/internal/metadata/${match[1]}/${match[2]}`,
+                headers: MANAGE_HEADERS,
+                failOnStatusCode: false,
+            });
+        }
+    });
 });

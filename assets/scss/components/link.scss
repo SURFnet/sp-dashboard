@@ -1,5 +1,5 @@
 .link {
-  color: $blue;
+  color: $contrast-blue;
   cursor: pointer;
   padding: .5rem;
   text-decoration: underline;
@@ -16,7 +16,7 @@
   &:focus,
   &:hover {
     box-shadow: $light-blue 0 0 10px 4px;
-    color: $blue;
+    color: $contrast-blue;
     outline: 3px solid $lighter-blue;
   }
 }

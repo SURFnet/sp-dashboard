@@ -1,29 +1,4 @@
 
-
-Cypress.Commands.add('addMemberRole', (isMemberOf = 'urn:collab:org:surf.nl') => {
-    cy.get('#add-attribute').select('urn:mace:dir:attribute-def:isMemberOf');
-    cy.get('input[name="urn:mace:dir:attribute-def:isMemberOf"]').type(isMemberOf);
-});
-
-Cypress.Commands.add('submitLoginForms', () => {
-    cy.get('.login-form').submit();
-    cy.checkForConsent();
-});
-
-Cypress.Commands.add('checkForLoginComplete', (url) => {
-    cy.get('html').then(($html) => {
-        const li = $html.find('.navigation .first');
-
-        if (!li) {
-            cy.wait(400);
-            cy.checkForConsent();
-            cy.checkForLoginComplete(url);
-        } else {
-            cy.contains('Logout');
-        }
-    });
-});
-
 Cypress.Commands.add('checkForConsent', () => {
     cy.get('body').then(($body) => {
         const isConsentPage = $body.find('.consent').length;
@@ -34,16 +9,21 @@ Cypress.Commands.add('checkForConsent', () => {
 });
 
 Cypress.Commands.add('login', (username = 'Tiffany', pass = 'Aching') => {
-    cy.origin('https://mujina-idp.dev.openconext.local', {args: {username, pass}}, ({username, pass}) => {
-        cy.visit('/login');
+    // Trigger the SP-initiated SAML flow: spdashboard → engine WAYF
+    cy.visit('https://spdashboard.dev.openconext.local');
+    cy.get('body').then(($body) => {
+        // If already logged in, the WAYF IdP selector won't be shown — skip login
+        if ($body.find('[data-title="Dummy IdP"]').length === 0) {
+            return;
+        }
+        // Click Dummy IdP (Mujina) on the engine WAYF
+        // chromeWebSecurity:false allows cross-origin interaction without cy.origin()
+        cy.get('[data-title="Dummy IdP"]').first().click({force: true});
+        // On the Mujina login page (with a real SAMLRequest), fill in credentials
         cy.get('#username').type(username);
         cy.get('#password').type(pass);
         cy.get('.login-form').submit();
-    });
-    const url = 'https://spdashboard.dev.openconext.local';
-    cy.wait(400);
-    cy.visit({
-        url: url,
-        failOnStatusCode: false
+        // Wait for the full redirect chain (Mujina → engine → spdashboard) to complete
+        cy.url({timeout: 15000}).should('include', 'spdashboard.dev.openconext.local');
     });
 });

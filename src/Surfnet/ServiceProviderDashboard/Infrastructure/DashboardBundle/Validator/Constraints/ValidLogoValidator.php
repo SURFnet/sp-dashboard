@@ -18,7 +18,6 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints;
 
-use Exception;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Exception\LogoInvalidTypeException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Exception\LogoNotFoundException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\LogoValidationHelperInterface;
@@ -37,8 +36,15 @@ class ValidLogoValidator extends ConstraintValidator
      */
     final public const STATUS_INVALID_TYPE = 'validator.logo.wrong_type';
 
-    public function __construct(private readonly LogoValidationHelperInterface $logoValidationHelper)
-    {
+    /**
+     * The status code used when the logo URL resolves to a private or reserved address.
+     */
+    final public const STATUS_PRIVATE_HOST = 'validator.logo.private_host';
+
+    public function __construct(
+        private readonly LogoValidationHelperInterface $logoValidationHelper,
+        private readonly string $environment = 'prod',
+    ) {
     }
 
     public function validate($value, Constraint $constraint): void
@@ -47,32 +53,39 @@ class ValidLogoValidator extends ConstraintValidator
             return;
         }
 
+        if ($this->environment === 'prod' && $this->isPrivateHost($value)) {
+            $this->context->addViolation(self::STATUS_PRIVATE_HOST);
+            return;
+        }
+
         try {
-            $this->logoValidationHelper->validateLogo($value);
-            $this->getImageSizeValidation($value, $constraint);
+            $body = $this->logoValidationHelper->validateLogo($value);
+            if (getimagesizefromstring($body) === false) {
+                $this->context->addViolation($constraint->message);
+            }
         } catch (LogoNotFoundException) {
             $this->context->addViolation(self::STATUS_DOWNLOAD_FAILED);
-            return;
         } catch (LogoInvalidTypeException) {
             $this->context->addViolation(self::STATUS_INVALID_TYPE);
-            return;
         }
     }
 
-    /**
-     * Using getimagesize we can test if PHP can handle the resource as an image
-     *
-     * @param $value
-     */
-    private function getImageSizeValidation($value, Constraint $constraint): void
+    private function isPrivateHost(string $url): bool
     {
-        try {
-            $imgData = getimagesize($value);
-            if ($imgData === false) {
-                $this->context->addViolation($constraint->message);
-            }
-        } catch (Exception) {
-            $this->context->addViolation($constraint->message);
+        $host = parse_url($url, PHP_URL_HOST);
+        if ($host === null || $host === false || $host === '') {
+            return true;
         }
+
+        // Strip IPv6 brackets, e.g. [::1] -> ::1
+        $host = trim($host, '[]');
+
+        $ip = filter_var($host, FILTER_VALIDATE_IP) !== false ? $host : gethostbyname($host);
+
+        return filter_var(
+            $ip,
+            FILTER_VALIDATE_IP,
+            FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE
+        ) === false;
     }
 }

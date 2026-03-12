@@ -308,7 +308,7 @@ services:
       - { name: validator.constraint_validator, alias: metadata_url }
 
   Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidLogoValidator:
-    arguments: [ '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\CurlLogoValidationHelper' ]
+    arguments: [ '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\CurlLogoValidationHelper', '%kernel.environment%' ]
     tags:
       - { name: validator.constraint_validator, alias: logo }
 
@@ -475,12 +475,14 @@ services:
     factory: [ '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\ManageClientFactory', 'createClient' ]
     arguments:
       - "@surfnet.manage.configuration.test"
+      - "%manage_verify_ssl%"
 
   surfnet.teams.http.guzzle:
     class: GuzzleHttp\Client
     factory: [ '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\ManageClientFactory', 'createClient' ]
     arguments:
       - "@surfnet.teams.configuration"
+      - "%manage_verify_ssl%"
 
   surfnet.manage.http.http_client.prod_environment:
     class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\ManageClient
@@ -498,6 +500,7 @@ services:
     factory: [ 'Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\ManageClientFactory','createClient' ]
     arguments:
       - "@surfnet.manage.configuration.production"
+      - "%manage_verify_ssl%"
 
   Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Factory\SaveCommandFactoryInterface:
     class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Factory\SaveCommandFactory
@@ -647,3 +650,4 @@ services:
     public: true
     arguments:
       $inviteUrl: '%env(string:invite_host)%'
+

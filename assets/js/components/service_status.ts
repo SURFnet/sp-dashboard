@@ -1,8 +1,9 @@
 
-import * as Chart from 'chart.js';
-import { ChartTooltipItem } from 'chart.js';
+import { Chart, ArcElement, DoughnutController, Tooltip, Legend, type ChartConfiguration, type TooltipItem } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 import * as $ from 'jquery';
-import 'chartjs-plugin-datalabels';
+
+Chart.register(ArcElement, DoughnutController, Tooltip, Legend, ChartDataLabels);
 
 interface StatesDictionary {
   [key: string]: string;
@@ -28,7 +29,7 @@ export class ServiceStatus {
   private elementContainer: HTMLElement;
   private canvas: HTMLCanvasElement;
   private serviceId: string;
-  private chart: Chart | undefined;
+  private chart: Chart<'doughnut'> | undefined;
 
   constructor(elementContainer: HTMLElement, serviceId: string) {
     this.elementContainer = elementContainer;
@@ -87,7 +88,9 @@ export class ServiceStatus {
       tooltips.push(states.service.tooltips[key]);
     }
 
-    const customTooltip = function (this: any, tooltipModel: any) {
+    const customTooltip = function (context: { chart: any; tooltip: any }) {
+      const { chart, tooltip } = context;
+
       // Tooltip Element
       let tooltipEl = document.getElementById('chartjs-tooltip');
 
@@ -101,16 +104,16 @@ export class ServiceStatus {
 
       // Set caret Position
       tooltipEl.classList.remove('above', 'below', 'no-transform');
-      if (tooltipModel.yAlign) {
-        tooltipEl.classList.add(tooltipModel.yAlign);
+      if (tooltip.yAlign) {
+        tooltipEl.classList.add(tooltip.yAlign);
       } else {
         tooltipEl.classList.add('no-transform');
       }
 
       // Set Text
-      if (tooltipModel.body) {
-        const titleLines = tooltipModel.title || [];
-        const bodyLines = tooltipModel.body.map((bodyItem: any) => {
+      if (tooltip.body) {
+        const titleLines = tooltip.title || [];
+        const bodyLines = tooltip.body.map((bodyItem: any) => {
           return bodyItem.lines;
         });
 
@@ -128,18 +131,15 @@ export class ServiceStatus {
         tooltipEl.innerHTML = innerHtml;
       }
 
-      // `this` will be the overall tooltip
-      const position = this._chart.canvas.getBoundingClientRect();
+      const position = chart.canvas.getBoundingClientRect();
 
       // Display, position, and set styles for font
       tooltipEl.style.position = 'absolute';
-      tooltipEl.style.left = `${position.left + window.pageXOffset + tooltipModel.caretX}px`;
-      tooltipEl.style.top = `${position.top + window.pageYOffset + tooltipModel.caretY}px`;
+      tooltipEl.style.left = `${position.left + window.pageXOffset + tooltip.caretX}px`;
+      tooltipEl.style.top = `${position.top + window.pageYOffset + tooltip.caretY}px`;
     };
 
-    Chart.platform.disableCSSInjection = true;
-
-    const options: Chart.ChartConfiguration = {
+    const options: ChartConfiguration<'doughnut'> = {
       type: 'doughnut',
       data: {
         labels,
@@ -149,7 +149,7 @@ export class ServiceStatus {
         }],
       },
       options: {
-        cutoutPercentage: 75,
+        cutout: '75%',
         responsive: true,
         aspectRatio: 1,
         layout: {
@@ -160,35 +160,31 @@ export class ServiceStatus {
             bottom: 60,
           },
         },
-        legend: {
-          display: false,
-        },
-        title: {
-          display: false,
-        },
         animation: {
           animateScale: true,
           animateRotate: true,
-        },
-        tooltips: {
-          // Disable the on-canvas tooltip
-          enabled: false,
-          mode: 'index',
-          position: 'nearest',
-          custom: customTooltip,
-          callbacks: {
-            label: (tooltipItem: ChartTooltipItem) => {
-              if (tooltipItem.index === undefined) {
-                return '';
-              }
-              return tooltips[tooltipItem.index];
+        } as any,
+        plugins: {
+          legend: {
+            display: false,
+          },
+          title: {
+            display: false,
+          },
+          tooltip: {
+            enabled: false,
+            mode: 'index',
+            position: 'nearest',
+            external: customTooltip,
+            callbacks: {
+              label: (tooltipItem: TooltipItem<'doughnut'>) => {
+                return tooltips[tooltipItem.dataIndex];
+              },
             },
           },
-        },
-        plugins: {
           datalabels: {
             backgroundColor: null,
-            borderColor: 'none',
+            borderColor: null,
             display: true,
             font: {
               weight: 'bold',

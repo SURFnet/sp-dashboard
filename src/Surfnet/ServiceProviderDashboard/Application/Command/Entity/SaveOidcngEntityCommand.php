@@ -223,6 +223,8 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
 
     private ?bool $isCopy = null;
 
+    private ?Attribute $organizationUnitAttribute = null;
+
     public function __construct()
     {
     }
@@ -726,6 +728,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     public function setOrganizationUnitAttribute(?Attribute $organizationUnitAttribute): void
     {
         $this->organizationUnitAttribute = $organizationUnitAttribute;
+        $this->setAttribute('organizationUnitAttribute', $organizationUnitAttribute);
     }
 
     /**
