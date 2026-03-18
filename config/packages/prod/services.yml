@@ -1,2 +1,3 @@
 parameters:
   jira_enable_test_mode: false
+  manage_verify_ssl: true

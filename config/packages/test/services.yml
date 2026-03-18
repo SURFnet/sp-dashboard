@@ -5,3 +5,4 @@ services:
 parameters:
   # By enabling 'jira_enable_test_mode', no real Jira backend is required to still simulate the Jira integration
   jira_enable_test_mode: true
+  manage_verify_ssl: false
