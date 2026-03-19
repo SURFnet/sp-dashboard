@@ -57,6 +57,8 @@ Run `yarn encore dev`. This will build the frontend.
 
 Install database migrations
 ```
+
+```
 bin/console doctrine:migrations:migrate --env=dev
 ```
 
@@ -78,6 +80,15 @@ Some remarks:
 2. The Cypress tests should run in your dev environment. No fixture is provided yet to run the tests against.
 3. Running tests in PROD mode is encouraged (this disengages the web debug toolbar) saving false positives in a11y and html validation errors
 4. A service with ID = 2 should be present, it should have the add production entities option set.
+
+## Overview of available environments
+
+| Environment | Description                                                                  |
+|-------------|------------------------------------------------------------------------------|
+| dev         | Local development, real services or stubs, developer ergonomics              |
+| test        | PHPUnit (unit + integration + webtests (panther)), mock kernel, no real HTTP |
+| ci          | Cypress e2e, real kernel, real services under self-signed TLS, seeded DB     |
+| prod        | Production, all SSL on, no debug, jira_enable_test_mode: false               |
 
 ## Other resources
 
