@@ -43,7 +43,7 @@ class ValidLogoValidator extends ConstraintValidator
 
     public function __construct(
         private readonly LogoValidationHelperInterface $logoValidationHelper,
-        private readonly string $environment = 'prod',
+        private readonly bool $allowLogoPrivateHosts = false,
     ) {
     }
 
@@ -53,7 +53,7 @@ class ValidLogoValidator extends ConstraintValidator
             return;
         }
 
-        if ($this->environment === 'prod' && $this->isPrivateHost($value)) {
+        if (!$this->allowLogoPrivateHosts && $this->isPrivateHost($value)) {
             $this->context->addViolation(self::STATUS_PRIVATE_HOST);
             return;
         }

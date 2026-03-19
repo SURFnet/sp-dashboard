@@ -38,7 +38,7 @@ class ValidLogoValidatorTest extends ConstraintValidatorTestCase
     {
         $this->validationHelper = m::mock(LogoValidationHelperInterface::class);
 
-        return new ValidLogoValidator($this->validationHelper, 'prod');
+        return new ValidLogoValidator($this->validationHelper, false);
     }
 
     public function test_success_png()

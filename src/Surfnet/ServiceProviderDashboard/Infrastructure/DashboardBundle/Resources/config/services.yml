@@ -308,7 +308,7 @@ services:
       - { name: validator.constraint_validator, alias: metadata_url }
 
   Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidLogoValidator:
-    arguments: [ '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\CurlLogoValidationHelper', '%kernel.environment%' ]
+    arguments: [ '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\CurlLogoValidationHelper', '%allow_logo_private_hosts%' ]
     tags:
       - { name: validator.constraint_validator, alias: logo }
 

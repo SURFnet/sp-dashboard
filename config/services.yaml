@@ -9,6 +9,7 @@ parameters:
     acs_location_route_name: 'dashboard_saml_consume_assertion'
     authentication_context_class_ref: ~
     manage_verify_ssl: true
+    allow_logo_private_hosts: false
 
 services:
     # default configuration for services in *this* file
