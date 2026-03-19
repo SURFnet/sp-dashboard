@@ -4,5 +4,4 @@ parameters:
     level: 9
     paths:
         - ../../src
-    reportUnmatchedIgnoredErrors: false
 

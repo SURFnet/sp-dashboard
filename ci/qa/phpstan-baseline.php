@@ -3842,7 +3842,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Controller/EntityEditController.php',
 ];
 $ignoreErrors[] = [
-	// identifier: attribute.notRepeatable
+	// identifier: attribute.nonRepeatable
 	'message' => '#^Attribute class Symfony\\\\Component\\\\Routing\\\\Attribute\\\\Route is not repeatable but is already present above the method\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Controller/EntityPublishedController.php',
