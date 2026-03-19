@@ -3842,12 +3842,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Controller/EntityEditController.php',
 ];
 $ignoreErrors[] = [
-	// identifier: attribute.nonRepeatable
-	'message' => '#^Attribute class Symfony\\\\Component\\\\Routing\\\\Attribute\\\\Route is not repeatable but is already present above the method\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Controller/EntityPublishedController.php',
-];
-$ignoreErrors[] = [
 	// identifier: method.nonObject
 	'message' => '#^Cannot call method getNameEn\\(\\) on Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\Entity\\\\MetaData\\|null\\.$#',
 	'count' => 1,
