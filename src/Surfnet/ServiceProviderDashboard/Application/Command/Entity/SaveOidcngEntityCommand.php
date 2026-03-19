@@ -728,6 +728,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     public function setOrganizationUnitAttribute(?Attribute $organizationUnitAttribute): void
     {
         $this->organizationUnitAttribute = $organizationUnitAttribute;
+        $this->setAttribute('organizationUnitAttribute', $organizationUnitAttribute);
     }
 
     /**

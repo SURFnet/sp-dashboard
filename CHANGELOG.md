@@ -1,6 +1,7 @@
 ## Unreleased
 Remove integration with Teams
 Add integration with Invite
+- Fix: `organizationUnitAttribute` was silently dropped from the Manage payload because `setOrganizationUnitAttribute()` did not call `setAttribute()`. The attribute is now correctly included when saving SAML and OIDC entities.
 
 The following environment variables have become obsolete.
 ```dotenv
