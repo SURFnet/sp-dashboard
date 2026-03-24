@@ -1,7 +1,10 @@
 ## Unreleased
 Remove integration with Teams
 Add integration with Invite
+
 - Fix: global site notice was not rendered on the service overview and my-services pages because both templates override the full `body_container` block, swallowing the notice render call that lived in the base template.
+- Fix: service cards on the overview page generated HTML element IDs containing dots (e.g. `add-for-test-Ibuildings-B.V.`), which are invalid per the `id-pattern` rule. Dots are now stripped when building the ID.
+
 
 The following environment variables have become obsolete.
 ```dotenv
