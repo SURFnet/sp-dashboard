@@ -223,8 +223,6 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
 
     private ?bool $isCopy = null;
 
-    private ?Attribute $organizationUnitAttribute = null;
-
     public function __construct()
     {
     }
@@ -718,17 +716,6 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     public function getAcsLocations(): ?array
     {
         return null;
-    }
-
-    public function getOrganizationUnitAttribute(): ?Attribute
-    {
-        return $this->organizationUnitAttribute;
-    }
-
-    public function setOrganizationUnitAttribute(?Attribute $organizationUnitAttribute): void
-    {
-        $this->organizationUnitAttribute = $organizationUnitAttribute;
-        $this->setAttribute('organizationUnitAttribute', $organizationUnitAttribute);
     }
 
     /**

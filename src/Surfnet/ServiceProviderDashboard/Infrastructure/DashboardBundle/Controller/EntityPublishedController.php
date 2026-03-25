@@ -32,7 +32,7 @@ class EntityPublishedController extends AbstractController
 {
     #[IsGranted('ROLE_USER')]
     #[Route(path: '/entity/published/production', name: 'entity_published_production', methods: ['GET'])]
-    #[Route(path: '/entity/published/test', name: 'entity_published_test', methods: ['GET'])] // @phpstan-ignore attribute.nonRepeatable
+    #[Route(path: '/entity/published/test', name: 'entity_published_test', methods: ['GET'])]
     public function published(Request $request): RedirectResponse|Response
     {
         /**
