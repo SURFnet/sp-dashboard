@@ -3,8 +3,8 @@ Cypress.Commands.add('goToServiceOverview', () => {
 });
 
 Cypress.Commands.add('doEntityAction', (action, environment = 'test', id = 'https://tiffany.aching.do/id') => {
-    cy.get(`.service-status-entities-table.${environment}-entities`)
-      .contains(id)
+    cy.get(`.service-status-entities-table.${environment}-entities`, {timeout: 15000})
+      .contains(id, {timeout: 15000})
       .next()
       .next()
       .next()

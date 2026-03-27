@@ -185,7 +185,7 @@ class ServiceOverviewTest extends WebTestCase
         $this->logIn($service);
         $crawler = self::$pantherClient->request('GET', '/');
         // Verify the link is on the page to trigger the modal window
-        $actions = $crawler->filter('.link[for^="add-for-production-Ibuildings-B.V."]');
+        $actions = $crawler->filter('.link[for^="add-for-production-Ibuildings-BV"]');
 
         $this->assertStringContainsString('New production entity', $actions->eq(0)->text(), 'Add for production link not found');
     }

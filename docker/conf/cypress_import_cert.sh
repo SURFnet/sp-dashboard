@@ -1,6 +1,6 @@
 # This will import the certificate offered by manage.dev.openconext.local into the local certificate store.
 
-until $(curl -k --output /dev/null --silent --head --fail https://manage.dev.openconext.local/internal/health); do
+until wget -q --spider --no-check-certificate https://manage.dev.openconext.local/internal/health 2>/dev/null; do
 	printf '.'
 	sleep 1
 done

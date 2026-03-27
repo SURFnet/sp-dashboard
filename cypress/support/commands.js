@@ -25,10 +25,10 @@
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 Cypress.Commands.add('removeSFToolbar', () => {
     cy.get('body').then((body) => {
-        const hasToolbar = body.find('.sf-toolbar').length;
-        if (hasToolbar) {
-            body.find('.sf-toolbar').remove();
-        }
+        // Remove the Symfony profiler toolbar and all its injected artifacts
+        body.find('.sf-toolbar, .sf-minitoolbar').remove();
+        // Remove <style> tags injected directly into <body> by the profiler
+        body.children('style').remove();
     });
 });
 
@@ -57,6 +57,6 @@ Cypress.Commands.add('checkContact', (contact, firstName, lastName, email, phone
       .next().contains('Email').next().should('have.text', email);
     if (phone) {
         cy.contains(contact)
-          .next().contains('Phone').next().should('have.text', email);
+          .next().contains('Phone').next().should('have.text', phone);
     }
 })

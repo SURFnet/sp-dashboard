@@ -4,7 +4,7 @@ div.add-entity-actions {
   text-align: right;
 
   a {
-    color: $blue;
+    color: $contrast-blue;
 
     &:visited, &:hover {
       text-decoration: none;
@@ -37,7 +37,7 @@ div.actions, td.actions > div[tabindex="0"], div.roles, td.roles > div[tabindex=
   }
 
   a {
-    color: $blue;
+    color: $contrast-blue;
     text-decoration: none;
 
     &:visited, &:hover {

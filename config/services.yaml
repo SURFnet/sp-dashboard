@@ -8,6 +8,21 @@ parameters:
     router.request_context.base_url: ''
     acs_location_route_name: 'dashboard_saml_consume_assertion'
     authentication_context_class_ref: ~
+    manage_verify_ssl: true
+    allow_logo_private_hosts: false
+    logo_verify_ssl: true
+
+when@ci:
+    parameters:
+        manage_verify_ssl: false
+        allow_logo_private_hosts: true
+        logo_verify_ssl: false
+
+when@dev:
+    parameters:
+        manage_verify_ssl: false
+        allow_logo_private_hosts: true
+        logo_verify_ssl: false
 
 services:
     # default configuration for services in *this* file

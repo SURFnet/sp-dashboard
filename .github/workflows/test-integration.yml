@@ -23,6 +23,13 @@ jobs:
         with:
           path: spdashboard
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'yarn'
+          cache-dependency-path: spdashboard/yarn.lock
+
       - name: Checkout openconext-devconf
         uses: actions/checkout@v4
         with:
@@ -51,15 +58,18 @@ jobs:
         run: |
           ${DOCKER_COMPOSE_PHP} /usr/bin/composer install -n --prefer-dist -o --ignore-platform-reqs
 
-      - name: Run yarn
+      - name: Install frontend dependencies and build assets
         working-directory: spdashboard
         run: |
-          ${DOCKER_COMPOSE_PHP} yarn install
+          yarn install
+          yarn build
 
-      - name: Create front end dependencies (yarn encore production)
+      - name: Configure git safe directory in spdashboard container
+        # Git 2.35.2+ rejects repos owned by a different user. The docker volume
+        # is owned by the host user but runs as www-data, so we mark it safe.
         working-directory: spdashboard
         run: |
-          ${DOCKER_COMPOSE_PHP} yarn run encore production
+          ${DOCKER_COMPOSE_PHP} git config --global --add safe.directory /var/www/html
 
       - name: Delete the database if present
         working-directory: spdashboard
@@ -70,6 +80,7 @@ jobs:
         working-directory: spdashboard
         run: |
           ${DOCKER_RUN_SPD_AS_WWW} bin/console doctrine:schema:create
+          ${DOCKER_RUN_SPD_AS_WWW} bin/console doctrine:fixtures:load --no-interaction
         env:
           APP_ENV: test
 
@@ -89,8 +100,11 @@ jobs:
         run: |
           ${DOCKER_COMPOSE_PHP} sh -c 'composer jest'
 
+      - name: Configure Mujina IdP attributes for Cypress tests
+        working-directory: spdashboard
+        run: ${DOCKER_COMPOSE_PHP} sh /var/www/html/docker/conf/configure_mujina_idp.sh
+
       - name: Run Cypress tests
         working-directory: spdashboard
         run: |
           ${DOCKER_COMPOSE_CYPRESS} cypress run --browser chrome -C ./ci/qa/cypress.config.ts
-        continue-on-error: true

@@ -353,9 +353,10 @@ class WebTestCase extends PantherTestCase
         // Click on the intermediate IdP selection element (wayf screen)
         $crawler->findElement(WebDriverBy::cssSelector('.wayf__idp[data-entityid="http://mock-idp"]'))->click();
         $crawler = self::$pantherClient->refreshCrawler();
-        $form = $crawler->findElement(WebDriverBy::cssSelector('form.login-form'));
+        $form = self::findBy('form.login-form');
         $this->fillFormField($form, '#username', 'John Doe');
         $this->fillFormField($form, '#password', 'secret');
+        $crawler = self::$pantherClient->refreshCrawler();
         // By default, log in using an admin team (see .env.test > administrator_teams)
         $teamName = 'urn:collab:group:dev.openconext.local:dev:openconext:local:spd_admin';
         if ($service) {
@@ -363,6 +364,7 @@ class WebTestCase extends PantherTestCase
         }
         $select = $crawler->filterXPath(".//select[@id='add-attribute']//option[@value='urn:mace:dir:attribute-def:isMemberOf']");
         $select->click();
+        $crawler = self::$pantherClient->refreshCrawler();
         $isMemberOf = $crawler->filter('input[name="urn:mace:dir:attribute-def:isMemberOf"]');
         $isMemberOf->sendKeys($teamName);
 
@@ -370,6 +372,7 @@ class WebTestCase extends PantherTestCase
             $secondTeamName = $secondService->getTeamName();
             $select = $crawler->filterXPath(".//select[@id='add-attribute']//option[@value='urn:mace:dir:attribute-def:isMemberOf']");
             $select->click();
+            $crawler = self::$pantherClient->refreshCrawler();
             $isMemberOf = $crawler->filter('input[name="urn:mace:dir:attribute-def:isMemberOf"]')->eq(1);
             $isMemberOf->sendKeys($secondTeamName);
         }
@@ -384,9 +387,10 @@ class WebTestCase extends PantherTestCase
         // Click on the intermediate IdP selection element (wayf screen)
         $crawler->findElement(WebDriverBy::cssSelector('.wayf__idp[data-entityid="http://mock-idp"]'))->click();
         $crawler = self::$pantherClient->refreshCrawler();
-        $form = $crawler->findElement(WebDriverBy::cssSelector('form.login-form'));
+        $form = self::findBy('form.login-form');
         $this->fillFormField($form, '#username', 'John Dart');
         $this->fillFormField($form, '#password', 'secret');
+        $crawler = self::$pantherClient->refreshCrawler();
 
         $select = $crawler->filterXPath(
             sprintf(
@@ -395,6 +399,7 @@ class WebTestCase extends PantherTestCase
             )
         );
         $select->click();
+        $crawler = self::$pantherClient->refreshCrawler();
         $entitlement = $crawler->filter(sprintf('input[name="urn:mace:dir:attribute-def:%s"]', $this->surfConextRepresentativeAttributeName));
         $entitlement->sendKeys('urn:mace:surfnet.nl:surfnet.nl:sab:organizationCode:' . $institutionId);
         // Now also send the attribute value that indicates this user is of role SurfConext representative
@@ -405,6 +410,7 @@ class WebTestCase extends PantherTestCase
             )
         );
         $select->click();
+        $crawler = self::$pantherClient->refreshCrawler();
         $entitlement = $crawler
             ->filter(sprintf('input[name="urn:mace:dir:attribute-def:%s"]', $this->surfConextRepresentativeAttributeName))
             ->eq(1); // There are now 2 entitlement attrs, pick the second
@@ -502,8 +508,9 @@ class WebTestCase extends PantherTestCase
 
     protected function fillFormField(WebDriverElement $form, string $targetField, string $value): void
     {
-        $form->findElement(WebDriverBy::cssSelector($targetField))->clear();
-        $form->findElement(WebDriverBy::cssSelector($targetField))->sendKeys($value);
+        $field = $form->findElement(WebDriverBy::cssSelector($targetField));
+        $field->clear();
+        $field->sendKeys($value);
     }
 
     protected function checkFormField(WebDriverElement $form, string $targetField): void

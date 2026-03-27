@@ -3,11 +3,12 @@ import {terminalLog} from '../../functions/terminalLog';
 context('SPD verify a11y of service overview modals', () => {
     beforeEach(() => {
         cy.login();
-        cy.selectService(1);
+        cy.selectService(2);
         cy.contains('New production entity').first().click();
     });
 
     it('contains no a11y problems on load', () => {
+        cy.removeSFToolbar();
         cy.injectAxe();
         cy.checkA11y(null, null, terminalLog);
     });

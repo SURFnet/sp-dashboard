@@ -66,7 +66,7 @@
     "symfony/twig-bridge": "^6.4.17",
     "symfony/twig-bundle": "^6.4.13",
     "symfony/uid": "6.4.*",
-    "symfony/ux-autocomplete": "^2.22.1",
+    "symfony/ux-autocomplete": "^2.32",
     "symfony/validator": "^6.4.17",
     "symfony/yaml": "^6.4.13",
     "twig/extra-bundle": "^2.12|^3.18",
@@ -180,7 +180,8 @@
       "!/templates",
       "!/translations",
       "!/var/cache/prod",
-      "!/vendor"
+      "!/vendor",
+      "bin/dev"
     ]
   },
   "extra": {

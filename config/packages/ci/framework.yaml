@@ -1,0 +1,10 @@
+imports:
+  - { resource: services.yml }
+
+framework:
+  session:
+    handler_id: null
+    save_path: '/tmp'
+    storage_factory_id: session.storage.factory.native
+  profiler:
+    collect: false

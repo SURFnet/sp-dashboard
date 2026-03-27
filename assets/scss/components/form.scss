@@ -47,7 +47,7 @@ form {
   top: 0;
 }
 
-.tippy-tooltip.light-theme {
+.tippy-box[data-theme~='light'] {
   @include tool-tip;
 
   text-align: left;

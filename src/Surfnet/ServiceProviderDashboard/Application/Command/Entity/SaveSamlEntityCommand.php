@@ -159,8 +159,6 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     public bool $isPublicInDashboard;
 
     private ?string $manageId = null;
-    private ?Attribute $organizationUnitAttribute = null;
-
     public function __construct()
     {
     }
@@ -477,15 +475,6 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         return Constants::TYPE_SAML;
     }
 
-    public function getOrganizationUnitAttribute(): ?Attribute
-    {
-        return $this->organizationUnitAttribute;
-    }
-
-    public function setOrganizationUnitAttribute(?Attribute $organizationUnitAttribute): void
-    {
-        $this->organizationUnitAttribute = $organizationUnitAttribute;
-    }
 
     /**
      * @return TypeOfService[]

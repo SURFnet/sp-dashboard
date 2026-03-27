@@ -1,6 +1,8 @@
 'use strict';
 
-import tippy from 'tippy.js/dist/esm/tippy.standalone'
+import tippy from 'tippy.js'
+import 'tippy.js/themes/light.css'
+import 'tippy.js/animations/scale.css'
 
 $(document).ready(
     () => tippy(
