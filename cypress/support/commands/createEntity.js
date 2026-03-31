@@ -122,7 +122,7 @@ Cypress.Commands.add('verifyCreation', () => {
     cy.viewEntity();
     cy.checkContainsValue('ACS location', 'https://oidc.dev.support.surfconext.nl/saml/SSO');
     cy.checkCorrectTextValue('Entity ID', 'https://tiffany.aching.do/id');
-    cy.checkCorrectTextValue('Logo URL', 'https://scriptmag.com/.image/t_share/MTY3Mzc5MDUyOTIyNTQ1OTY1/image-placeholder-title.png');
+    cy.checkCorrectTextValue('Logo URL', 'https://engine.dev.openconext.local/images/logo.png');
     cy.checkCorrectTextValue('Name NL', 'Tiffany Aching');
     cy.checkCorrectTextValue('Description NL', 'Ik, wat?  Geen pagina over Tiffany Aching in het Nederlands?  Ik ben verontwaardigd ende alsook zwaar op mijn teen getorten!  Schande!  Schreeuw het van de daken: SCHANDE!  Maar ik ben wel te lui om er één toe te voegen, dat dan weer wel.');
     cy.checkCorrectTextValue('Name EN', 'Tiffany Aching');

@@ -211,13 +211,14 @@ Cypress.Commands.add('checkAllWhitelistIsChecked', () => {
 Cypress.Commands.add('deleteOnManage', () => {
     cy.url().then((url) => {
         const match = url.match(/\/metadata\/([^/]+)\/([^/]+)/);
-        if (match) {
-            cy.request({
-                method: 'DELETE',
-                url: `${MANAGE_URL}/manage/api/internal/metadata/${match[1]}/${match[2]}`,
-                headers: MANAGE_HEADERS,
-                failOnStatusCode: false,
-            });
+        if (!match) {
+            throw new Error(`deleteOnManage: could not extract entity type/id from URL: ${url}`);
         }
+        cy.request({
+            method: 'DELETE',
+            url: `${MANAGE_URL}/manage/api/internal/metadata/${match[1]}/${match[2]}`,
+            headers: MANAGE_HEADERS,
+            failOnStatusCode: false,
+        });
     });
 });
