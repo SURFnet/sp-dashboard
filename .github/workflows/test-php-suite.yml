@@ -1,4 +1,4 @@
-name: Run integration tests - Webtests
+name: PHP test suite
 
 on:
   pull_request:
@@ -12,15 +12,22 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
-      DOCKER_COMPOSE: docker compose -f docker-compose.yml
-      DOCKER_COMPOSE_PHP: docker compose -f docker-compose.yml exec -T spdashboard
-      DOCKER_RUN_SPD_AS_WWW: docker compose -f docker-compose.yml exec --user 33:33 spdashboard
+      DOCKER_COMPOSE: docker compose -f docker-compose.yml -f docker-compose-php-tests.yml
+      DOCKER_COMPOSE_PHP: docker compose -f docker-compose.yml -f docker-compose-php-tests.yml exec -T spdashboard
+      DOCKER_RUN_SPD_AS_WWW: docker compose -f docker-compose.yml -f docker-compose-php-tests.yml exec --user 33:33 spdashboard
 
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
         with:
           path: spdashboard
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'yarn'
+          cache-dependency-path: spdashboard/yarn.lock
 
       - name: Checkout openconext-devconf
         uses: actions/checkout@v4
@@ -46,15 +53,11 @@ jobs:
         run: |
           ${DOCKER_COMPOSE_PHP} /usr/bin/composer install -n --prefer-dist -o --ignore-platform-reqs
 
-      - name: Run yarn
+      - name: Install frontend dependencies and build assets
         working-directory: spdashboard
         run: |
-          ${DOCKER_COMPOSE_PHP} yarn install
-
-      - name: Create front end dependencies (yarn encore production)
-        working-directory: spdashboard
-        run: |
-          ${DOCKER_COMPOSE_PHP} yarn run encore production
+          yarn install
+          yarn build
 
       - name: Run CI tests
         working-directory: spdashboard

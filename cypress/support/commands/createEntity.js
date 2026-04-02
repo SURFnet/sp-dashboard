@@ -26,8 +26,15 @@ Cypress.Commands.add('addCertificate', (certificate = '') => {
     cy.get('#dashboard_bundle_entity_type_metadata_certificate').type(certificate);
 });
 
-Cypress.Commands.add('addLogoUrl', (url = 'https://generative-placeholders.glitch.me/image?width=600&height=300') => {
+Cypress.Commands.add('addLogoUrl', (url = 'https://engine.dev.openconext.local/images/logo.png') => {
     cy.get('#dashboard_bundle_entity_type_metadata_logoUrl').type(url);
+});
+
+Cypress.Commands.add('addTypeOfService', (service = 'Education') => {
+    cy.get('#dashboard_bundle_entity_type_metadata_typeOfService')
+        .select([service], { force: true })
+        .invoke('val')
+        .should('deep.equal', [service]);
 });
 
 Cypress.Commands.add('addNameNl', (name = 'Tiffany Aching') => {
@@ -88,6 +95,7 @@ Cypress.Commands.add('addComment', (comment = 'ya always know just what ta say, 
 Cypress.Commands.add('fillInCreateSamlForm', (attributes = [], entityId = '') => {
     cy.addAcsLocation();
     cy.addLogoUrl();
+    cy.addTypeOfService();
     cy.addNameNl();
     cy.addDescriptionNl();
     cy.addNameEn();
@@ -114,7 +122,7 @@ Cypress.Commands.add('verifyCreation', () => {
     cy.viewEntity();
     cy.checkContainsValue('ACS location', 'https://oidc.dev.support.surfconext.nl/saml/SSO');
     cy.checkCorrectTextValue('Entity ID', 'https://tiffany.aching.do/id');
-    cy.checkCorrectTextValue('Logo URL', 'https://generative-placeholders.glitch.me/image?width=600&height=300');
+    cy.checkCorrectTextValue('Logo URL', 'https://engine.dev.openconext.local/images/logo.png');
     cy.checkCorrectTextValue('Name NL', 'Tiffany Aching');
     cy.checkCorrectTextValue('Description NL', 'Ik, wat?  Geen pagina over Tiffany Aching in het Nederlands?  Ik ben verontwaardigd ende alsook zwaar op mijn teen getorten!  Schande!  Schreeuw het van de daken: SCHANDE!  Maar ik ben wel te lui om er één toe te voegen, dat dan weer wel.');
     cy.checkCorrectTextValue('Name EN', 'Tiffany Aching');
@@ -127,7 +135,43 @@ Cypress.Commands.add('verifyCreation', () => {
 });
 
 Cypress.Commands.add('clickPublishButton', () => {
-    cy.get('#dashboard_bundle_entity_type_publishButton').click();
+    cy.intercept('POST', '**/entity/create/**').as('publishEntity');
+    cy.get('#dashboard_bundle_entity_type_publishButton').then(($button) => {
+        const button = $button.get(0);
+        const form = button?.form;
+
+        if (!button || !form) {
+            throw new Error('Unable to submit the create-entity form');
+        }
+
+        form.requestSubmit(button);
+    });
+});
+
+Cypress.Commands.add('waitForEntityCreationToFinish', () => {
+    cy.wait('@publishEntity', { timeout: 60000 }).then(({ response }) => {
+        if (!response) {
+            throw new Error('Entity publish request did not receive a response');
+        }
+
+        if (response.statusCode !== 200) {
+            return;
+        }
+
+        cy.document().then((document) => {
+            const flashError = document.querySelector('.message.error')?.textContent?.trim();
+            const validationErrors = [...document.querySelectorAll('li.error')]
+                .map((element) => element.textContent?.trim())
+                .filter(Boolean);
+            const errorDetails = [flashError, ...validationErrors].join(' | ');
+
+            throw new Error(errorDetails
+                ? `Entity publish stayed on the create form: ${errorDetails}`
+                : 'Entity publish stayed on the create form without a redirect');
+        });
+    });
+
+    cy.location('pathname', {timeout: 60000}).should('not.include', '/entity/create/');
 });
 
 Cypress.Commands.add('openCreateEntityModal', (environment = 'test', serviceID = 1) => {
@@ -137,7 +181,11 @@ Cypress.Commands.add('openCreateEntityModal', (environment = 'test', serviceID =
 });
 
 Cypress.Commands.add('createEntity', (attributes = [], environment = 'test', entityId = '') => {
+    const resolvedEntityId = entityId || 'https://tiffany.aching.do/id';
+
     cy.openCreateEntityModal(environment, 2);
     cy.fillInCreateSamlForm(attributes, entityId);
     cy.clickPublishButton();
+    cy.waitForEntityCreationToFinish();
+    cy.waitForManageEntity('saml20_sp', resolvedEntityId);
 });

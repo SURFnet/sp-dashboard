@@ -29,18 +29,17 @@ module.exports = {
         "<rootDir>/public/build"
     ],
     transform: {
-        "\\.(ts|tsx)$": "ts-jest"
+        "\\.(ts|tsx)$": ["ts-jest", {
+            tsconfig: "tsconfig.jest.json",
+            diagnostics: {
+                ignoreCodes: [151001, 2349, 2351]
+            },
+        }]
     },
     testRegex: ".*\\.test\\.(ts|tsx|js|jsx)$",
-    globals: {
-        "ts-jest": {
-            tsconfig: "tsconfig.json",
-            diagnostics: {
-                ignoreCodes: [151001]
-            },
-        }
-    },
+    testEnvironment: "jsdom",
     "setupFiles": [
         "jest-canvas-mock",
+        "<rootDir>/ci/qa/jest.setup.js"
     ]
 };

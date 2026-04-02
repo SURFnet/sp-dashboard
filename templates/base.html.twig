@@ -47,9 +47,8 @@
             </div>
         </header>
         <div class="page-container">
-            {{ render(controller('Surfnet\\ServiceProviderDashboard\\Infrastructure\\DashboardBundle\\Controller\\SiteNoticeController::showGlobalSiteNotice')) }}
-
             {% block body_container %}
+                {{ render(controller('Surfnet\\ServiceProviderDashboard\\Infrastructure\\DashboardBundle\\Controller\\SiteNoticeController::showGlobalSiteNotice')) }}
                 <h1>{% block page_heading %}{% endblock %}</h1>
                 <div class="card">
                     {% block body %}{% endblock %}

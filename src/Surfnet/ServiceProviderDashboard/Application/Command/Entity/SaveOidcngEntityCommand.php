@@ -718,16 +718,6 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         return null;
     }
 
-    public function getOrganizationUnitAttribute(): ?Attribute
-    {
-        return $this->organizationUnitAttribute;
-    }
-
-    public function setOrganizationUnitAttribute(?Attribute $organizationUnitAttribute): void
-    {
-        $this->organizationUnitAttribute = $organizationUnitAttribute;
-    }
-
     /**
      * @return TypeOfService[]
      */

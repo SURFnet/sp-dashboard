@@ -3,15 +3,13 @@ import {attributes, attributesTitles} from '../fixtures/variables';
 context('Publish functionality', () => {
     beforeEach(() => {
         cy.login();
-        cy.selectService(1);
-        cy.contains('New production entity').first().click();
     });
 
     // Elke keer als een productie entity wordt gepubliceerd, dient de coin:exclude_from_push aan te staan, uitgezonderd bij een secret reset voor een entity waar deze al uit staat.
     it('coin:exclude_from_push is on when publishing', () => {
         cy.selectService();
         cy.createEntity(attributes, 'production', 'https://tiffany.aching.do/id/1');
-        cy.loginToManageAndSelectTiffanyAching();
+        cy.loginToManageAndSelectTiffanyAching('https://manage.dev.openconext.local', 'https://tiffany.aching.do/id/1');
         cy.checkExcludeFromPushIsChecked();
         cy.deleteOnManage();
     });
@@ -22,7 +20,7 @@ context('Publish functionality', () => {
     it('when publishing an entity on production, no ACL can be set', () => {
         cy.selectService();
         cy.createEntity(attributes, 'production', 'https://tiffany.aching.do/id/2');
-        cy.loginToManageAndSelectTiffanyAching();
+        cy.loginToManageAndSelectTiffanyAching('https://manage.dev.openconext.local', 'https://tiffany.aching.do/id/2');
         cy.goToWhitelistingTab();
         cy.checkAllWhitelistIsChecked();
         cy.deleteOnManage()
@@ -33,9 +31,10 @@ context('Publish functionality', () => {
     it('when creating an entity, all attributes i add on creation should be visible in the entity view and the comment should be in the comment field in Manage', () => {
         cy.selectService();
         cy.createEntity(attributes, 'test', 'https://tiffany.aching.do/id/3');
-        cy.viewEntity();
+        cy.selectService(2);
+        cy.viewEntity('test', 'https://tiffany.aching.do/id/3');
         cy.verifyAttributeMotivations(attributesTitles);
-        cy.loginToManageAndSelectTiffanyAching();
+        cy.loginToManageAndSelectTiffanyAching('https://manage.dev.openconext.local', 'https://tiffany.aching.do/id/3');
         cy.checkRevisionNote();
         cy.deleteOnManage()
     });

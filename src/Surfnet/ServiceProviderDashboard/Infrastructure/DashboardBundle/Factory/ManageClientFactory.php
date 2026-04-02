@@ -23,7 +23,7 @@ use Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfig;
 
 class ManageClientFactory
 {
-    public static function createClient(ApiConfig $configuration): Client
+    public static function createClient(ApiConfig $configuration, bool $verifySsl = true): Client
     {
         $arguments = [
             'base_uri' => $configuration->getConnection()->getHost(),
@@ -32,6 +32,7 @@ class ManageClientFactory
                 $configuration->getConnection()->getPassword(),
                 'basic',
             ],
+            'verify' => $verifySsl,
         ];
 
         return new Client($arguments);

@@ -3,7 +3,7 @@ services:
   spdashboard:
     image:  ghcr.io/openconext/openconext-basecontainers/php82-apache2-node20-composer2:latest
     environment:
-      APP_ENV: test
+      APP_ENV: ci
       PHP_MEMORY_LIMIT: 256M
     volumes:
       - ${PWD}/../OpenConext-devconf/core/:/config
@@ -32,7 +32,7 @@ services:
       coreconextdev:
 
   cypress:
-    image: cypress/included:10.8.0
+    image: cypress/included:15.11.0
     working_dir: /e2e
     entrypoint: cypress open --project .
     networks:
