@@ -55,7 +55,7 @@
     "jquery-modal": "^0.9.1",
     "jquery.mousewheel": "^3.1.9",
     "js-cookie": "^3.0",
-    "lodash": "^4.17.23",
+    "lodash": "^4.18.1",
     "parsleyjs": "^2.8.1",
     "select2": "^4.1.0-rc.0",
     "semver": "^7.7.4",
