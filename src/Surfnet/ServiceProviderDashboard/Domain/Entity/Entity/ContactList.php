@@ -48,11 +48,16 @@ class ContactList implements Comparable
             }
         }
 
-        // 2. Build the Contact DTOs
+        // 2. Build the Contact DTOs — take the first contact of each type, ignore duplicates
         $list = new self();
+        $seenTypes = [];
         foreach ($contactsData as $contact) {
-            if (array_key_exists('contactType', $contact) && in_array($contact['contactType'], self::$supportedContactTypes)) {
+            if (array_key_exists('contactType', $contact)
+                && in_array($contact['contactType'], self::$supportedContactTypes)
+                && !in_array($contact['contactType'], $seenTypes)
+            ) {
                 $list->add(Contact::from($contact));
+                $seenTypes[] = $contact['contactType'];
             }
         }
 
