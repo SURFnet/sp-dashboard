@@ -3842,6 +3842,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Controller/EntityEditController.php',
 ];
 $ignoreErrors[] = [
+	// identifier: attribute.nonRepeatable
+	'message' => '#^Attribute class Symfony\\\\Component\\\\Routing\\\\Attribute\\\\Route is not repeatable but is already present above the method\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Controller/EntityPublishedController.php',
+];
+$ignoreErrors[] = [
 	// identifier: method.nonObject
 	'message' => '#^Cannot call method getNameEn\\(\\) on Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\Entity\\\\MetaData\\|null\\.$#',
 	'count' => 1,
@@ -3959,12 +3965,6 @@ $ignoreErrors[] = [
 	// identifier: method.notFound
 	'message' => '#^Call to an undefined method Symfony\\\\Component\\\\HttpFoundation\\\\Session\\\\SessionInterface\\:\\:getFlashBag\\(\\)\\.$#',
 	'count' => 2,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Controller/ServiceController.php',
-];
-$ignoreErrors[] = [
-	// identifier: method.nonObject
-	'message' => '#^Cannot call method getClientSecret\\(\\) on Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\Entity\\\\OidcClientInterface\\|null\\.$#',
-	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Controller/ServiceController.php',
 ];
 $ignoreErrors[] = [

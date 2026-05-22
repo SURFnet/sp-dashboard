@@ -103,6 +103,36 @@ class EntityActionsTest extends TestCase
         ];
     }
 
+    public function test_public_client_cannot_reset_secret(): void
+    {
+        $actions = new EntityActions(
+            'manage-id',
+            1,
+            Constants::STATE_PUBLISHED,
+            Constants::ENVIRONMENT_TEST,
+            Constants::TYPE_OPENID_CONNECT_TNG,
+            false,
+            false,
+            true
+        );
+        $this->assertFalse($actions->allowSecretResetAction(), 'Public OIDC client should not have reset secret option');
+    }
+
+    public function test_confidential_client_can_reset_secret(): void
+    {
+        $actions = new EntityActions(
+            'manage-id',
+            1,
+            Constants::STATE_PUBLISHED,
+            Constants::ENVIRONMENT_TEST,
+            Constants::TYPE_OPENID_CONNECT_TNG,
+            false,
+            false,
+            false
+        );
+        $this->assertTrue($actions->allowSecretResetAction(), 'Confidential OIDC client should have reset secret option');
+    }
+
     public function test_read_only_restricts_cud_actions()
     {
         $actions = new EntityActions(

@@ -42,6 +42,8 @@ class EntityDetailFactory
             $logo = $manageEntity->getMetaData()->getLogo()->getUrl();
         }
 
+        $isPublicClient = $manageEntity->getOidcClient()?->isPublicClient() ?? false;
+
         $actions = new EntityActions(
             $manageEntity->getId(),
             $manageEntity->getService()->getId(),
@@ -49,7 +51,8 @@ class EntityDetailFactory
             $manageEntity->getEnvironment(),
             $manageEntity->getProtocol()->getProtocol(),
             $manageEntity->isReadOnly(),
-            false
+            false,
+            $isPublicClient
         );
 
         $grants = null;
