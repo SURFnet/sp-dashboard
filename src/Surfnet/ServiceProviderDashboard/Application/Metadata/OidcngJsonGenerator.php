@@ -218,7 +218,7 @@ class OidcngJsonGenerator implements GeneratorInterface
                     $metadata['secret'] = $secret;
                 }
             } else {
-                $metadata['secret'] = null;
+                $metadata['secret'] = '';
             }
             // Reset the redirect URI list in order to get a correct JSON formatting (See #163646662)
             $metadata['redirectUrls'] = $entity->getOidcClient()->getRedirectUris();
