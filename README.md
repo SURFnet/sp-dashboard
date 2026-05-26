@@ -46,7 +46,7 @@ Please follow the instructions in the [OpenConext-devconf README](https://github
 
 
 If Devconf is provisioned and up and running then you can start the command line in the container with
-`./start-dev-env.sh spdashboard:/home/bas/Projects/surf/sp-dashboard` in the `OpenConext-devconf/core` directory.
+`./start-dev-env.sh spdashboard:/path/to/your/sp-dashboard --profile dashboard` in the `OpenConext-devconf/core` directory.
 
 Then run the following commands to install the PHP and JS dependencies:
 
