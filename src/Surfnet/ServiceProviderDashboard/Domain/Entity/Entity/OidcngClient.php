@@ -175,14 +175,17 @@ class OidcngClient implements Comparable, OidcClientInterface
 
     public function asArray(): array
     {
-        return [
+        $data = [
             'metaDataFields.accessTokenValidity' => $this->getAccessTokenValidity(),
             'metaDataFields.grants' => $this->getGrants(),
             'metaDataFields.isPublicClient' => $this->isPublicClient(),
             'metaDataFields.redirectUrls' => $this->getRedirectUris(),
-            'metaDataFields.secret' => $this->getClientSecret(),
             'entityid' => $this->getClientId(),
         ];
+        if (!$this->isPublicClient) {
+            $data['metaDataFields.secret'] = $this->getClientSecret();
+        }
+        return $data;
     }
 
     /**

@@ -3848,6 +3848,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Controller/EntityPublishedController.php',
 ];
 $ignoreErrors[] = [
+	// identifier: attribute.notRepeatable
+	'message' => '#^Attribute class Symfony\\\\Component\\\\Routing\\\\Attribute\\\\Route is not repeatable but is already present above the method\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Controller/EntityPublishedController.php',
+];
+$ignoreErrors[] = [
 	// identifier: method.notFound
 	'message' => '#^Call to an undefined method Symfony\\\\Component\\\\Form\\\\FormInterface\\:\\:getClickedButton\\(\\)\\.$#',
 	'count' => 1,
