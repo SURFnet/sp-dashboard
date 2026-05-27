@@ -187,8 +187,6 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
                 if ($secret !== '' && $secret !== '0') {
                     $metadata['secret'] = $secret;
                 }
-            } else {
-                $metadata['secret'] = null;
             }
         }
         return $metadata;

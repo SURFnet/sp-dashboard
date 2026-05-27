@@ -76,6 +76,10 @@ class EntityDiff
         // we can also mark removed metadata items correctly.
         foreach (array_keys($originalData) as $key) {
             if (!array_key_exists($key, $data)) {
+                // Public-client transition: secret removed from asArray() — omit rather than send null (NPE in Manage SecretHook)
+                if ($key === 'metaDataFields.secret') {
+                    continue;
+                }
                 $diffResults[$key] = null;
             }
         }

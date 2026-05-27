@@ -27,6 +27,7 @@ use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashbo
 use Surfnet\ServiceProviderDashboard\Application\Metadata\OidcngResourceServerJsonGenerator;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\JiraTicketNumber;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OidcClientInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\EntityDiff;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
@@ -146,6 +147,29 @@ class OidcngResourceServerJsonGeneratorTest extends MockeryTestCase
             ),
             $data
         );
+    }
+
+    public function test_generate_for_new_entity_omits_secret_for_public_clients()
+    {
+        $generator = new OidcngResourceServerJsonGenerator(
+            $this->privacyQuestionsMetadataGenerator,
+            $this->spDashboardMetadataGenerator
+        );
+
+        $oidcClient = m::mock(OidcClientInterface::class);
+        $oidcClient->shouldReceive('isPublicClient')->andReturn(true);
+        $oidcClient->shouldReceive('getClientSecret')->andReturn('');
+
+        $entity = $this->createManageEntity();
+        $entity->shouldReceive('getOidcClient')->andReturn($oidcClient);
+
+        $contact = m::mock(Contact::class);
+        $contact->shouldReceive('getDisplayName')->andReturn('John Doe');
+        $contact->shouldReceive('getEmailAddress')->andReturn('jd@example.com');
+
+        $data = $generator->generateForNewEntity($entity, 'testaccepted', $contact);
+
+        $this->assertArrayNotHasKey('secret', $data['data']['metaDataFields']);
     }
 
     public function test_it_builds_an_entity_change_request()
