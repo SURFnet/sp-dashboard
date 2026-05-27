@@ -31,13 +31,22 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class EntityPublishedController extends AbstractController
 {
     #[IsGranted('ROLE_USER')]
-    #[Route(path: '/entity/published/production', name: 'entity_published_production', methods: ['GET'])]
     #[Route(path: '/entity/published/test', name: 'entity_published_test', methods: ['GET'])]
-    public function published(Request $request): RedirectResponse|Response
+    public function publishedTest(Request $request): RedirectResponse|Response
     {
-        /**
- * @var ManageEntity $entity
-*/
+        return $this->published($request);
+    }
+
+    #[IsGranted('ROLE_USER')]
+    #[Route(path: '/entity/published/production', name: 'entity_published_production', methods: ['GET'])]
+    public function publishedProduction(Request $request): RedirectResponse|Response
+    {
+        return $this->published($request);
+    }
+
+    private function published(Request $request): RedirectResponse|Response
+    {
+        /** @var ManageEntity $entity */
         $entity = $request->getSession()->get('published.entity.clone');
 
         // Redirects OIDC published entity confirmations to the entity list page and shows a
