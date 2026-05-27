@@ -70,6 +70,27 @@ class ContactListTest extends TestCase
         ];
     }
 
+    public function test_it_takes_first_contact_per_type_from_api_response(): void
+    {
+        $metaDataFields = [
+            'contacts:0:contactType'  => 'technical',
+            'contacts:0:givenName'    => 'Jan',
+            'contacts:0:surName'      => 'Doe',
+            'contacts:0:emailAddress' => 'jan@example.com',
+            'contacts:1:contactType'  => 'support',
+            'contacts:1:emailAddress' => 'support@example.com',
+            'contacts:2:contactType'  => 'administrative',
+            'contacts:2:emailAddress' => 'admin@example.com',
+            'contacts:3:contactType'  => 'technical', // duplicate, empty
+        ];
+
+        $list = ContactList::fromApiResponse($metaDataFields);
+
+        $technical = $list->findTechnicalContact();
+        self::assertNotNull($technical);
+        self::assertEquals('jan@example.com', $technical->getEmail());
+    }
+
     private function contactList($contacts = null)
     {
         $contactList = new ContactList();
