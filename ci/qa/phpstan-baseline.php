@@ -3963,12 +3963,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: method.nonObject
-	'message' => '#^Cannot call method getClientSecret\\(\\) on Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\Entity\\\\OidcClientInterface\\|null\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Controller/ServiceController.php',
-];
-$ignoreErrors[] = [
-	// identifier: method.nonObject
 	'message' => '#^Cannot call method getContact\\(\\) on Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Controller/ServiceController.php',

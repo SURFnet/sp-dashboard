@@ -35,6 +35,7 @@ class EntityActions
         private string $protocol,
         private readonly bool $readOnly,
         private readonly bool $changeRequest,
+        private readonly bool $isPublicClient = false,
     ) {
     }
 
@@ -112,7 +113,7 @@ class EntityActions
 
     public function allowSecretResetAction(): bool
     {
-        if ($this->readOnly) {
+        if ($this->readOnly || $this->isPublicClient) {
             return false;
         }
         $protocol = $this->protocol;

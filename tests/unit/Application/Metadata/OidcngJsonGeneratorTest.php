@@ -274,6 +274,27 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
         );
     }
 
+    public function test_public_client_omits_secret_for_new_entity(): void
+    {
+        $this->arpMetadataGenerator
+            ->shouldReceive('build')
+            ->andReturn(['arp' => 'arp']);
+
+        $generator = new OidcngJsonGenerator(
+            $this->arpMetadataGenerator,
+            $this->privacyQuestionsMetadataGenerator,
+            $this->spDashboardMetadataGenerator
+        );
+
+        $entity = $this->createManageEntity();
+        $contact = m::mock(Contact::class);
+        $contact->shouldReceive('getEmailAddress')->andReturn('j.doe@example.com');
+        $contact->shouldReceive('getDisplayName')->andReturn('John Doe');
+        $data = $generator->generateForNewEntity($entity, 'testaccepted', $contact);
+
+        $this->assertArrayNotHasKey('secret', $data['data']['metaDataFields'], 'Public client must omit secret entirely');
+    }
+
     public function test_it_builds_an_entity_change_request()
     {
         $generator = new OidcngJsonGenerator(

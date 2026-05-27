@@ -139,11 +139,9 @@ class EntityCreateOidcngTest extends WebTestCase
 
         $crawler = self::$pantherClient->submit($form);
 
-        $label = $crawler->filter('.monospaced label')->first()->text();
-        $span = $crawler->filter('.monospaced pre')->first()->text();
-        // A secret should be displayed
-        $this->assertEquals('Secret', $label);
-        $this->assertSame(20, strlen($span));
+        // Public clients have no secret — modal must not appear
+        $this->assertOnPage('Ibuildings B.V. overview', $crawler);
+        $this->assertCount(0, $crawler->filter('.monospaced label'));
     }
     public function test_it_does_not_show_hidden_type_of_services_as_options()
     {
