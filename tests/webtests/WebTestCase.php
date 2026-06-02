@@ -422,7 +422,11 @@ class WebTestCase extends PantherTestCase
     private function finishLogin(): Crawler
     {
         self::findBy('.button')->click();
-        $crawler = self::$pantherClient->refreshCrawler();
+
+        // In php-webdriver v1.16.0, click() no longer waits for navigation to complete.
+        // Wait for either the EB consent page (.page__title) or the SP dashboard (.page-container)
+        // before checking — replaces an immediate refreshCrawler() that returned a stale page.
+        $crawler = self::$pantherClient->waitFor('.page__title, .page-container');
 
         $retryCount = 0;
         while ($retryCount < 3) {
