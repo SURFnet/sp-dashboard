@@ -41,9 +41,9 @@ jobs:
         working-directory: devconf/core
         run: ./scripts/init.sh
 
-      - name: Start the docker images for testing
-        working-directory: spdashboard
-        run: ${DOCKER_COMPOSE} up -d mariadb spdashboard test-browser
+#      - name: Start the docker images for testing
+#        working-directory: spdashboard
+#        run: ${DOCKER_COMPOSE} up -d mariadb spdashboard test-browser
 
       - name: Instantiate the env file
         run: cp spdashboard/.env.dist spdashboard/.env
