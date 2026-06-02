@@ -82,11 +82,6 @@ Some remarks:
 3. Running tests in PROD mode is encouraged (this disengages the web debug toolbar) saving false positives in a11y and html validation errors
 4. A service with ID = 2 should be present, it should have the add production entities option set.
 
-### Running the webtests
-The webtests run in chrome. To startup chrome:
-`docker compose up -d`  
-Then: `composer webtests`
-
 ## Overview of available environments
 
 | Environment | Description                                                                  |
