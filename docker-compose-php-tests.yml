@@ -1,5 +1,0 @@
----
-services:
-  spdashboard:
-    environment:
-      APP_ENV: test
