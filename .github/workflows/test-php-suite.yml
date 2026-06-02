@@ -34,11 +34,11 @@ jobs:
         with:
           repository: OpenConext/OpenConext-devconf
           ref: main
-          path: OpenConext-devconf
+          path: devconf
           sparse-checkout: core
 
       - name: Bootstrap the openconext environment
-        working-directory: OpenConext-devconf/core
+        working-directory: devconf/core
         run: ./scripts/init.sh
 
       - name: Start the docker images for testing

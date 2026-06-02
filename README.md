@@ -38,7 +38,7 @@ This setup includes the OpenConext environment from the [Devconf](https://github
 
 dir/
   - sp-dashboard/
-  - OpenConext-devconf/
+  - devconf/
 
 
 To bootstrap the development environment, you'll need a working Devconf setup.
@@ -47,7 +47,7 @@ Please follow the instructions in the [OpenConext-devconf README](https://github
 
 ### Start environment
 If Devconf is provisioned and up and running then you can start the command line in the container with
-`./start-dev-env.sh spdashboard:/path/to/your/sp-dashboard --profile dashboard` in the `OpenConext-devconf/core` directory.
+`./start-dev-env.sh spdashboard:/path/to/your/sp-dashboard --profile dashboard` in the `devconf/core` directory.
 
 ### Install Dependencies & build frontend
 Then run the following commands to install the PHP and JS dependencies:
@@ -81,6 +81,11 @@ Some remarks:
 2. The Cypress tests should run in your dev environment. No fixture is provided yet to run the tests against.
 3. Running tests in PROD mode is encouraged (this disengages the web debug toolbar) saving false positives in a11y and html validation errors
 4. A service with ID = 2 should be present, it should have the add production entities option set.
+
+### Running the webtests
+The webtests run in chrome. To startup chrome:
+`docker compose up -d`  
+Then: `composer webtests`
 
 ## Overview of available environments
 
