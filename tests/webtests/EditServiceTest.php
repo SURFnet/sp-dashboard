@@ -85,7 +85,6 @@ class EditServiceTest extends WebTestCase
 
         // Step 1: Admin sets privacy questions enabled to false
         $formData = [
-            'dashboard_bundle_edit_service_type[general][privacyQuestionsEnabled]' => false,
             'dashboard_bundle_edit_service_type[teams][teamName]' => WebTestFixtures::TEAMNAME_SURF,
             'dashboard_bundle_edit_service_type[serviceStatus][surfconextRepresentativeApproved]' => 'no',
         ];
@@ -93,6 +92,7 @@ class EditServiceTest extends WebTestCase
             ->selectButton('Save')
             ->form();
         $form->setValues($formData);
+        self::$pantherClient->executeScript("document.getElementById('dashboard_bundle_edit_service_type_general_privacyQuestionsEnabled').checked = false;");
         self::$pantherClient->executeScript("document.getElementsByClassName('service-form').item(0).submit();");
         self::$pantherClient->wait(10)->until( WebDriverExpectedCondition::elementTextContains(WebDriverBy::cssSelector('body'), 'Your changes were saved!'));
 

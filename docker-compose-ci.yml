@@ -20,17 +20,6 @@ services:
       mariadb:
         condition: service_healthy
 
-  test-browser:
-    image: selenium/standalone-chrome:120.0
-    hostname: test-browser
-    ports:
-      - "5900:5900"
-      - "4444:4444"
-    privileged: true
-    shm_size: 2g
-    networks:
-      coreconextdev:
-
   cypress:
     image: cypress/included:15.11.0
     working_dir: /e2e
