@@ -33,7 +33,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: OpenConext/OpenConext-devconf
-          ref: feature/spd-selenium
+          ref: main
           path: devconf
           sparse-checkout: core
 
