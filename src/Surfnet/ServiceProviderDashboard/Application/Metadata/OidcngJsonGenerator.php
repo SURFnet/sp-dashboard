@@ -217,9 +217,8 @@ class OidcngJsonGenerator implements GeneratorInterface
                 if ($secret !== '' && $secret !== '0') {
                     $metadata['secret'] = $secret;
                 }
-            } else {
-                $metadata['secret'] = null;
             }
+            // Public clients have no secret; omitting the field prevents Manage's SecretHook from crashing on null
             // Reset the redirect URI list in order to get a correct JSON formatting (See #163646662)
             $metadata['redirectUrls'] = $entity->getOidcClient()->getRedirectUris();
             $metadata['grants'] = $entity->getOidcClient()->getGrants();
