@@ -4,6 +4,7 @@
     "vendor",
     "**/*.test.ts",
     "cypress",
+    "cypress.config.ts",
     "ci/qa/cypress.config.ts"
   ],
   "compilerOptions": {
