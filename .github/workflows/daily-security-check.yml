@@ -11,28 +11,28 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
 
       # PHP checks
       - name: Check for php composer project
         id: check_composer
-        uses: andstor/file-existence-action@v2
+        uses: andstor/file-existence-action@v3
         with:
           files: "composer.lock"
       - name: Run php local security checker
         if: steps.check_composer.outputs.files_exists == 'true'
-        uses: symfonycorp/security-checker-action@v4
+        uses: symfonycorp/security-checker-action@v5
         continue-on-error: true
 
       # node-yarn checks
       - name: Check for node-yarn project
         id: check_node_yarn
-        uses: andstor/file-existence-action@v2
+        uses: andstor/file-existence-action@v3
         with:
           files: "yarn.lock"
       - name: Setup node
         if: steps.check_node_yarn.outputs.files_exists == 'true'
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v6
         with:
           node-version: 20
       - name: Yarn Audit
@@ -43,12 +43,12 @@ jobs:
       # node-npm checks
       - name: Check for node-npm project
         id: check_node_npm
-        uses: andstor/file-existence-action@v2
+        uses: andstor/file-existence-action@v3
         with:
           files: "package.lock"
       - name: Setup node
         if: steps.check_node_npm.outputs.files_exists == 'true'
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v6
         with:
           node-version: 20
       - name: npm audit
@@ -59,23 +59,23 @@ jobs:
       # python checks
       - name: Check for python project
         id: check_python
-        uses: andstor/file-existence-action@v2
+        uses: andstor/file-existence-action@v3
         with:
           files: "requirements.txt"
       - name: Safety checks Python dependencies
         if: steps.check_python.outputs.files_exists == 'true'
-        uses: pyupio/safety@2.3.5
+        uses: pyupio/safety@3.12.13
         continue-on-error: true
 
       # java checks
       - name: Check for java maven project
         id: check_maven
-        uses: andstor/file-existence-action@v2
+        uses: andstor/file-existence-action@v3
         with:
           files: "pom.xml"
       - name: Setup java if needed
         if: steps.check_maven.outputs.files_exists == 'true'
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v5
         with:
           java-version: 11
       - name: Check java
