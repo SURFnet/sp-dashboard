@@ -758,12 +758,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Factory/EntityDetailFactory.php',
 ];
 $ignoreErrors[] = [
-	// identifier: method.nonObject
-	'message' => '#^Cannot call method isPublicClient\\(\\) on Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\Entity\\\\OidcClientInterface\\|null\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Factory/EntityDetailFactory.php',
-];
-$ignoreErrors[] = [
 	// identifier: if.alwaysTrue
 	'message' => '#^If condition is always true\\.$#',
 	'count' => 1,
