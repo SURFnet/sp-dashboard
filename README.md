@@ -38,29 +38,30 @@ This setup includes the OpenConext environment from the [Devconf](https://github
 
 dir/
   - sp-dashboard/
-  - OpenConext-devconf/
+  - devconf/
 
 
 To bootstrap the development environment, you'll need a working Devconf setup.
 Please follow the instructions in the [OpenConext-devconf README](https://github.com/OpenConext/OpenConext-devconf/blob/main/README.md)
 
 
+### Start environment
 If Devconf is provisioned and up and running then you can start the command line in the container with
-`./start-dev-env.sh spdashboard:/home/bas/Projects/surf/sp-dashboard` in the `OpenConext-devconf/core` directory.
+`./start-dev-env.sh spdashboard:/path/to/your/sp-dashboard --profile dashboard` in the `devconf/core` directory.
 
+### Install Dependencies & build frontend
 Then run the following commands to install the PHP and JS dependencies:
 
-```bash
-Run `composer install --ignore-platform-req=ext-zip`. This will install all PHP dependencies, including the development dependencies.
-Run `yarn install`. This will install all js dependencies, including the development dependencies.
-Run `yarn encore dev`. This will build the frontend.
+* Run `composer install --ignore-platform-req=ext-zip`. This will install all PHP dependencies, including the development dependencies.
+* Run `yarn install`. This will install all js dependencies, including the development dependencies.
+* Run `yarn encore dev`. This will build the frontend.
 
-Install database migrations
-```
 
-```
-bin/console doctrine:migrations:migrate --env=dev
-```
+### Install database migrations:
+`./bin/console doctrine:migrations:migrate --env=dev`
+
+### Optional: Load fixture data for development
+`./bin/console doctrine:fixtures:load --no-interaction`
 
 The application is now up and running and can be accessed at
 [https://spdashboard.dev.openconext.local/](https://spdashboard.dev.openconext.local). 

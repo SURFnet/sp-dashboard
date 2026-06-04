@@ -3847,6 +3847,7 @@ $ignoreErrors[] = [
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Controller/EntityPublishedController.php',
 ];
+
 $ignoreErrors[] = [
 	// identifier: method.notFound
 	'message' => '#^Call to an undefined method Symfony\\\\Component\\\\Form\\\\FormInterface\\:\\:getClickedButton\\(\\)\\.$#',

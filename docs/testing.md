@@ -7,8 +7,8 @@ which also helps the developer to get feedback as quickly as possible.
 
 ## Continuous integration
 
-Using Travis CI, the full test suite will be run against every pull request and has to pass before it can be merged.
-Every commit on the master branch will be tested as well.
+Using GitHub Actions, the full test suite will be run against every pull request and has to pass before it can be merged.
+Every commit on the main branch will be tested as well.
 
 ## Static analysis
 
@@ -22,6 +22,7 @@ test code as well as production code;
  - PHP Mess Detector checks a number of metrics, and if they exceed a certain treshold the build will fail;
  - PHP CodeSniffer ensures that the code adheres to the chosen coding standard (PSR-2);
  - PHP Copy-Paste Detector ensures that there is no substantial duplication within the source code.
+ - PHPStan performs static analysis to find type errors and other bugs without running the code.
  - A JSON schema validator ensures that the JSON-schema is valid and validates the JSON-data against the JSON-schema.
  
 If any of those tools fails, the build will fail and the issue has to be resolved before a pull request can be merged.
@@ -51,26 +52,35 @@ tests will be run as part of every CI build.
 
 Tools: PHPUnit
 
-## Acceptance testing
+## Web testing
 
-Acceptance tests test the actual features that the software delivers. It does so by running the application code
-(command handlers) in combination with the domain code. The infrastructure (databases, external systems) are replaced
-with stand-ins in order to make the test suite faster.
+Web tests test the application end-to-end through a real browser. They boot a Symfony test server and drive Chrome
+via Symfony Panther, exercising the full stack including the database. The purpose of web testing is to verify
+that the application works correctly from a user's perspective and to catch regressions in controller, form, and
+UI behaviour.
 
-Acceptance tests will be written for all command handlers and will be run as part of every CI build.
+Web tests will be run as part of every CI build.
 
-Tools: Behat
+Tools: PHPUnit, Symfony Panther
+
+## End-to-end testing
+
+End-to-end tests cover key user workflows through the running application, including accessibility checks. These tests
+run against the full Docker environment.
+
+Tools: Cypress
 
 ## Security testing
 
 Using an automated tool, the list of dependencies of the project is being checked against a database of known
-vulnerabilities as part of every CI build. If any of the dependencies contains a known vulnerability, the build will
+vulnerabilities as a scheduled daily CI job. If any of the dependencies contains a known vulnerability, the build will
 fail.
 
-Tools: SensioLabs Security Checker
+Tools: symfonycorp/security-checker-action, yarn audit
 
 ## Code coverage
-By default code coverage reports are generated for all available test types (unit, integration, web-tests, acceptance). 
+By default code coverage reports are generated for unit, integration, and webtests suites using the `phpcov` script
+in `ci/qa/`. Coverage data files are written to `/tmp/sp-dashboard-coverage/`.
 
 Code coverage can be viewed at `web/coverage/index.html`.
 

@@ -274,25 +274,62 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
         );
     }
 
-    public function test_public_client_omits_secret_for_new_entity(): void
+    public function test_generate_for_new_entity_omits_secret_for_public_clients()
     {
-        $this->arpMetadataGenerator
-            ->shouldReceive('build')
-            ->andReturn(['arp' => 'arp']);
-
+        // Regression test for: copying an OIDC RP fails with NPE in Manage's SecretHook when secret is null
         $generator = new OidcngJsonGenerator(
             $this->arpMetadataGenerator,
             $this->privacyQuestionsMetadataGenerator,
             $this->spDashboardMetadataGenerator
         );
 
-        $entity = $this->createManageEntity();
-        $contact = m::mock(Contact::class);
-        $contact->shouldReceive('getEmailAddress')->andReturn('j.doe@example.com');
-        $contact->shouldReceive('getDisplayName')->andReturn('John Doe');
-        $data = $generator->generateForNewEntity($entity, 'testaccepted', $contact);
+        $this->arpMetadataGenerator
+            ->shouldReceive('build')
+            ->andReturn(['arp' => 'arp']);
 
-        $this->assertArrayNotHasKey('secret', $data['data']['metaDataFields'], 'Public client must omit secret entirely');
+        // The fixture has isPublicClient: true
+        $entity = $this->createManageEntity();
+        $data = $generator->generateForNewEntity($entity, 'testaccepted', $this->getContact());
+
+        $this->assertArrayNotHasKey('secret', $data['data']['metaDataFields']);
+        $this->assertTrue($data['data']['metaDataFields']['isPublicClient']);
+    }
+
+    public function test_generate_for_new_entity_includes_secret_for_confidential_clients()
+    {
+        $generator = new OidcngJsonGenerator(
+            $this->arpMetadataGenerator,
+            $this->privacyQuestionsMetadataGenerator,
+            $this->spDashboardMetadataGenerator
+        );
+
+        $this->arpMetadataGenerator
+            ->shouldReceive('build')
+            ->andReturn(['arp' => 'arp']);
+
+        // Build a fixture with isPublicClient: false and a secret
+        $fixtureData = json_decode(
+            file_get_contents(__DIR__ . '/fixture/oidc10_rp_response.json'),
+            true
+        );
+        $fixtureData['data']['metaDataFields']['isPublicClient'] = false;
+        $fixtureData['data']['metaDataFields']['secret'] = 'my-client-secret';
+
+        $entity = ManageEntity::fromApiResponse($fixtureData);
+        $service = new Service();
+        $service->setGuid('543b4e5b-76b5-453f-af1e-5648378bb266');
+        $service->setInstitutionId('service-institution-id');
+        $entity->setService($service);
+        $entity->setComments('revisionnote');
+        $entity = m::mock($entity);
+        $entity->shouldReceive('getAllowedIdentityProviders->isAllowAll')->andReturn(true);
+        $entity->shouldReceive('getAllowedIdentityProviders->getAllowedIdentityProviders')->andReturn([]);
+
+        $data = $generator->generateForNewEntity($entity, 'testaccepted', $this->getContact());
+
+        $this->assertArrayHasKey('secret', $data['data']['metaDataFields']);
+        $this->assertEquals('my-client-secret', $data['data']['metaDataFields']['secret']);
+        $this->assertFalse($data['data']['metaDataFields']['isPublicClient']);
     }
 
     public function test_it_builds_an_entity_change_request()
