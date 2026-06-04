@@ -45,6 +45,7 @@ class Entity
         bool                             $isReadOnly,
         bool                             $hasChangeRequests,
         private readonly RouterInterface $router,
+        bool                             $isPublicClient = false,
     ) {
         $this->actions = new EntityActions(
             $this->id,
@@ -53,7 +54,8 @@ class Entity
             $this->environment,
             $this->protocol,
             $isReadOnly,
-            $hasChangeRequests
+            $hasChangeRequests,
+            $isPublicClient
         );
     }
 
@@ -64,6 +66,7 @@ class Entity
     ): self {
         $formattedContact = self::formatManageContact($result);
         $protocol = $result->getProtocol()->getProtocol();
+        $isPublicClient = $result->getOidcClient()?->isPublicClient() ?? false;
         return new self(
             $result->getId(),
             $result->getMetaData()->getEntityId(),
@@ -75,7 +78,8 @@ class Entity
             $protocol,
             false,
             false,
-            $router
+            $router,
+            $isPublicClient
         );
     }
 
@@ -97,6 +101,7 @@ class Entity
             $status = Constants::STATE_PUBLICATION_REQUESTED;
         }
         $protocol = $result->getProtocol()->getProtocol();
+        $isPublicClient = $result->getOidcClient()?->isPublicClient() ?? false;
         return new self(
             $result->getId(),
             $result->getMetaData()->getEntityId(),
@@ -108,7 +113,8 @@ class Entity
             $protocol,
             false,
             $hasChangeRequests,
-            $router
+            $router,
+            $isPublicClient
         );
     }
 

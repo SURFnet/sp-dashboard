@@ -42,6 +42,8 @@ class EntityDetailFactory
             $logo = $manageEntity->getMetaData()->getLogo()->getUrl();
         }
 
+        $isPublicClient = $manageEntity->getOidcClient()?->isPublicClient() ?? false;
+
         $actions = new EntityActions(
             $manageEntity->getId(),
             $manageEntity->getService()->getId(),
@@ -49,11 +51,11 @@ class EntityDetailFactory
             $manageEntity->getEnvironment(),
             $manageEntity->getProtocol()->getProtocol(),
             $manageEntity->isReadOnly(),
-            false
+            false,
+            $isPublicClient
         );
 
         $grants = null;
-        $isPublicClient = false;
         $accessTokenValidity = null;
         $redirectUris = null;
         $playgroundEnabled = null;
@@ -62,7 +64,6 @@ class EntityDetailFactory
             || $manageEntity->getProtocol()->getProtocol() === Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT
         ) {
             $grants = $manageEntity->getOidcClient()->getGrants();
-            $isPublicClient = $manageEntity->getOidcClient()->isPublicClient();
             $accessTokenValidity = $manageEntity->getOidcClient()->getAccessTokenValidity();
             $redirectUris = $manageEntity->getOidcClient()->getRedirectUris();
             $playgroundEnabled = $this->getIsPlaygroundEnabled($manageEntity);

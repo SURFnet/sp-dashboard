@@ -349,6 +349,9 @@ class ServiceController extends AbstractController
         if ($publishedEntity === null) {
             return false;
         }
+        if ($publishedEntity->getOidcClient() === null || $publishedEntity->getOidcClient()->isPublicClient()) {
+            return false;
+        }
         $protocol = $publishedEntity->getProtocol()->getProtocol();
         $protocolUsesSecret = $protocol === Constants::TYPE_OPENID_CONNECT_TNG ||
             $protocol === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER ||
