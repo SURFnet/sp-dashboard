@@ -156,7 +156,7 @@ trait EntityControllerTrait
             case $entity->getEnvironment() === Constants::ENVIRONMENT_TEST:
                 $publishEntityCommand = new PublishEntityTestCommand($entity, $applicant);
                 break;
-            case $isEntityChangeRequest:
+            case $isEntityChangeRequest && !$entity?->isOidcngResourceServer():
                 $publishEntityCommand = new EntityChangeRequestCommand($entity, $applicant);
                 break;
             case $entity->getEnvironment() === Constants::ENVIRONMENT_PRODUCTION:
