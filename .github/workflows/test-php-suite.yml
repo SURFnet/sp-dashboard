@@ -18,19 +18,19 @@ jobs:
 
     steps:
       - name: Check out the repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
         with:
           path: spdashboard
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: '20'
           cache: 'yarn'
           cache-dependency-path: spdashboard/yarn.lock
 
       - name: Checkout openconext-devconf
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
         with:
           repository: OpenConext/OpenConext-devconf
           ref: main
@@ -66,7 +66,7 @@ jobs:
 
       - name: Upload error screenshots
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: error-screenshots
           path: spdashboard/var/error-screenshots
