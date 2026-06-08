@@ -86,7 +86,7 @@ class PublishEntityTestCommandHandler implements CommandHandler
                     $e->getMessage()
                 )
             );
-            $this->requestStack->getSession()->getFlashBag()->add('error', 'entity.edit.error.publish');
+            throw $e;
         }
     }
 

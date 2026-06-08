@@ -190,10 +190,6 @@ class PublishEntityTestCommandHandlerTest extends MockeryTestCase
             ->shouldReceive('error')
             ->times(1);
 
-        $this->requestStack
-            ->shouldReceive('getSession->getFlashBag->add')
-            ->with('error', 'entity.edit.error.publish');
-
         $this->entityService
             ->shouldReceive('getPristineManageEntityById')
             ->andReturn($manageEntity);
@@ -206,6 +202,7 @@ class PublishEntityTestCommandHandlerTest extends MockeryTestCase
             ->with($manageEntity, $manageEntity, $command->getApplicant())
             ->andThrow(PublishMetadataException::class);
 
+        $this->expectException(PublishMetadataException::class);
         $this->commandHandler->handle($command);
     }
 

@@ -448,7 +448,7 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: method.notFound
 	'message' => '#^Call to an undefined method Symfony\\\\Component\\\\HttpFoundation\\\\Session\\\\SessionInterface\\:\\:getFlashBag\\(\\)\\.$#',
-	'count' => 2,
+	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/CommandHandler/Entity/PublishEntityTestCommandHandler.php',
 ];
 $ignoreErrors[] = [
