@@ -22,6 +22,7 @@ use RuntimeException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository as PublishEntityRepositoryInterface;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataException;
 
 class FakePublishEntityClient implements PublishEntityRepositoryInterface
 {
@@ -31,7 +32,14 @@ class FakePublishEntityClient implements PublishEntityRepositoryInterface
 
     public function reset()
     {
-        $this->write([]);
+        $this->write(['__publishFails' => false]);
+    }
+
+    public function registerPublishFailure(): void
+    {
+        $data = $this->read();
+        $data['__publishFails'] = true;
+        $this->write($data);
     }
 
     public function registerPublishResponse(string $entityId, string $response)
@@ -52,8 +60,12 @@ class FakePublishEntityClient implements PublishEntityRepositoryInterface
         Contact $contact,
         string $part = ''
     ): mixed {
+        $data = $this->read();
+        if ($data['__publishFails'] ?? false) {
+            throw new PublishMetadataException('Simulated Manage publish failure');
+        }
         $entityId = $entity->getMetaData()->getEntityId();
-        $publishResponses = $this->read();
+        $publishResponses = $data;
         if (!array_key_exists($entityId, $publishResponses)) {
             throw new RuntimeException(sprintf('No pre programmed response is available for entity "%s"', $entityId));
         }
