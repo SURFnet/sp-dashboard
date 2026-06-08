@@ -176,7 +176,7 @@ class MetaData implements Comparable
         $this->entityId = is_null($metaData->getEntityId()) ? null : $metaData->getEntityId();
         $this->metaDataUrl = is_null($metaData->getMetaDataUrl()) ? null : $metaData->getMetaDataUrl();
         $this->acsLocations = is_null($metaData->getAcsLocations()) ? null : $metaData->getAcsLocations();
-        $this->nameIdFormat = is_null($metaData->getNameIdFormat()) ? null : $metaData->getNameIdFormat();
+        $this->nameIdFormat = is_null($metaData->getNameIdFormat()) ? $this->nameIdFormat : $metaData->getNameIdFormat();
         $this->descriptionEn = is_null($metaData->getDescriptionEn()) ? null : $metaData->getDescriptionEn();
         $this->descriptionNl = is_null($metaData->getDescriptionNl()) ? null : $metaData->getDescriptionNl();
         $this->nameEn = is_null($metaData->getNameEn()) ? null : $metaData->getNameEn();
