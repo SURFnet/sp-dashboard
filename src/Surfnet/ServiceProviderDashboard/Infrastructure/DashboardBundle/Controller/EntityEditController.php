@@ -94,7 +94,9 @@ class EntityEditController extends AbstractController
                         $response = $this->publishEntity($entity, $command, $isProductionEntityEdit, $request);
 
                         if ($response instanceof Response) {
-                            if ($environment !== Constants::ENVIRONMENT_PRODUCTION) {
+                            if ($environment !== Constants::ENVIRONMENT_PRODUCTION
+                                && !$flashBag->has('error')
+                            ) {
                                 $this->addFlash('info', 'entity.edit.metadata.flash.success');
                             }
                             return $response;

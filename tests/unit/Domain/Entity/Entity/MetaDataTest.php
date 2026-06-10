@@ -202,6 +202,16 @@ class MetaDataTest extends TestCase
      *
      * See: https://www.pivotaltracker.com/story/show/182411730/comments/233831779
      */
+    public function testMergePreservesNameIdFormatWhenIncomingIsNull(): void
+    {
+        $existing = $this->metaData('a');
+        $incoming = $this->metaData('null');
+
+        $existing->merge($incoming);
+
+        self::assertEquals('nameIdFormat-transient', $existing->getNameIdFormat());
+    }
+
     public function test_acs_locations_are_formed_correctly_as_array()
     {
         $data['data'] = json_decode(file_get_contents(__DIR__.'/fixture/read_response.json'), true);
@@ -229,7 +239,7 @@ class MetaDataTest extends TestCase
         yield [
             $this->metaData('a'),
             $this->metaData('null'),
-            $this->metaData('null'),
+            $this->metaData('null_preserve_name_id_format'),
         ];
     }
 
@@ -284,6 +294,21 @@ class MetaDataTest extends TestCase
                     null,
                     null,
                     null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    $contactList,
+                    $organization,
+                    $coin,
+                    $logo
+                );
+            case 'null_preserve_name_id_format':
+                return new MetaData(
+                    null,
+                    null,
+                    null,
+                    'nameIdFormat-transient',
                     null,
                     null,
                     null,
