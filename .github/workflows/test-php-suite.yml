@@ -18,7 +18,7 @@ jobs:
 
     steps:
       - name: Check out the repo
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v6.0.3
         with:
           path: spdashboard
 
@@ -30,7 +30,7 @@ jobs:
           cache-dependency-path: spdashboard/yarn.lock
 
       - name: Checkout openconext-devconf
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v6.0.3
         with:
           repository: OpenConext/OpenConext-devconf
           ref: main
