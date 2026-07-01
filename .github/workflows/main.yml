@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Check out the repo
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v7.0.0
 
       - name: Get commit details for the tag from the latest release
         id: commit_details
@@ -49,7 +49,7 @@ jobs:
             type=semver,pattern={{major}}
 
       - name: Build the container and push to GitHub Packages
-        uses: docker/build-push-action@v7
+        uses: docker/build-push-action@v7.2.0
         with:
           context: .
           build-args: |
