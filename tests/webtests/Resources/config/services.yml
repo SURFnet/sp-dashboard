@@ -42,6 +42,11 @@ services:
         tags:
             - { name: validator.constraint_validator, alias: logo }
 
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidMetadataUrlValidator:
+        class: Surfnet\ServiceProviderDashboard\Webtests\Validator\Constraints\MockValidMetadataUrlValidator
+        tags:
+            - { name: validator.constraint_validator, alias: metadata_url }
+
     Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient:
         class: Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeQueryClient
         arguments: ['/../../../../var/webtest-test-query-client-manage.json']

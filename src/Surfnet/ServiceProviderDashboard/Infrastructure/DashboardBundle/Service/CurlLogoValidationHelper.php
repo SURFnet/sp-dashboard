@@ -39,7 +39,7 @@ class CurlLogoValidationHelper implements LogoValidationHelperInterface
      * @throws LogoInvalidTypeException
      * @throws LogoNotFoundException
      */
-    public function validateLogo(string $url): string
+    public function validateLogo(string $url, ?string $resolvedIp = null): string
     {
         $this->logger->debug(sprintf('Validating logo: "%s" using curl', $url));
 
@@ -51,6 +51,10 @@ class CurlLogoValidationHelper implements LogoValidationHelperInterface
         curl_setopt($ch, CURLOPT_TIMEOUT, 10);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $this->verifySsl);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, $this->verifySsl ? 2 : 0);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
+        curl_setopt($ch, CURLOPT_PROTOCOLS, CURLPROTO_HTTP | CURLPROTO_HTTPS);
+        curl_setopt($ch, CURLOPT_REDIR_PROTOCOLS, CURLPROTO_HTTP | CURLPROTO_HTTPS);
+        $this->pinResolvedIp($ch, $url, $resolvedIp);
 
         $body = (string) curl_exec($ch);
 
@@ -80,5 +84,21 @@ class CurlLogoValidationHelper implements LogoValidationHelperInterface
         }
 
         return $body;
+    }
+
+    private function pinResolvedIp(\CurlHandle $ch, string $url, ?string $resolvedIp): void
+    {
+        if ($resolvedIp === null) {
+            return;
+        }
+
+        $host = parse_url($url, PHP_URL_HOST);
+        if ($host === null || $host === false) {
+            return;
+        }
+
+        $port = parse_url($url, PHP_URL_PORT)
+            ?? (strtolower((string) parse_url($url, PHP_URL_SCHEME)) === 'https' ? 443 : 80);
+        curl_setopt($ch, CURLOPT_RESOLVE, ["$host:$port:$resolvedIp"]);
     }
 }

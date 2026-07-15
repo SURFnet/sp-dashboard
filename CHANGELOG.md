@@ -1,4 +1,5 @@
 ## Unreleased
+- Fix: SSRF vulnerability fixed. Add the ip's you need to block to the env. example: blocked_ip_ranges='["169.254.169.254/32"]'. See env.dist. 
 - Fix: editing an existing resource server (oauth20_rs) always failed with a confusing dual success+error message and no change applied in Manage. Root cause: `MetaData::merge()` overwrote `nameIdFormat` with `null` when the form command returned `null` (the RS form has no NameIDFormat field), causing the diff to send `metaDataFields.NameIDFormat: null` to Manage, which rejected the update. Additionally, published production RS entities were incorrectly routed through the change-request flow instead of being published directly.
 Remove integration with Teams
 Add integration with Invite

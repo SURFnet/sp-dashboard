@@ -20,6 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Valida
 
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Exception\LogoInvalidTypeException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Exception\LogoNotFoundException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\HostBlocklistCheckerInterface;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\LogoValidationHelperInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -43,6 +44,7 @@ class ValidLogoValidator extends ConstraintValidator
 
     public function __construct(
         private readonly LogoValidationHelperInterface $logoValidationHelper,
+        private readonly HostBlocklistCheckerInterface $hostBlocklistChecker,
         private readonly bool $allowLogoPrivateHosts = false,
     ) {
     }
@@ -53,13 +55,16 @@ class ValidLogoValidator extends ConstraintValidator
             return;
         }
 
-        if (!$this->allowLogoPrivateHosts && $this->isPrivateHost($value)) {
+        $host = parse_url($value, PHP_URL_HOST);
+        $ip = $host !== null && $host !== false ? $this->hostBlocklistChecker->resolve($host) : null;
+
+        if (!$this->allowLogoPrivateHosts && $this->hostBlocklistChecker->isIpBlocked($ip)) {
             $this->context->addViolation(self::STATUS_PRIVATE_HOST);
             return;
         }
 
         try {
-            $body = $this->logoValidationHelper->validateLogo($value);
+            $body = $this->logoValidationHelper->validateLogo($value, $ip);
             if (getimagesizefromstring($body) === false) {
                 $this->context->addViolation($constraint->message);
             }
@@ -68,24 +73,5 @@ class ValidLogoValidator extends ConstraintValidator
         } catch (LogoInvalidTypeException) {
             $this->context->addViolation(self::STATUS_INVALID_TYPE);
         }
-    }
-
-    private function isPrivateHost(string $url): bool
-    {
-        $host = parse_url($url, PHP_URL_HOST);
-        if ($host === null || $host === false || $host === '') {
-            return true;
-        }
-
-        // Strip IPv6 brackets, e.g. [::1] -> ::1
-        $host = trim($host, '[]');
-
-        $ip = filter_var($host, FILTER_VALIDATE_IP) !== false ? $host : gethostbyname($host);
-
-        return filter_var(
-            $ip,
-            FILTER_VALIDATE_IP,
-            FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE
-        ) === false;
     }
 }

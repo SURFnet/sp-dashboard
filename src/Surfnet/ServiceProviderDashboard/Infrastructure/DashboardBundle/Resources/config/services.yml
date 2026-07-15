@@ -198,7 +198,13 @@ services:
     class: GuzzleHttp\Client
 
   Surfnet\ServiceProviderDashboard\Legacy\Metadata\Fetcher:
-    arguments: [ '@surfnet.dashboard.metadata.client', '@logger', '%env(metadata_url_timeout)%' ]
+    arguments:
+      - '@surfnet.dashboard.metadata.client'
+      - '@logger'
+      - '%env(metadata_url_timeout)%'
+      - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\HostBlocklistCheckerInterface'
+      - '%allow_metadata_private_hosts%'
+      - '%metadata_verify_ssl%'
 
 
   Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGeneratorStrategy:
@@ -304,16 +310,21 @@ services:
       - { name: validator.constraint_validator, alias: valid_redirect_url }
 
   Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidMetadataUrlValidator:
+    arguments: [ '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\HostBlocklistCheckerInterface', '%allow_metadata_private_hosts%' ]
     tags:
       - { name: validator.constraint_validator, alias: metadata_url }
 
   Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidLogoValidator:
-    arguments: [ '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\CurlLogoValidationHelper', '%allow_logo_private_hosts%' ]
+    arguments: [ '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\CurlLogoValidationHelper', '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\HostBlocklistCheckerInterface', '%allow_logo_private_hosts%' ]
     tags:
       - { name: validator.constraint_validator, alias: logo }
 
   Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\CurlLogoValidationHelper:
     arguments: [ '@logger', '%logo_verify_ssl%' ]
+
+  Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\HostBlocklistCheckerInterface:
+    class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\HostBlocklistChecker
+    arguments: [ '%metadata_logo_fetch_blocked_ip_ranges%' ]
 
   Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Repository\IssueRepository:
     arguments:

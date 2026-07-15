@@ -54,6 +54,7 @@
     "symfony/form": "^6.4.13",
     "symfony/framework-bundle": "^6.4.17",
     "symfony/http-client": "6.4.*",
+    "symfony/http-foundation": "^6.4.13",
     "symfony/mailer": "^6.4.13",
     "symfony/monolog-bundle": "^3.10.0",
     "symfony/polyfill-apcu": "^1.31",

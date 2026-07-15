@@ -20,7 +20,9 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Integration\Infrastructure\Dash
 
 use GuzzleHttp\Handler\MockHandler;
 use Mockery as m;
+use Mockery\Mock;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\HostBlocklistCheckerInterface;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidMetadataUrl;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidMetadataUrlValidator;
 use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
@@ -37,6 +39,11 @@ class ValidMetadataUrlValidatorTest extends ConstraintValidatorTestCase
      */
     private $repository;
 
+    /**
+     * @var HostBlocklistCheckerInterface|Mock
+     */
+    private $hostBlocklistChecker;
+
     protected function tearDown(): void
     {
         parent::tearDown();
@@ -46,7 +53,10 @@ class ValidMetadataUrlValidatorTest extends ConstraintValidatorTestCase
     protected function createValidator()
     {
         $this->mockHandler = new MockHandler();
-        return new ValidMetadataUrlValidator();
+        $this->hostBlocklistChecker = m::mock(HostBlocklistCheckerInterface::class);
+        $this->hostBlocklistChecker->shouldReceive('isBlocked')->andReturn(false)->byDefault();
+
+        return new ValidMetadataUrlValidator($this->hostBlocklistChecker, false);
     }
 
     public function test_success()
@@ -68,5 +78,34 @@ class ValidMetadataUrlValidatorTest extends ConstraintValidatorTestCase
             $violations->get(0)->getMessageTemplate(),
             'Expected certain violation but dit not receive it.'
         );
+    }
+
+    public function test_private_host_is_blocked()
+    {
+        $this->hostBlocklistChecker = m::mock(HostBlocklistCheckerInterface::class);
+        $this->hostBlocklistChecker->shouldReceive('isBlocked')->andReturn(true);
+        $this->validator = new ValidMetadataUrlValidator($this->hostBlocklistChecker, false);
+        $this->validator->initialize($this->context);
+
+        $this->validator->validate('http://169.254.169.254/metadata', new ValidMetadataUrl());
+
+        $violations = $this->context->getViolations();
+        $this->assertCount(1, $violations);
+        $this->assertEquals(
+            'validator.entity_id.private_host',
+            $violations->get(0)->getMessageTemplate()
+        );
+    }
+
+    public function test_allow_metadata_private_hosts_skips_check()
+    {
+        $this->hostBlocklistChecker = m::mock(HostBlocklistCheckerInterface::class);
+        $this->hostBlocklistChecker->shouldNotReceive('isBlocked');
+        $this->validator = new ValidMetadataUrlValidator($this->hostBlocklistChecker, true);
+        $this->validator->initialize($this->context);
+
+        $this->validator->validate('http://169.254.169.254/metadata', new ValidMetadataUrl());
+
+        $this->assertNoViolation();
     }
 }
