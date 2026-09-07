@@ -22,6 +22,7 @@ use Mockery as m;
 use Mockery\Mock;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Exception\LogoInvalidTypeException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Exception\LogoNotFoundException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\HostBlocklistCheckerInterface;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\LogoValidationHelperInterface;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidLogo;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidLogoValidator;
@@ -34,11 +35,19 @@ class ValidLogoValidatorTest extends ConstraintValidatorTestCase
      */
     private $validationHelper;
 
+    /**
+     * @var HostBlocklistCheckerInterface|Mock
+     */
+    private $hostBlocklistChecker;
+
     protected function createValidator()
     {
         $this->validationHelper = m::mock(LogoValidationHelperInterface::class);
+        $this->hostBlocklistChecker = m::mock(HostBlocklistCheckerInterface::class);
+        $this->hostBlocklistChecker->shouldReceive('resolve')->andReturn('93.184.216.34')->byDefault();
+        $this->hostBlocklistChecker->shouldReceive('isIpBlocked')->andReturn(false)->byDefault();
 
-        return new ValidLogoValidator($this->validationHelper, false);
+        return new ValidLogoValidator($this->validationHelper, $this->hostBlocklistChecker, false);
     }
 
     public function test_success_png()
@@ -105,6 +114,24 @@ class ValidLogoValidatorTest extends ConstraintValidatorTestCase
         $violation = $violations->get(0);
 
         $this->assertEquals('validator.logo.wrong_type', $violation->getMessageTemplate());
+    }
+
+    public function test_private_host_is_blocked()
+    {
+        $constraint = new ValidLogo();
+
+        $this->hostBlocklistChecker = m::mock(HostBlocklistCheckerInterface::class);
+        $this->hostBlocklistChecker->shouldReceive('resolve')->andReturn('169.254.169.254');
+        $this->hostBlocklistChecker->shouldReceive('isIpBlocked')->andReturn(true);
+        $this->validator = new ValidLogoValidator($this->validationHelper, $this->hostBlocklistChecker, false);
+        $this->validator->initialize($this->context);
+
+        $this->validator->validate('http://169.254.169.254/logo.png', $constraint);
+
+        $violations = $this->context->getViolations();
+        $violation = $violations->get(0);
+
+        $this->assertEquals('validator.logo.private_host', $violation->getMessageTemplate());
     }
 
     public function test_unable_to_download()

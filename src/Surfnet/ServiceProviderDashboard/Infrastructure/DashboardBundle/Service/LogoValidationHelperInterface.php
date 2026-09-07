@@ -39,5 +39,5 @@ interface LogoValidationHelperInterface
      * @throws LogoInvalidTypeException
      * @throws LogoNotFoundException
      */
-    public function validateLogo(string $url): string;
+    public function validateLogo(string $url, ?string $resolvedIp = null): string;
 }

@@ -19,11 +19,19 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints;
 
 use Exception;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\HostBlocklistCheckerInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
 class ValidMetadataUrlValidator extends ConstraintValidator
 {
+    final public const STATUS_PRIVATE_HOST = 'validator.entity_id.private_host';
+
+    public function __construct(
+        private readonly HostBlocklistCheckerInterface $hostBlocklistChecker,
+        private readonly bool $allowMetadataPrivateHosts = false,
+    ) {
+    }
 
     /**
      * @param string     $value
@@ -41,6 +49,10 @@ class ValidMetadataUrlValidator extends ConstraintValidator
         } catch (Exception) {
             $this->context->addViolation('validator.entity_id.invalid_url');
             return;
+        }
+
+        if (!$this->allowMetadataPrivateHosts && $this->hostBlocklistChecker->isBlocked($value)) {
+            $this->context->addViolation(self::STATUS_PRIVATE_HOST);
         }
     }
 }
