@@ -11,7 +11,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v7.0.1
 
       # PHP checks
       - name: Check for php composer project
@@ -32,7 +32,7 @@ jobs:
           files: "yarn.lock"
       - name: Setup node
         if: steps.check_node_yarn.outputs.files_exists == 'true'
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: 20
       - name: Yarn Audit
@@ -48,7 +48,7 @@ jobs:
           files: "package.lock"
       - name: Setup node
         if: steps.check_node_npm.outputs.files_exists == 'true'
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: 20
       - name: npm audit
