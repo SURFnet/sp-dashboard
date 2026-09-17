@@ -68,9 +68,6 @@ nelmio_security:
             upgrade-insecure-requests: true # defaults to false, upgrades HTTP requests to HTTPS transport
     content_type:
         nosniff: true
-    xss_protection:
-        enabled: true
-        mode_block: true
     forced_ssl:
         enabled: true
         hsts_max_age: 31536000 # 365 days
