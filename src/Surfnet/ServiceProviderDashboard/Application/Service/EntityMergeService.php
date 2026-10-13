@@ -213,6 +213,10 @@ class EntityMergeService
             $typeOfServiceCollection->add($typeOfService);
         }
 
+        // Entity types without a public in dashboard option (resource servers and client credential clients)
+        // return null, which must not be turned into "idp visible only" by negating it.
+        $isPublicInDashboard = $command->isPublicInDashboard();
+
         return new Coin(
             null,
             null,
@@ -225,7 +229,7 @@ class EntityMergeService
             null,
             // Note when the dashboard sets the isPublicInDashboard to be true
             // That means the metaDataFields.coin:ss:idp_visible_only must be false
-            !$command->isPublicInDashboard(),
+            $isPublicInDashboard === null ? null : !$isPublicInDashboard,
         );
     }
 

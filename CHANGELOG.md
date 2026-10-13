@@ -3,6 +3,7 @@
 - Fix: editing an existing resource server (oauth20_rs) always failed with a confusing dual success+error message and no change applied in Manage. Root cause: `MetaData::merge()` overwrote `nameIdFormat` with `null` when the form command returned `null` (the RS form has no NameIDFormat field), causing the diff to send `metaDataFields.NameIDFormat: null` to Manage, which rejected the update. Additionally, published production RS entities were incorrectly routed through the change-request flow instead of being published directly.
 Remove integration with Teams
 Add integration with Invite
+- Fix: editing an existing resource server (oauth20_rs) was still rejected by Manage after the NameIDFormat fix (#1379). Root cause: `EntityMergeService` negated the `null` returned by `isPublicInDashboard()` for resource servers and client credential clients, so `metaDataFields.coin:ss:idp_visible_only: true` ended up in the diff. Manage does not permit that key on oauth20_rs and returns a 400 schema validation error. The value now stays `null` for entity types without a public in dashboard option.
 - Fix: `organizationUnitAttribute` was silently dropped from the Manage payload because `setOrganizationUnitAttribute()` did not call `setAttribute()`. The attribute is now correctly included when saving SAML and OIDC entities.
 
 - Fix: global site notice was not rendered on the service overview and my-services pages because both templates override the full `body_container` block, swallowing the notice render call that lived in the base template.

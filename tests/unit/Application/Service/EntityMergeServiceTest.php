@@ -20,6 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\Service;
 
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngResourceServerEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Service\AttributeService;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityMergeService;
@@ -84,6 +85,48 @@ class EntityMergeServiceTest extends TestCase
         // Verify merging was performed by randomly test one value that should have been updated. And one that should have been nulled
         self::assertEquals('https://www.example.com', $mergedManageEntity->getMetaData()->getEntityId());
         self::assertNull($manageEntity->getMetaData()->getContacts()->findAdministrativeContact());
+    }
+
+    public function testMergingResourceServerCommandDoesNotSetIdpVisibleOnly(): void
+    {
+        $service = m::mock(Service::class);
+        $service->shouldReceive('getOrganizationNameEn', 'getOrganizationNameNl')
+            ->andReturn('Organization Name');
+        $service->shouldReceive('getTeamName')->andReturn('urn:collab:group:test.example.com:test');
+        $pristine = $this->buildResourceServerManageEntity();
+        $manageEntity = $this->buildResourceServerManageEntity();
+
+        $merged = $this->service->mergeEntityCommand(
+            $this->buildResourceServerCommand($service),
+            $manageEntity
+        );
+
+        self::assertNull($merged->getMetaData()->getCoin()->isIdpVisibleOnly());
+        // Manage rejects coin:ss:idp_visible_only for oauth20_rs entities
+        self::assertArrayNotHasKey(
+            'metaDataFields.coin:ss:idp_visible_only',
+            $pristine->diff($merged)->getDiff()
+        );
+    }
+
+    private function buildResourceServerManageEntity(): ManageEntity
+    {
+        return ManageEntity::fromApiResponse(
+            json_decode(file_get_contents(__DIR__ . '/../Metadata/fixture/oauth20_rs_response.json'), true)
+        );
+    }
+
+    private function buildResourceServerCommand(Service $service): SaveOidcngResourceServerEntityCommand
+    {
+        $command = new SaveOidcngResourceServerEntityCommand();
+        $command->setEntityId('entityid');
+        $command->setNameEn('name en');
+        $command->setNameNl('name nl');
+        $command->setDescriptionEn('description en');
+        $command->setDescriptionNl('description nl');
+        $command->setSecret('test');
+        $command->setService($service);
+        return $command;
     }
 
     private function buildManageEntity()
