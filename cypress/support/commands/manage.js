@@ -63,6 +63,16 @@ Cypress.Commands.add('waitForManageEntity', (entityType = 'saml20_sp', entityId 
     return findManageEntityByEntityId(entityType, entityId);
 });
 
+Cypress.Commands.add('manageEntityMetaDataField', (entityType, entityId, field) => {
+    return cy.waitForManageEntity(entityType, entityId).then((entity) =>
+        cy.request({
+            method: 'GET',
+            url: `${MANAGE_URL}/manage/api/internal/metadata/${entityType}/${entity._id}`,
+            headers: MANAGE_HEADERS,
+        }).then((response) => response.body.data.metaDataFields[field])
+    );
+});
+
 Cypress.Commands.add('createEntityViaManageApi', (entityId, team, name, attributes, environment = 'testaccepted', serviceIdOrEntityType = 'oidc10_rp', entityType = null) => {
     // Support both 6-arg (no serviceId) and 7-arg (with serviceId) calling conventions
     const resolvedEntityType = entityType || (typeof serviceIdOrEntityType === 'string' ? serviceIdOrEntityType : 'oidc10_rp');
