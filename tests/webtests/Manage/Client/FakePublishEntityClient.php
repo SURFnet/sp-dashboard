@@ -23,6 +23,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository as PublishEntityRepositoryInterface;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataRejectedException;
 
 class FakePublishEntityClient implements PublishEntityRepositoryInterface
 {
@@ -32,13 +33,20 @@ class FakePublishEntityClient implements PublishEntityRepositoryInterface
 
     public function reset()
     {
-        $this->write(['__publishFails' => false]);
+        $this->write(['__publishFails' => false, '__publishRejection' => null]);
     }
 
     public function registerPublishFailure(): void
     {
         $data = $this->read();
         $data['__publishFails'] = true;
+        $this->write($data);
+    }
+
+    public function registerPublishRejection(string $validations): void
+    {
+        $data = $this->read();
+        $data['__publishRejection'] = $validations;
         $this->write($data);
     }
 
@@ -63,6 +71,9 @@ class FakePublishEntityClient implements PublishEntityRepositoryInterface
         $data = $this->read();
         if ($data['__publishFails'] ?? false) {
             throw new PublishMetadataException('Simulated Manage publish failure');
+        }
+        if ($data['__publishRejection'] ?? false) {
+            throw PublishMetadataRejectedException::fromManageResponse(['validations' => $data['__publishRejection']]);
         }
         $entityId = $entity->getMetaData()->getEntityId();
         $publishResponses = $data;

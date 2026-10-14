@@ -20,6 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Contro
 
 use Exception;
 use League\Tactician\CommandBus;
+use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\EntityChangeRequestCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\LoadMetadataCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand;
@@ -39,6 +40,8 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\EntityTypeFactory;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\SamlEntityType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataRejectedException;
 use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Exception\MetadataFetchException;
 use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Exception\ParserException;
 use Symfony\Component\Form\FormInterface;
@@ -59,6 +62,7 @@ trait EntityControllerTrait
         private readonly EntityTypeFactory $entityTypeFactory,
         private readonly LoadEntityService $loadEntityService,
         private readonly EntityMergeService $entityMergeService,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -95,6 +99,7 @@ trait EntityControllerTrait
         SaveEntityCommandInterface $saveCommand,
         bool $isPublishedProductionEntity,
         Request $request,
+        FormInterface $form,
     ): RedirectResponse|FormInterface {
         try {
             // Merge the save command data into the ManageEntity
@@ -102,9 +107,19 @@ trait EntityControllerTrait
             $isNewEntity = is_null($entity->getId());
             $publishEntityCommand = $this->createPublishEntityCommandFromEntity($entity, $isPublishedProductionEntity);
             $this->commandBus->handle($publishEntityCommand);
-        } catch (Exception) {
+        } catch (PublishMetadataRejectedException) {
+            // The command handlers logged the validation messages of Manage. The form is returned so the user
+            // does not lose the entered data.
+            $this->addFlash('error', 'entity.edit.error.publish-rejected');
+            return $form;
+        } catch (PublishMetadataException) {
+            // The command handlers logged the cause
             $this->addFlash('error', 'entity.edit.error.publish');
-            return $this->redirectToRoute('service_overview');
+            return $form;
+        } catch (Exception $e) {
+            $this->logger->error('Unable to publish the entity', ['exception' => $e]);
+            $this->addFlash('error', 'entity.edit.error.publish');
+            return $form;
         }
 
         if ($entity->getEnvironment() === Constants::ENVIRONMENT_TEST && !$isPublishedProductionEntity) {
@@ -115,6 +130,14 @@ trait EntityControllerTrait
         // page we will be redirecting to in a moment.
         $request->getSession()->set('published.entity.clone', clone $entity);
 
+        return $this->redirectAfterPublish($publishEntityCommand, $entity, $isNewEntity);
+    }
+
+    private function redirectAfterPublish(
+        PublishEntityTestCommand|EntityChangeRequestCommand|PublishEntityProductionCommand $publishEntityCommand,
+        ManageEntity $entity,
+        bool $isNewEntity,
+    ): RedirectResponse {
         if ($publishEntityCommand instanceof PublishEntityTestCommand) {
             if (!$isNewEntity) {
                 return $this->redirectToRoute('entity_published_test');

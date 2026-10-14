@@ -147,6 +147,7 @@ entity.list.modal.oidc_confirmation:
 entity.list.oidcng_connection.info.html: <p><strong>Select OIDC RP to connect this Resource Server to</strong></p><p><i class="fa fa-exclamation-triangle"></i> Only access_tokens from connected clients can be introspected by the resource server.</p>
 entity.create.info.publish: "Your entity was published successfully"
 entity.edit.error.publish: "Unable to publish the entity, try again later"
+entity.edit.error.publish-rejected: "The entity was not published because SURFconext did not accept the data. Your input is still in the form below. Please check the values and try again. If the problem persists, please contact the service desk."
 entity.edit.error.push: "Unable to publish the entity, try again later"
 entity.edit.title: Service Provider registration form
 entity.edit.info.saml20.title: Info

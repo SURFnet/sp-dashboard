@@ -137,7 +137,8 @@ class PublishEntityProductionCommandHandler implements CommandHandler
                     $e->getMessage()
                 )
             );
-            $this->requestStack->getSession()->getFlashBag()->add('error', 'entity.edit.error.publish');
+            // The caller shows the flash message, like it does for test environment publications
+            throw $e;
         } catch (Exception $e) {
             $this->logger->critical('Unable to create the Jira issue.', [$e->getMessage()]);
             $this->mailService->sendErrorReport($entity, $e);
