@@ -32,6 +32,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\EntityDiff;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataRejectedException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PushMetadataException
     as PushMetadataExceptionAlias;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient;
@@ -196,6 +197,54 @@ class PublishEntityClientTest extends MockeryTestCase
         $this->client->publish($entity, $entity, m::mock(Contact::class));
     }
 
+    public function testManageRejectingThePayloadThrowsRejectedExceptionWithValidations(): void
+    {
+        $this->mockHandler->append(new Response(400, [], $this->manageValidationError()));
+
+        try {
+            $this->client->publish($this->newEntity(), null, m::mock(Contact::class));
+            $this->fail('A payload that Manage rejects must not be published');
+        } catch (PublishMetadataRejectedException $e) {
+            $this->assertStringContainsString('extraneous key [coin:ss:idp_visible_only]', $e->getMessage());
+        }
+    }
+
+    public function testRejectionDoesNotExposeTheRawInputOfTheRequest(): void
+    {
+        $this->mockHandler->append(new Response(400, [], $this->manageValidationError()));
+
+        try {
+            $this->client->publish($this->newEntity(), null, m::mock(Contact::class));
+            $this->fail('A payload that Manage rejects must not be published');
+        } catch (PublishMetadataRejectedException $e) {
+            $this->assertStringNotContainsString('s3cr3t-value', $e->getMessage());
+        }
+    }
+
+    public function testManageBeingUnavailableIsNotTreatedAsRejection(): void
+    {
+        $this->mockHandler->append(new Response(503));
+
+        try {
+            $this->client->publish($this->newEntity(), null, m::mock(Contact::class));
+            $this->fail('A publish that Manage did not accept must throw');
+        } catch (PublishMetadataException $e) {
+            $this->assertNotInstanceOf(PublishMetadataRejectedException::class, $e);
+        }
+    }
+
+    public function testManageAnsweringWithoutIdIsNotTreatedAsRejection(): void
+    {
+        $this->mockHandler->append(new Response(200, [], json_encode(['status' => 'ok'])));
+
+        try {
+            $this->client->publish($this->newEntity(), null, m::mock(Contact::class));
+            $this->fail('A publish without an id in the response must throw');
+        } catch (PublishMetadataException $e) {
+            $this->assertNotInstanceOf(PublishMetadataRejectedException::class, $e);
+        }
+    }
+
     public function test_it_can_push_to_engineblock()
     {
         $responseJson = '{
@@ -255,5 +304,35 @@ class PublishEntityClientTest extends MockeryTestCase
             ->once();
 
         $this->client->pushMetadata();
+    }
+
+    private function newEntity(): ManageEntity
+    {
+        $entity = m::mock(ManageEntity::class);
+        $entity->shouldReceive('getMetaData->getEntityId')->andReturn('http://test');
+        $entity->shouldReceive('isManageEntity')->andReturnFalse();
+        $entity->shouldReceive('getId')->andReturn(null);
+
+        $this->manageConfig->shouldReceive('getPublicationStatus->getStatus')->andReturn('testaccepted');
+        $this->logger->shouldReceive('info');
+        $this->generator
+            ->shouldReceive('generateForNewEntity')
+            ->andReturn(json_decode(file_get_contents(__DIR__ . '/fixture/metadata.json'), true));
+
+        return $entity;
+    }
+
+    /**
+     * The body that Manage answers with, the raw input is the payload that was sent (and contains the secret).
+     */
+    private function manageValidationError(): string
+    {
+        return json_encode([
+            'status' => 400,
+            'error' => 'org.everit.json.schema.ValidationException',
+            'validations' => 'Validation failed for entity http://test (oauth20_rs): '
+                . '#/metaDataFields: extraneous key [coin:ss:idp_visible_only] is not permitted in schema',
+            'rawInput' => ['data' => ['metaDataFields' => ['secret' => 's3cr3t-value']]],
+        ]);
     }
 }

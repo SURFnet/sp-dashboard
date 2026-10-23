@@ -91,7 +91,13 @@ class EntityEditController extends AbstractController
                         $environment === Constants::ENVIRONMENT_PRODUCTION;
                     // Only trigger form validation on publish
                     if ($form->isValid()) {
-                        $response = $this->publishEntity($entity, $command, $isProductionEntityEdit, $request);
+                        $response = $this->publishEntity(
+                            $entity,
+                            $command,
+                            $isProductionEntityEdit,
+                            $request,
+                            $form
+                        );
 
                         if ($response instanceof Response) {
                             if ($environment !== Constants::ENVIRONMENT_PRODUCTION

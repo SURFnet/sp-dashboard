@@ -49,6 +49,8 @@ use Surfnet\ServiceProviderDashboard\Domain\Service\TypeOfServiceService;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\TypeOfService;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\TypeOfServiceCollection;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Identity;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataRejectedException;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
@@ -180,6 +182,65 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
 
         $command = new PublishEntityProductionCommand($manageEntity, $applicant);
         $this->commandHandler->handle($command);
+    }
+
+    public static function publishFailureProvider(): array
+    {
+        return [
+            'rejected by Manage' => [
+                PublishMetadataRejectedException::fromManageResponse(
+                    ['validations' => '#/metaDataFields: extraneous key [coin:unknown] is not permitted in schema']
+                ),
+            ],
+            'Manage not reachable' => [new PublishMetadataException('Unable to reach Manage')],
+        ];
+    }
+
+    /**
+     * @dataProvider publishFailureProvider
+     */
+    public function testPublishFailureIsLoggedAndRethrownSoTheControllerCanReact(PublishMetadataException $failure)
+    {
+        $manageEntity = m::mock(ManageEntity::class);
+        $manageEntity->shouldReceive('getMetaData->getNameEn')->andReturn('Test Entity Name');
+        $manageEntity->shouldReceive('isManageEntity')->andReturnTrue();
+        $manageEntity->shouldReceive('getId')->andReturn('123');
+        $manageEntity->shouldReceive('getEnvironment')->andReturn('production');
+        $manageEntity->shouldReceive('getService->getServiceType')->andReturn(Constants::SERVICE_TYPE_INSTITUTE);
+
+        $coin = m::mock(Coin::class);
+        $coin->shouldReceive('setContractualBase')->with(Constants::CONTRACTUAL_BASE_IX);
+        $coin->shouldReceive('hasTypeOfService')->andReturn(false);
+        $coin->shouldReceive('getTypeOfService')->andReturn(new TypeOfServiceCollection());
+        $coin->shouldReceive('setTypeOfService');
+        $manageEntity->shouldReceive('getMetaData->getCoin')->andReturn($coin);
+
+        $protocol = m::mock(Protocol::class);
+        $protocol->shouldReceive('getProtocol')->andReturn(Constants::TYPE_SAML);
+        $manageEntity->shouldReceive('getProtocol')->andReturn($protocol);
+        $manageEntity->shouldReceive('getMetaData->getEntityId')->andReturn('https://app.example.com/');
+
+        $this->entityService->shouldReceive('getPristineManageEntityById')->andReturn($manageEntity);
+
+        $applicant = new Contact('john:doe', 'john@example.com', 'John Doe');
+        $this->publishEntityClient
+            ->shouldReceive('publish')
+            ->once()
+            ->andThrow($failure);
+
+        $this->logger->shouldReceive('info')->once();
+        $this->logger
+            ->shouldReceive('error')
+            ->once()
+            ->with(m::on(static fn (string $message): bool => str_contains($message, $failure->getMessage())));
+
+        // The controller adds the flash message, the handler must not add a second one
+        $this->requestStack->shouldNotReceive('getSession');
+        $this->ticketService->shouldNotReceive('createJiraTicket');
+
+        $this->expectException(PublishMetadataException::class);
+
+        $this->commandHandler->handle(new PublishEntityProductionCommand($manageEntity, $applicant));
     }
 
     /**

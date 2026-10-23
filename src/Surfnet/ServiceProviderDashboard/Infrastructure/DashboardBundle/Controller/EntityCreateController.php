@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
 use League\Tactician\CommandBus;
+use Psr\Log\LoggerInterface;
 
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityMergeService;
@@ -53,6 +54,7 @@ class EntityCreateController extends AbstractController
         private readonly LoadEntityService $loadEntityService,
         private readonly ProtocolChoiceFactory $protocolChoiceFactory,
         private readonly EntityMergeService $entityMergeService,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -188,7 +190,7 @@ class EntityCreateController extends AbstractController
                 if ($this->isPublishAction($form)) {
                     // Only trigger form validation on publish
                     if ($form->isValid()) {
-                        $response = $this->publishEntity(null, $command, false, $request);
+                        $response = $this->publishEntity(null, $command, false, $request, $form);
 
                         // When a response is returned, publishing was a success
                         if ($response instanceof Response) {
@@ -287,19 +289,13 @@ class EntityCreateController extends AbstractController
                     // Only trigger form validation on publish
                     if ($form->isValid()) {
                         $entity = $entity->resetId();
-                        $response = $this->publishEntity($entity, $command, false, $request);
+                        $response = $this->publishEntity($entity, $command, false, $request, $form);
 
-                        // When a response is returned, publishing was a success
+                        // When a response is returned, publishing was a success. Otherwise the form is shown again
+                        // with the error message and the data the user entered.
                         if ($response instanceof Response) {
                             return $response;
                         }
-
-                        // When publishing failed, forward to the edit action and show the error messages there
-                        if ($this->isGranted('ROLE_ADMINISTRATOR')) {
-                            return $this->redirectToRoute('service_admin_overview', ['serviceId' => $service->getId()]);
-                        }
-
-                        return $this->redirectToRoute('service_overview');
                     } else {
                         $this->addFlash('error', 'entity.edit.metadata.validation-failed');
                     }

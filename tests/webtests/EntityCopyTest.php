@@ -140,6 +140,27 @@ class EntityCopyTest extends WebTestCase
         $this->assertEquals('https://playground.openconext.nl', $clientId);
     }
 
+    public function testFailedPublishOfACopyKeepsTheCopyForm()
+    {
+        $this->testPublicationClient->registerPublishFailure();
+
+        $crawler = self::$pantherClient->request('GET', "/entity/copy/{$this->service->getId()}/d645ddf7-1246-4224-8e14-0d5c494fd9ad");
+        $form = $crawler->selectButton('Publish')->form();
+
+        self::$pantherClient->submit($form, [
+            'dashboard_bundle_entity_type[metadata][entityId]' => 'https://copied.example.com/metadata',
+            'dashboard_bundle_entity_type[metadata][nameEn]' => 'Copied entity',
+            'dashboard_bundle_entity_type[metadata][nameIdFormat]' => 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient',
+            'dashboard_bundle_entity_type[metadata][applicationUrl]' => 'https://app.example.com',
+            'dashboard_bundle_entity_type[metadata][eulaUrl]' => 'https://eula.example.com',
+            'dashboard_bundle_entity_type[metadata][typeOfService][]' => 'Research',
+            'dashboard_bundle_entity_type[attributes][organizationAttribute][motivation]' => 'We need it',
+        ]);
+
+        self::assertOnPage('Unable to publish the entity, try again later');
+        self::assertOnPage('value="Copied entity"');
+    }
+
     public function test_no_save_button_after_import()
     {
         $crawler = self::$pantherClient->request('GET', "/entity/copy/{$this->service->getId()}/d645ddf7-1246-4224-8e14-0d5c494fd9ad");

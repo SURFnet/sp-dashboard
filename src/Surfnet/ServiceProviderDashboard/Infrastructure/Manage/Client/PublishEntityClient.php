@@ -25,6 +25,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\HttpException\HttpException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataRejectedException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PushMetadataException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\HttpClientInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository
@@ -85,6 +86,9 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
             }
 
             if (!isset($response['id'])) {
+                if (PublishMetadataRejectedException::isRejection($response)) {
+                    throw PublishMetadataRejectedException::fromManageResponse($response);
+                }
                 throw new PublishMetadataException('Unable to publish the metadata to Manage');
             }
 

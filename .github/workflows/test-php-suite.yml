@@ -37,6 +37,10 @@ jobs:
           path: devconf
           sparse-checkout: core
 
+      - name: Generate the development CA and HAProxy certificate
+        working-directory: devconf/core
+        run: ./scripts/create_dev_ca.sh
+
       - name: Bootstrap the openconext environment
         working-directory: devconf/core
         run: ./scripts/init.sh

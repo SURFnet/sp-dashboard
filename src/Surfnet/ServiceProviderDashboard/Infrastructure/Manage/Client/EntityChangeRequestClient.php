@@ -28,6 +28,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Protocol;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityChangeRequestRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataRejectedException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\HttpClientInterface;
 
 class EntityChangeRequestClient implements EntityChangeRequestRepository
@@ -57,6 +58,9 @@ class EntityChangeRequestClient implements EntityChangeRequestRepository
         );
 
         if (!isset($response['id'])) {
+            if (PublishMetadataRejectedException::isRejection($response)) {
+                throw PublishMetadataRejectedException::fromManageResponse($response);
+            }
             throw new PublishMetadataException('Unable to open a entity change request in Manage');
         }
 

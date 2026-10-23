@@ -106,4 +106,40 @@ class ResourceServerEditTest extends WebTestCase
         self::assertOnPage('Unable to publish the entity, try again later');
         self::assertNotOnPage('Your changes were saved');
     }
+
+    public function testFailedPublishKeepsTheSubmittedForm(): void
+    {
+        $this->testPublicationClient->registerPublishFailure();
+
+        $this->submitEditFormWithName('Updated Resource Server');
+
+        self::assertOnPage('Unable to publish the entity, try again later');
+        self::assertOnPage('value="Updated Resource Server"');
+    }
+
+    public function testRejectedPublishExplainsTheRejectionAndKeepsTheSubmittedForm(): void
+    {
+        $this->testPublicationClient->registerPublishRejection(
+            '#/metaDataFields: extraneous key [coin:unknown] is not permitted in schema'
+        );
+
+        $this->submitEditFormWithName('Updated Resource Server');
+
+        self::assertOnPage('did not accept the data');
+        self::assertOnPage('value="Updated Resource Server"');
+        self::assertNotOnPage('try again later');
+        self::assertNotOnPage('Your changes were saved');
+        // The technical validation message is logged, it is not meant for the user
+        self::assertNotOnPage('extraneous key');
+    }
+
+    private function submitEditFormWithName(string $name): void
+    {
+        $crawler = self::$pantherClient->request('GET', "/entity/edit/test/{$this->rsManageId}/1");
+
+        $form = $crawler->selectButton('Publish')->form();
+        $form->setValues(['dashboard_bundle_entity_type[metadata][nameEn]' => $name]);
+
+        self::$pantherClient->submit($form);
+    }
 }

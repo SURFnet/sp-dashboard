@@ -5,6 +5,7 @@ import './commands/editEntity';
 import './commands/entityActions';
 import './commands/login';
 import './commands/manage';
+import './commands/resourceServer';
 
 import 'cypress-axe';
 import 'cypress-html-validate/dist/commands';
