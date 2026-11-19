@@ -94,7 +94,7 @@ class PrivacyQuestionsController extends AbstractController
     #[Route(path: '/service/{serviceId}/privacy/edit', name: 'privacy_questions_edit')]
     public function edit(Request $request, int $serviceId): Response
     {
-        $service = $this->serviceService->getServiceById($serviceId);
+        $service = $this->authorizationService->changeActiveService($serviceId);
 
         $questions = $service->getPrivacyQuestions();
 

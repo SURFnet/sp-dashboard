@@ -42,6 +42,25 @@ class EditPrivacyQuestionsTest extends WebTestCase
         $this->assertEquals(DpaType::DEFAULT, $checkedDpaType);
     }
 
+    public function test_it_does_not_expose_privacy_questions_of_another_service()
+    {
+        $this->loadFixtures();
+
+        $serviceRepository = $this->getServiceRepository();
+
+        // SURFnet is not a member of the Ibuildings service (id 2)
+        $this->logIn($serviceRepository->findByName('SURFnet'));
+
+        foreach (['/service/2/privacy', '/service/2/privacy/edit'] as $url) {
+            $crawler = self::$pantherClient->request('GET', $url);
+            $this->assertStringNotContainsString(
+                'All your data are belong to us',
+                $crawler->filter('body')->text(),
+                sprintf('Privacy answers of another service leaked on %s', $url)
+            );
+        }
+    }
+
     public function test_it_can_submit_the_form()
     {
         $this->loadFixtures();
